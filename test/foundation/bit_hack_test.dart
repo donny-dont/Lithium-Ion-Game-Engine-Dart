@@ -18,8 +18,6 @@ void main() {
       for (int i = 0; i < maxPower; ++i) {
         int flag = 1 << i;
 
-        print('$i $value $flag');
-
         expect(isFlagEnabled(value, flag), expectation);
       }
     };

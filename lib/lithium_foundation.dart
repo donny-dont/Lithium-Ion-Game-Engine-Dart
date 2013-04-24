@@ -5,8 +5,17 @@
 
 library lithium_foundation;
 
+import 'dart:typeddata';
+
+import 'package:vector_math/vector_math.dart';
+
 //---------------------------------------------------------------------
 // Foundation library
 //---------------------------------------------------------------------
 
 part 'src/foundation/bit_hacks.dart';
+part 'src/foundation/scalar_list.dart';
+part 'src/foundation/strided_list.dart';
+part 'src/foundation/vector2_list.dart';
+part 'src/foundation/vector3_list.dart';
+part 'src/foundation/vector4_list.dart';
