@@ -8,7 +8,7 @@ library bit_hack_test;
 import 'dart:math' as Math;
 
 import 'package:unittest/unittest.dart';
-import 'package:lithium_ion/lithium_foundation.dart';
+import 'package:lithium_ion/foundation.dart';
 
 void main() {
   test('isFlagEnabled', () {

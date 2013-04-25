@@ -7,7 +7,7 @@ library scalar_list_test;
 
 import 'dart:typeddata';
 import 'package:unittest/unittest.dart';
-import 'package:lithium_ion/lithium_foundation.dart';
+import 'package:lithium_ion/foundation.dart';
 import 'strided_list_test_helper.dart';
 
 void main() {
