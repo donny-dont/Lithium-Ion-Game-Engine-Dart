@@ -34,6 +34,14 @@ class GraphicsDevice {
   /// The [GraphicsDeviceCapabilities] describing what GPU features are
   /// available.
   GraphicsDeviceCapabilities _capabilities;
+  /// The controller for the [onResourceCreated] stream.
+  StreamController<ResourceCreatedEvent> _onResourceCreatedController;
+  /// Event handler for when [GraphicsResource]s are created.
+  Stream<ResourceCreatedEvent> _onResourceCreated;
+  /// The controller for the [onResourceDestroyed] stream.
+  StreamController<ResourceDestroyedEvent> _onResourceDestroyedController;
+  /// Event handler for when [GraphicsResource]s are destroyed.
+  Stream<ResourceDestroyedEvent> _onResourceDestroyed;
 
   //---------------------------------------------------------------------
   // Construction
@@ -78,6 +86,14 @@ class GraphicsDevice {
 
     // Create the associated GraphicsContext
     _context = new GraphicsContext._internal(this);
+
+    // Create the resource created stream
+    _onResourceCreatedController = new StreamController<ResourceCreatedEvent>();
+    _onResourceCreated = _onResourceCreatedController.stream;
+
+    // Create the resource destroyed stream
+    _onResourceDestroyedController = new StreamController<ResourceDestroyedEvent>();
+    _onResourceDestroyed = _onResourceDestroyedController.stream;
   }
 
   //---------------------------------------------------------------------
@@ -112,8 +128,53 @@ class GraphicsDevice {
   /// to satisfy the requested height.
   int get frontBufferHeight => _gl.drawingBufferHeight;
 
+  /// Event handler for when [GraphicsResource]s are created.
+  ///
+  /// By subscribing to the [onResourceCreated] and [onResourceDestroyed] events
+  /// it can be verified that all resources are properly disposed of.
+  Stream<ResourceCreatedEvent> get onResourceCreated => _onResourceCreated;
+
+  /// Event handler for when [GraphicsResource]s are destroyed.
+  ///
+  /// By subscribing to the [onResourceCreated] and [onResourceDestroyed] events
+  /// it can be verified that all resources are properly disposed of.
+  Stream<ResourceDestroyedEvent> get onResourceDestroyed => _onResourceDestroyed;
+
   //---------------------------------------------------------------------
-  // Creation methods
+  // Event callbacks
   //---------------------------------------------------------------------
 
+  /// Notify that a [GraphicsResource] has been created.
+  void _notifyResourceCreated(GraphicsResource resource) {
+    if (!_onResourceCreatedController.isPaused) {
+      _onResourceCreatedController.add(new ResourceCreatedEvent._internal(resource));
+    }
+  }
+
+  /// Notify that a [GraphicsResource] has been destroyed.
+  void _notifyResourceDestroyed(GraphicsResource resource) {
+    if (!_onResourceDestroyedController.isPaused) {
+      _onResourceDestroyedController.add(new ResourceDestroyedEvent._internal(resource));
+    }
+  }
+
+  //---------------------------------------------------------------------
+  // Binding methods
+  //---------------------------------------------------------------------
+
+  /// Binds a [GraphicsResource] to the [GraphicsDevice].
+  ///
+  /// Used for [GraphicsResource]s that do not require a binding to the
+  /// underlying [WebGL] implementation.
+  void _createWithoutBinding(GraphicsResource resource) {
+    _notifyResourceCreated(resource);
+  }
+
+  /// Releases a [GraphicsResource] from the [GraphicsDevice].
+  ///
+  /// Used for [GraphicsResource]s that do not require a binding to the
+  /// underlying [WebGL] implementation.
+  void _destroyWithoutBinding(GraphicsResource resource) {
+    _notifyResourceDestroyed(resource);
+  }
 }

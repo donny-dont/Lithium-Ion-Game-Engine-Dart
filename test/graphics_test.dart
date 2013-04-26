@@ -3,15 +3,14 @@
 // Use of this source code is governed by a zlib license that can be found in
 // the LICENSE file.
 
-import 'package:unittest/unittest.dart';
-import 'package:unittest/html_enhanced_config.dart';
+library foundation_test;
 
-import 'foundation_test.dart' as foundation_test;
-import 'graphics_test.dart' as graphics_test;
+import 'package:unittest/unittest.dart';
+
+import 'graphics/graphics_device_test.dart' as graphics_device_test;
 
 void main() {
-  useHtmlEnhancedConfiguration();
-
-  //foundation_test.main();
-  graphics_test.main();
+  group('Graphics library', () {
+    group('GraphicsDevice tests', graphics_device_test.main);
+  });
 }

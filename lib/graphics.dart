@@ -31,3 +31,7 @@ part 'src/graphics/graphics_device.dart';
 part 'src/graphics/graphics_device_capabilities.dart';
 part 'src/graphics/graphics_device_config.dart';
 part 'src/graphics/graphics_resource.dart';
+part 'src/graphics/rendering_error_event.dart';
+part 'src/graphics/resource_created_event.dart';
+part 'src/graphics/resource_destroyed_event.dart';
+part 'src/graphics/viewport.dart';

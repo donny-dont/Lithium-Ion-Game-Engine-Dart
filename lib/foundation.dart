@@ -27,3 +27,4 @@ part 'src/foundation/strided_list.dart';
 part 'src/foundation/vector2_list.dart';
 part 'src/foundation/vector3_list.dart';
 part 'src/foundation/vector4_list.dart';
+part 'src/foundation/vector_math_helpers.dart';

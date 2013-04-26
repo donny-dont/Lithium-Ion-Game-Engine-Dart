@@ -6,6 +6,45 @@
 part of lithium_graphics;
 
 /// Base class for resources allocated from the [GraphicsDevice].
-class GraphicsResource {
+abstract class GraphicsResource {
+  //---------------------------------------------------------------------
+  // Member variables
+  //---------------------------------------------------------------------
 
+  /// The [GraphicsDevice] the resource is bound to.
+  GraphicsDevice _device;
+  /// The name of the resource.
+  String _name = '';
+
+  //---------------------------------------------------------------------
+  // Construction
+  //---------------------------------------------------------------------
+
+  /// Creates an instance of the [GraphicsResource] class.
+  ///
+  /// The [device] is used to bind any resources to the underlying [WebGL]
+  /// implementation.
+  GraphicsResource._internal(GraphicsDevice device)
+      : _device = device
+  {
+    assert(device != null);
+  }
+
+  //---------------------------------------------------------------------
+  // Properties
+  //---------------------------------------------------------------------
+
+  /// The [GraphicsDevice] the resource is bound to.
+  GraphicsDevice get graphicsDevice => _graphicsDevice;
+
+  /// The name of the resource
+  String get name => _name;
+  set name(String value) { _name = value; }
+
+  //---------------------------------------------------------------------
+  // Public methods
+  //---------------------------------------------------------------------
+
+  /// Immediately releases the unmanaged resources used by this object.
+  void dispose();
 }
