@@ -59,14 +59,9 @@ class RenderingErrorEvent {
       case WebGL.INVALID_FRAMEBUFFER_OPERATION:
         errorMessage = 'The framebuffer object is not complete. The offending command is ignored and has no other side effect than to set the error flag.';
         break;
-      case WebGL.OUT_OF_MEMORY
+      case WebGL.OUT_OF_MEMORY:
         errorMessage = 'There is not enough memory left to execute the command. The state of the GL is undefined, except for the state of the error flags, after this error is recorded.';
         break;
-      case WebGL.STACK_UNDERFLOW
-        errorMessage = 'An attempt has been made to perform an operation that would cause an internal stack to underflow.';
-        break;
-      case WebGL.STACK_OVERFLOW
-        errorMessage = 'An attempt has been made to perform an operation that would cause an internal stack to overflow.';
       default:
         errorMessage = 'An unknown error occurred';
         break;

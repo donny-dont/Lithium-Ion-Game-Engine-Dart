@@ -30,7 +30,7 @@ class GraphicsDevice {
   ///
   /// This functions as an immediate context meaning all calls are sent directly
   /// to the GPU rather than creating a command list that is then processed.
-  GraphicsContext _context;
+  GraphicsContext _graphicsContext;
   /// The [GraphicsDeviceCapabilities] describing what GPU features are
   /// available.
   GraphicsDeviceCapabilities _capabilities;
@@ -84,9 +84,6 @@ class GraphicsDevice {
       _vao = GraphicsDeviceCapabilities._getExtension(_gl, 'OES_vertex_array_object');
     }
 
-    // Create the associated GraphicsContext
-    _context = new GraphicsContext._internal(this);
-
     // Create the resource created stream
     _onResourceCreatedController = new StreamController<ResourceCreatedEvent>();
     _onResourceCreated = _onResourceCreatedController.stream;
@@ -94,17 +91,23 @@ class GraphicsDevice {
     // Create the resource destroyed stream
     _onResourceDestroyedController = new StreamController<ResourceDestroyedEvent>();
     _onResourceDestroyed = _onResourceDestroyedController.stream;
+
+    // Create the associated GraphicsContext
+    _graphicsContext = new GraphicsContext._internal(this);
   }
 
   //---------------------------------------------------------------------
   // Properties
   //---------------------------------------------------------------------
 
+  /// The [WebGL.RenderingContext] to use.
+  WebGL.RenderingContext get gl => _gl;
+
   /// The [GraphicsContext] associated with the device.
   ///
   /// This functions as an immediate context meaning all calls are sent directly
   /// to the GPU rather than creating a command list that is then processed.
-  GraphicsContext get context => _context;
+  GraphicsContext get graphicsContext => _graphicsContext;
 
   /// The [GraphicsDeviceCapabilities] describing what GPU features are
   /// available.

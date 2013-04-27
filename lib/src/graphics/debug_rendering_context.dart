@@ -37,7 +37,7 @@ class DebugRenderingContext implements WebGL.RenderingContext {
   DebugRenderingContext._internal(WebGL.RenderingContext gl)
       : _gl = gl
   {
-    _onErrorController = new StreamController<RenderingError>();
+    _onErrorController = new StreamController<RenderingErrorEvent>();
     _onError = _onErrorController.stream;
   }
 
@@ -46,7 +46,7 @@ class DebugRenderingContext implements WebGL.RenderingContext {
   //---------------------------------------------------------------------
 
   /// Event handler for when [RenderingErrorEvent]s occur.
-  Stream<RenderingError> get onError => _onError;
+  Stream<RenderingErrorEvent> get onError => _onError;
 
   //---------------------------------------------------------------------
   // Public methods

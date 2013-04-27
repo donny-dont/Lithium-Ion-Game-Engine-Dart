@@ -12,7 +12,7 @@ abstract class GraphicsResource {
   //---------------------------------------------------------------------
 
   /// The [GraphicsDevice] the resource is bound to.
-  GraphicsDevice _device;
+  GraphicsDevice _graphicsDevice;
   /// The name of the resource.
   String _name = '';
 
@@ -25,7 +25,7 @@ abstract class GraphicsResource {
   /// The [device] is used to bind any resources to the underlying [WebGL]
   /// implementation.
   GraphicsResource._internal(GraphicsDevice device)
-      : _device = device
+      : _graphicsDevice = device
   {
     assert(device != null);
   }

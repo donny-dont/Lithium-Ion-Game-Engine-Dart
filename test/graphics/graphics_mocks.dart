@@ -8,8 +8,13 @@ library graphics_mocks;
 import 'dart:html';
 import 'dart:web_gl' as WebGL;
 
-import 'package:unittest/unittest.dart';
 import 'package:unittest/mock.dart';
+import 'package:unittest/unittest.dart';
+import 'package:lithium_ion/graphics.dart';
 
 part 'mock_canvas_element.dart';
 part 'mock_rendering_context.dart';
+
+GraphicsDevice createMockGraphicsDevice() {
+  return new GraphicsDevice(new MockCanvasElement());
+}

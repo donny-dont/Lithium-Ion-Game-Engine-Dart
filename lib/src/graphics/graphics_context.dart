@@ -24,7 +24,7 @@ class GraphicsContext {
   //---------------------------------------------------------------------
 
   /// The [GraphicsDevice] that created the context.
-  GraphicsDevice _device;
+  GraphicsDevice _graphicsDevice;
 
   //---------------------------------------------------------------------
   // Clear variables
@@ -53,9 +53,22 @@ class GraphicsContext {
   /// A [GraphicsContext] can not be created directly. A [GraphicsDevice] must
   /// be involved in the creation of the context.
   GraphicsContext._internal(GraphicsDevice device)
-      : _device = device
+      : _graphicsDevice = device
       , _gl = device._gl
-      , _vao = device._vao;
+      , _vao = device._vao
+  {
+    _initializeState();
+  }
+
+  /// Initialize the WebGL pipeline state.
+  /// Creates all the default state values and applies them to the pipeline.
+  void _initializeState() {
+    // Viewport setup
+    _viewport = new Viewport(_graphicsDevice);
+
+    _gl.viewport(_viewport.x, _viewport.y, _viewport.width, _viewport.height);
+    _gl.depthRange(_viewport.minDepth, _viewport.maxDepth);
+  }
 
   //---------------------------------------------------------------------
   // State properties
