@@ -27,7 +27,7 @@ class GraphicsContext {
   GraphicsDevice _device;
 
   //---------------------------------------------------------------------
-  // Clear variable
+  // Clear variables
   //---------------------------------------------------------------------
 
   /// The current color that the color buffer is set to on clear.
@@ -36,6 +36,13 @@ class GraphicsContext {
   double _clearDepth = 0.0;
   /// The current value to set the stencil buffer to on clear.
   int _clearStencil = 0;
+
+  //---------------------------------------------------------------------
+  // State variables
+  //---------------------------------------------------------------------
+
+  /// The current [Viewport] of the pipeline.
+  Viewport _viewport;
 
   //---------------------------------------------------------------------
   // Construction
@@ -50,5 +57,36 @@ class GraphicsContext {
       , _gl = device._gl
       , _vao = device._vao;
 
+  //---------------------------------------------------------------------
+  // State properties
+  //---------------------------------------------------------------------
 
+  /// Sets a [Viewport] identifying the portion of the render target to receive draw calls.
+  set viewport(Viewport value) {
+    if (value == null) {
+      return;
+    }
+
+    if ((_viewport.x      != value.x)     ||
+        (_viewport.y      != value.y)     ||
+        (_viewport.width  != value.width) ||
+        (_viewport.height != value.height))
+    {
+      _gl.viewport(value.x, value.y, value.width, value.height);
+
+      _viewport.x      = value.x;
+      _viewport.y      = value.y;
+      _viewport.width  = value.width;
+      _viewport.height = value.height;
+    }
+
+    if ((_viewport.minDepth != value.minDepth) ||
+        (_viewport.maxDepth != value.maxDepth))
+    {
+      _gl.depthRange(value.minDepth, value.maxDepth);
+
+      _viewport.minDepth = value.minDepth;
+      _viewport.maxDepth = value.maxDepth;
+    }
+  }
 }
