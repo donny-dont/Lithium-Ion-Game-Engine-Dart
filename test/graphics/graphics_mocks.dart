@@ -18,3 +18,7 @@ part 'mock_rendering_context.dart';
 GraphicsDevice createMockGraphicsDevice() {
   return new GraphicsDevice(new MockCanvasElement());
 }
+
+GraphicsDevice createMockGraphicsDeviceNoExtensions() {
+  return new GraphicsDevice(new MockCanvasElement.noExtensions());
+}

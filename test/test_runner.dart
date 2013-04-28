@@ -12,6 +12,6 @@ import 'graphics_test.dart' as graphics_test;
 void main() {
   useHtmlEnhancedConfiguration();
 
-  foundation_test.main();
+  //foundation_test.main();
   graphics_test.main();
 }

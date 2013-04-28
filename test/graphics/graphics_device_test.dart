@@ -25,12 +25,14 @@ void main() {
     // Create all the GraphicsResource subclasses
     var viewport = new Viewport(device);
     var vertexBuffer = new VertexBuffer.static(device);
+    var indexBuffer = new IndexBuffer.static(device);
 
-    expect(resources, 2);
+    expect(resources, 3);
 
     // Destory all the GraphicsResource subclasses
     viewport.dispose();
     vertexBuffer.dispose();
+    indexBuffer.dispose();
 
     expect(resources, 0);
   });

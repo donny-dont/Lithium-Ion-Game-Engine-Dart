@@ -50,6 +50,8 @@ class GraphicsContext {
 
   /// The currently bound [VertexBuffer].
   VertexBuffer _vertexBuffer;
+  /// The currently bound [IndexBuffer].
+  IndexBuffer _indexBuffer;
 
   //---------------------------------------------------------------------
   // Construction
@@ -111,7 +113,38 @@ class GraphicsContext {
   }
 
   //---------------------------------------------------------------------
-  // Buffer methods
+  // IndexBuffer methods
+  //---------------------------------------------------------------------
+
+  /// Binds the [IndexBuffer] to the pipeline.
+  void _bindIndexBuffer(IndexBuffer buffer) {
+    if (_indexBuffer != buffer) {
+      assert(buffer._binding != null);
+      _gl.bindBuffer(WebGL.ELEMENT_ARRAY_BUFFER, buffer._binding);
+
+      _indexBuffer = buffer;
+    }
+  }
+
+  /// Sets the entire contents of the [buffer] with the values contained in [data].
+  void _setIndexBufferData(IndexBuffer buffer, TypedData data) {
+    _bindIndexBuffer(buffer);
+
+    _gl.bufferData(WebGL.ELEMENT_ARRAY_BUFFER, data, buffer._bufferUsage);
+  }
+
+  /// Replaces a portion of the buffer with the values contained in [data].
+  ///
+  /// The contents are replaced starting at the [offset] in bytes up to the size
+  /// of the [data] array.
+  void _replaceIndexBufferData(IndexBuffer buffer, TypedData data, int offset) {
+    _bindIndexBuffer(buffer);
+
+    _gl.bufferSubData(WebGL.ELEMENT_ARRAY_BUFFER, offset, data);
+  }
+
+  //---------------------------------------------------------------------
+  // VertexBuffer methods
   //---------------------------------------------------------------------
 
   /// Binds the [VertexBuffer] to the pipeline.

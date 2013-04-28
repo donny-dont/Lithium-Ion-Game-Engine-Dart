@@ -9,4 +9,14 @@ class MockCanvasElement extends Mock implements CanvasElement {
   MockCanvasElement() {
     when(callsTo('getContext3d')).alwaysReturn(new MockRenderingContext());
   }
+
+  MockCanvasElement.noExtensions() {
+    var extensions = [];
+
+    when(callsTo('getContext3d')).alwaysReturn(new MockRenderingContext(extensions));
+  }
+
+  MockCanvasElement.specifyExtensions(List extensions) {
+    when(callsTo('getContext3d')).alwaysReturn(new MockRenderingContext(extensions));
+  }
 }

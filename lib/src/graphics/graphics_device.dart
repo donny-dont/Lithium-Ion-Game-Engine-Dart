@@ -181,6 +181,24 @@ class GraphicsDevice {
     _notifyResourceDestroyed(resource);
   }
 
+  /// Binds an [IndexBuffer] to the [GraphicsDevice].
+  void _createIndexBuffer(IndexBuffer resource) {
+    // Check that the unsigned int extension is available if the resource uses it
+    assert(resource.indexElementSize == IndexElementSize.Short || _capabilities.hasUnsignedIntIndices);
+
+    resource._binding = _gl.createBuffer();
+
+    _notifyResourceCreated(resource);
+  }
+
+  /// Releases a [IndexBuffer] from the [GraphicsDevice].
+  void _destroyIndexBuffer(IndexBuffer resource) {
+    _gl.deleteBuffer(resource._binding);
+    resource._binding = null;
+
+    _notifyResourceDestroyed(resource);
+  }
+
   /// Binds a [VertexBuffer] to the [GraphicsDevice].
   void _createVertexBuffer(VertexBuffer resource) {
     resource._binding = _gl.createBuffer();
