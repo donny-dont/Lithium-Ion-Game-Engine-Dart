@@ -45,6 +45,13 @@ class GraphicsContext {
   Viewport _viewport;
 
   //---------------------------------------------------------------------
+  // Buffer variables
+  //---------------------------------------------------------------------
+
+  /// The currently bound [VertexBuffer].
+  VertexBuffer _vertexBuffer;
+
+  //---------------------------------------------------------------------
   // Construction
   //---------------------------------------------------------------------
 
@@ -101,5 +108,36 @@ class GraphicsContext {
       _viewport.minDepth = value.minDepth;
       _viewport.maxDepth = value.maxDepth;
     }
+  }
+
+  //---------------------------------------------------------------------
+  // Buffer methods
+  //---------------------------------------------------------------------
+
+  /// Binds the [VertexBuffer] to the pipeline.
+  void _bindVertexBuffer(VertexBuffer buffer) {
+    if (_vertexBuffer != buffer) {
+      assert(buffer._binding != null);
+      _gl.bindBuffer(WebGL.ARRAY_BUFFER, buffer._binding);
+
+      _vertexBuffer = buffer;
+    }
+  }
+
+  /// Sets the entire contents of the [buffer] with the values contained in [data].
+  void _setVertexBufferData(VertexBuffer buffer, TypedData data) {
+    _bindVertexBuffer(buffer);
+
+    _gl.bufferData(WebGL.ARRAY_BUFFER, data, buffer._bufferUsage);
+  }
+
+  /// Replaces a portion of the buffer with the values contained in [data].
+  ///
+  /// The contents are replaced starting at the [offset] in bytes up to the size
+  /// of the [data] array.
+  void _replaceVertexBufferData(VertexBuffer buffer, TypedData data, int offset) {
+    _bindVertexBuffer(buffer);
+
+    _gl.bufferSubData(WebGL.ARRAY_BUFFER, offset, data);
   }
 }

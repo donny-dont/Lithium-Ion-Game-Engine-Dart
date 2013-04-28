@@ -19,16 +19,18 @@ void main() {
     int resources = 0;
 
     // Attach to the events
-    device.onResourceCreated.listen((_) { resources++; });
+    device.onResourceCreated.listen  ((_) { resources++; });
     device.onResourceDestroyed.listen((_) { resources--; });
 
     // Create all the GraphicsResource subclasses
     var viewport = new Viewport(device);
+    var vertexBuffer = new VertexBuffer.static(device);
 
-    expect(resources, 1);
+    expect(resources, 2);
 
     // Destory all the GraphicsResource subclasses
     viewport.dispose();
+    vertexBuffer.dispose();
 
     expect(resources, 0);
   });

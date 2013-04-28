@@ -5,7 +5,7 @@
 
 part of graphics_mocks;
 
-class MockWebGLBuffer implements WebGL.Buffer { }
+class MockBuffer implements WebGL.Buffer { }
 
 class MockContextAttributes implements WebGL.ContextAttributes {
   bool alpha = true;
@@ -21,5 +21,7 @@ class MockRenderingContext extends Mock implements WebGL.RenderingContext {
     when(callsTo('getParameter')).alwaysReturn(4);
     when(callsTo('getExtension')).alwaysReturn(null);
     when(callsTo('getContextAttributes')).alwaysReturn(new MockContextAttributes());
+
+    when(callsTo('createBuffer')).alwaysReturn(new MockBuffer());
   }
 }

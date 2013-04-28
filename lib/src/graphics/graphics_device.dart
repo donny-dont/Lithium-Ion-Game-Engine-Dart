@@ -180,4 +180,19 @@ class GraphicsDevice {
   void _destroyWithoutBinding(GraphicsResource resource) {
     _notifyResourceDestroyed(resource);
   }
+
+  /// Binds a [VertexBuffer] to the [GraphicsDevice].
+  void _createVertexBuffer(VertexBuffer resource) {
+    resource._binding = _gl.createBuffer();
+
+    _notifyResourceCreated(resource);
+  }
+
+  /// Releases a [VertexBuffer] from the [GraphicsDevice].
+  void _destroyVertexBuffer(VertexBuffer resource) {
+    _gl.deleteBuffer(resource._binding);
+    resource._binding = null;
+
+    _notifyResourceDestroyed(resource);
+  }
 }
