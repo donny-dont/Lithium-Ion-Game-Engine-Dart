@@ -5,6 +5,7 @@
 
 part of lithium_graphics;
 
+/// Defines vertex element formats.
 class VertexElementFormat {
   //---------------------------------------------------------------------
   // Serialization names
@@ -36,7 +37,7 @@ class VertexElementFormat {
   // Class methods
   //---------------------------------------------------------------------
 
-  /// Convert from a [String] name to the corresponding [InputElementFormat] enumeration.
+  /// Convert from a [String] name to the corresponding [VertexElementFormat] enumeration.
   static int parse(String name) {
     switch (name) {
       case _scalarName : return Scalar;
@@ -49,7 +50,7 @@ class VertexElementFormat {
     return Scalar;
   }
 
-  /// Converts the [InputElementFormat] enumeration to a [String].
+  /// Converts the [VertexElementFormat] enumeration to a [String].
   static String stringify(int value) {
     switch (value) {
       case Scalar : return _scalarName;

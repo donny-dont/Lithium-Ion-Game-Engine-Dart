@@ -14,6 +14,7 @@ import 'graphics/index_buffer_test.dart' as index_buffer_test;
 import 'graphics/index_element_size_test.dart' as index_element_size_test;
 import 'graphics/vertex_buffer_test.dart' as vertex_buffer_test;
 import 'graphics/vertex_element_format_test.dart' as vertex_element_format_test;
+import 'graphics/vertex_element_usage_test.dart' as vertex_element_usage_test;
 import 'graphics/viewport_test.dart' as viewport_test;
 
 void main() {
@@ -25,6 +26,7 @@ void main() {
     group('IndexElementSize tests', index_element_size_test.main);
     group('VertexBuffer tests', vertex_buffer_test.main);
     group('VertexElementFormat tests', vertex_element_format_test.main);
+    group('VertexElementUsage tests', vertex_element_usage_test.main);
     group('Viewport tests', viewport_test.main);
   });
 }

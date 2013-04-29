@@ -41,4 +41,5 @@ part 'src/graphics/resource_created_event.dart';
 part 'src/graphics/resource_destroyed_event.dart';
 part 'src/graphics/vertex_buffer.dart';
 part 'src/graphics/vertex_element_format.dart';
+part 'src/graphics/vertex_element_usage.dart';
 part 'src/graphics/viewport.dart';
