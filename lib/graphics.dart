@@ -32,6 +32,7 @@ part 'src/graphics/graphics_context.dart';
 part 'src/graphics/graphics_device.dart';
 part 'src/graphics/graphics_device_capabilities.dart';
 part 'src/graphics/graphics_device_config.dart';
+part 'src/graphics/graphics_device_extensions.dart';
 part 'src/graphics/graphics_resource.dart';
 part 'src/graphics/index_buffer.dart';
 part 'src/graphics/index_element_size.dart';

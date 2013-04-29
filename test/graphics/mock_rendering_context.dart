@@ -45,29 +45,14 @@ class MockContextAttributes implements WebGL.ContextAttributes {
 //---------------------------------------------------------------------
 
 class MockRenderingContext extends Mock implements WebGL.RenderingContext {
-  static final List<String> _vendorExtensions = [ '', 'WEBKIT_', 'MOZ_' ];
-
-  static final List<String> _allExtensions = [
-      'OES_texture_float',
-      'OES_texture_half_float',
-      'WEBGL_lose_context',
-      'OES_standard_derivatives',
-      'OES_vertex_array_object',
-      //'WEBGL_debug_renderer_info',
-      'WEBGL_debug_shaders',
-      'WEBGL_compressed_texture_s3tc',
-      'WEBGL_depth_texture',
-      'OES_element_index_uint',
-      'EXT_texture_filter_anisotropic',
-      'WEBGL_compressed_texture_atc',
-      'ANGLE_instanced_arrays',
-      'WEBGL_compressed_texture_pvrtc',
-      'EXT_draw_buffers'
-  ];
+  static const String _vendorName   = 'Lithium-Ion Engine';
+  static const String _rendererName = 'Lithium-Ion Engine Mock WebGL';
+  static const String _versionName  = 'Mock WebGL 1.0 (OpenGL ES 2.0)';
 
   MockRenderingContext([List extensions]) {
+    // Extensions
     if (extensions == null) {
-      extensions = _allExtensions;
+      extensions = GraphicsDeviceExtensions.all;
     }
 
     var extensionSet = new Set<String>();
@@ -75,45 +60,61 @@ class MockRenderingContext extends Mock implements WebGL.RenderingContext {
 
     _initializeExtensions(extensionSet);
 
-    when(callsTo('getParameter')).alwaysReturn(4);
+    // Device info
+    _initializeDeviceInfo();
+
     when(callsTo('getContextAttributes')).alwaysReturn(new MockContextAttributes());
 
     when(callsTo('createBuffer')).alwaysReturn(new MockBuffer());
   }
 
-  void _initializeExtensions(Set extensions) {
-    _initializeExtension(extensions, 'OES_texture_float');
-    _initializeExtension(extensions, 'OES_texture_half_float');
-    _initializeExtension(extensions, 'WEBGL_lose_context');
-    _initializeExtension(extensions, 'OES_standard_derivatives');
-    _initializeExtension(extensions, 'WEBGL_debug_renderer_info');
-    _initializeExtension(extensions, 'WEBGL_debug_shaders');
-    _initializeExtension(extensions, 'WEBGL_compressed_texture_s3tc');
-    _initializeExtension(extensions, 'WEBGL_depth_texture');
-    _initializeExtension(extensions, 'OES_element_index_uint');
-    _initializeExtension(extensions, 'EXT_texture_filter_anisotropic');
+  void _initializeDeviceInfo() {
+    when(callsTo('getParameter', WebGL.DebugRendererInfo.UNMASKED_VENDOR_WEBGL)).alwaysReturn(_vendorName);
+    when(callsTo('getParameter', WebGL.DebugRendererInfo.UNMASKED_RENDERER_WEBGL)).alwaysReturn(_rendererName);
+    when(callsTo('getParameter', WebGL.VENDOR)).alwaysReturn(_vendorName);
+    when(callsTo('getParameter', WebGL.RENDERER)).alwaysReturn(_rendererName);
 
-    _initializeExtension(extensions, 'WEBGL_compressed_texture_atc');
-    _initializeExtension(extensions, 'ANGLE_instanced_arrays');
-    _initializeExtension(extensions, 'WEBGL_compressed_texture_pvrtc');
-    _initializeExtension(extensions, 'EXT_draw_buffers');
+    when(callsTo('getParameter', WebGL.VERSION)).alwaysReturn(_versionName);
 
-    _initializeExtension(extensions, 'OES_vertex_array_object', new MockOesVertexArrayObject());
+    when(callsTo('getParameter', WebGL.MAX_TEXTURE_IMAGE_UNITS)).alwaysReturn(16);
+    when(callsTo('getParameter', WebGL.MAX_VERTEX_TEXTURE_IMAGE_UNITS)).alwaysReturn(4);
+    when(callsTo('getParameter', WebGL.MAX_TEXTURE_SIZE)).alwaysReturn(8192);
+    when(callsTo('getParameter', WebGL.MAX_CUBE_MAP_TEXTURE_SIZE)).alwaysReturn(8192);
+    when(callsTo('getParameter', WebGL.MAX_VERTEX_ATTRIBS)).alwaysReturn(16);
+    when(callsTo('getParameter', WebGL.MAX_VARYING_VECTORS)).alwaysReturn(10);
+    when(callsTo('getParameter', WebGL.MAX_VERTEX_UNIFORM_VECTORS)).alwaysReturn(254);
+    when(callsTo('getParameter', WebGL.MAX_FRAGMENT_UNIFORM_VECTORS)).alwaysReturn(221);
+    when(callsTo('getParameter', WebGL.ExtTextureFilterAnisotropic.MAX_TEXTURE_MAX_ANISOTROPY_EXT)).alwaysReturn(16);
+
+    when(callsTo('getParameter', WebGL.DEPTH_BITS)).alwaysReturn(24);
+    when(callsTo('getParameter', WebGL.STENCIL_BITS)).alwaysReturn(8);
   }
 
-  void _initializeExtension(Set extensions, String name, [dynamic returnValue]) {
-    if (extensions.contains(name)) {
-      if (returnValue == null) {
-        returnValue = new MockExtension();
-      }
-    } else {
+  void _initializeExtensions(Set extensions) {
+    var allExtensions = GraphicsDeviceExtensions.all;
+    int extensionCount = allExtensions.length;
+
+    for (int i = 0; i < extensionCount; ++i) {
+      var name = allExtensions[i];
+
+      var returnValue = (name == GraphicsDeviceExtensions.vertexArrayObject)
+          ? new MockOesVertexArrayObject()
+          : new MockExtension();
+
+      _initializeExtension(extensions, name, returnValue);
+    }
+  }
+
+  void _initializeExtension(Set extensions, String name, dynamic returnValue) {
+    if (!extensions.contains(name)) {
       returnValue = null;
     }
 
-    int numVendorExtensions = _vendorExtensions.length;
+    var vendorPrefixes = GraphicsDeviceExtensions.vendorPrefixes;
+    int vendorPrefixCount = vendorPrefixes.length;
 
-    for (int i = 0; i < numVendorExtensions; ++i) {
-      when(callsTo('getExtension', '${_vendorExtensions[i]}${name}')).alwaysReturn(returnValue);
+    for (int i = 0; i < vendorPrefixCount; ++i) {
+      when(callsTo('getExtension', '${vendorPrefixes[i]}${name}')).alwaysReturn(returnValue);
     }
   }
 }

@@ -11,20 +11,19 @@ part of lithium_graphics;
 /// well as access what WebGL extensions are available.
 class GraphicsDeviceCapabilities {
   //---------------------------------------------------------------------
-  // Class variables
-  //---------------------------------------------------------------------
-
-  /// Vendor extensions to use when searching for extensions.
-  static List<String> _vendorExtensions = [ '', 'WEBKIT_', 'MOZ_' ];
-
-  //---------------------------------------------------------------------
   // Device information
   //---------------------------------------------------------------------
 
-  /// The graphics card vendor
+  /// The graphics card vendor.
+  ///
+  /// This may be masked due to privacy concerns.
   String _vendor;
-  /// The renderer
+  /// The renderer.
+  ///
+  /// This may be masked due to privacy concerns.
   String _renderer;
+  /// The [WebGL] version.
+  String _version;
   /// The number of texture units available.
   int _textureUnits;
   /// The number of texture units available in the vertex shader
@@ -84,9 +83,9 @@ class GraphicsDeviceCapabilities {
   /// Whether depth textures can be used.
   bool _depthTextures;
   /// Whether ATC compressed textures can be used.
-  bool _compressedTextureATC;
+  bool _compressedTextureAtc;
   /// Whether PVRTC compressed textures can be used.
-  bool _compressedTexturePVRTC;
+  bool _compressedTexturePvrtc;
   /// Whether multiple render targets can be used.
   bool _multipleRenderTargets;
   /// Whether instanced arrays can be used.
@@ -106,19 +105,28 @@ class GraphicsDeviceCapabilities {
       _vendor   = gl.getParameter(WebGL.DebugRendererInfo.UNMASKED_VENDOR_WEBGL);
       _renderer = gl.getParameter(WebGL.DebugRendererInfo.UNMASKED_RENDERER_WEBGL);
     } else {
-      _vendor = '';
-      _renderer = '';
+      _vendor   = gl.getParameter(WebGL.VENDOR);
+      _renderer = gl.getParameter(WebGL.RENDERER);
     }
+
+    _version = gl.getParameter(WebGL.VERSION);
   }
 
   //---------------------------------------------------------------------
   // Properties
   //---------------------------------------------------------------------
 
-  /// The graphics card vendor
+  /// The graphics card vendor.
+  ///
+  /// This may be masked due to privacy concerns.
   String get vendor => _vendor;
-  /// The renderer
+  /// The renderer.
+  ///
+  /// This may be masked due to privacy concerns.
   String get renderer => _renderer;
+  /// The [WebGL] version.
+  String get version => _version;
+
   /// Whether a depth buffer is available.
   bool get depthBuffer => _depthBuffer;
   /// Whether a stencil buffer is available.
@@ -165,9 +173,9 @@ class GraphicsDeviceCapabilities {
   /// Whether depth textures can be used.
   bool get hasDepthTextures => _depthTextures;
   /// Whether ATC compressed textures can be used.
-  bool get hasCompressedTextureATC => _compressedTextureATC;
+  bool get hasCompressedTextureAtc => _compressedTextureAtc;
   /// Whether PVRTC compressed textures can be used.
-  bool get hasCompressedTexturePVRTC => _compressedTexturePVRTC;
+  bool get hasCompressedTexturePvrtc => _compressedTexturePvrtc;
   /// Whether multiple render targets can be used.
   bool get hasMultipleRenderTargets => _multipleRenderTargets;
   /// Whether instanced arrays can be used.
@@ -179,16 +187,14 @@ class GraphicsDeviceCapabilities {
 
   /// Returns a string representation of this object.
   String toString() {
-    var vendorString   =   _vendor.isEmpty ? 'Unknown' : _vendor;
-    var rendererString = _renderer.isEmpty ? 'Unknown' : _renderer;
-
     return
         '''
-Vendor: $vendorString
-Renderer: $rendererString
+Vendor  : $_vendor
+Renderer: $_renderer
+Version : $_version
 
 Buffer Size
-Depth: $_depthBufferSize
+Depth  : $_depthBufferSize
 Stencil: $_stencilBufferSize
 
 Device stats
@@ -212,8 +218,8 @@ OES_texture_half_float: $_halfFloatTextures
 OES_standard_derivatives: $_standardDerivatives
 OES_vertex_array_object: $_vertexArrayObjects
 WEBGL_compressed_texture_s3tc: $_compressedTextureS3TC
-WEBGL_compressed_texture_atc: $_compressedTextureATC
-WEBGL_compressed_texture_pvrtc: $_compressedTexturePVRTC
+WEBGL_compressed_texture_atc: $_compressedTextureAtc
+WEBGL_compressed_texture_pvrtc: $_compressedTexturePvrtc
 WEBGL_debug_renderer_info: $_debugRendererInfo
 WEBGL_debug_shaders: $_debugShaders
 WEBGL_depth_texture: $_depthTextures
@@ -231,76 +237,63 @@ WEBGL_lose_context: $_loseContext
 
   /// Queries device info using the [WebGL.RenderingContext].
   void _queryDeviceInfo(WebGL.RenderingContext gl) {
-    _textureUnits = gl.getParameter(WebGL.MAX_TEXTURE_IMAGE_UNITS);
-    _vertexShaderTextureUnits = gl.getParameter(WebGL.MAX_VERTEX_TEXTURE_IMAGE_UNITS);
-    _maxTextureSize = gl.getParameter(WebGL.MAX_TEXTURE_SIZE);
-    _maxCubeMapTextureSize = gl.getParameter(WebGL.MAX_CUBE_MAP_TEXTURE_SIZE);
-    _maxVertexAttribs = gl.getParameter(WebGL.MAX_VERTEX_ATTRIBS);
-    _maxVaryingVectors = gl.getParameter(WebGL.MAX_VARYING_VECTORS);
-    _maxVertexShaderUniforms = gl.getParameter(WebGL.MAX_VERTEX_UNIFORM_VECTORS);
+    _textureUnits              = gl.getParameter(WebGL.MAX_TEXTURE_IMAGE_UNITS);
+    _vertexShaderTextureUnits  = gl.getParameter(WebGL.MAX_VERTEX_TEXTURE_IMAGE_UNITS);
+    _maxTextureSize            = gl.getParameter(WebGL.MAX_TEXTURE_SIZE);
+    _maxCubeMapTextureSize     = gl.getParameter(WebGL.MAX_CUBE_MAP_TEXTURE_SIZE);
+    _maxVertexAttribs          = gl.getParameter(WebGL.MAX_VERTEX_ATTRIBS);
+    _maxVaryingVectors         = gl.getParameter(WebGL.MAX_VARYING_VECTORS);
+    _maxVertexShaderUniforms   = gl.getParameter(WebGL.MAX_VERTEX_UNIFORM_VECTORS);
     _maxFragmentShaderUniforms = gl.getParameter(WebGL.MAX_FRAGMENT_UNIFORM_VECTORS);
 
-    _depthBufferSize = gl.getParameter(WebGL.DEPTH_BITS);
+    _depthBufferSize   = gl.getParameter(WebGL.DEPTH_BITS);
     _stencilBufferSize = gl.getParameter(WebGL.STENCIL_BITS);
   }
 
   /// Queries extensions using the [WebGL.RenderingContext].
   void _queryExtensionInfo(WebGL.RenderingContext gl) {
+    var extensions = GraphicsDeviceExtensions._getAllExtensions(gl);
+
     // Approved
-    _floatTextures = _hasExtension(gl, 'OES_texture_float');
-    _halfFloatTextures = _hasExtension(gl, 'OES_texture_half_float');
-    _loseContext = _hasExtension(gl, 'WEBGL_lose_context');
-    _standardDerivatives = _hasExtension(gl, 'OES_standard_derivatives');
-    _vertexArrayObjects = _hasExtension(gl, 'OES_vertex_array_object');
-    _debugRendererInfo = _hasExtension(gl, 'WEBGL_debug_renderer_info');
-    _debugShaders = _hasExtension(gl, 'WEBGL_debug_shaders');
-    _compressedTextureS3TC = _hasExtension(gl, 'WEBGL_compressed_texture_s3tc');
-    _depthTextures = _hasExtension(gl, 'WEBGL_depth_texture');
-    _unsignedIntIndices = _hasExtension(gl, 'OES_element_index_uint');
+    _floatTextures         = _hasExtension(extensions, GraphicsDeviceExtensions.textureFloat);
+    _halfFloatTextures     = _hasExtension(extensions, GraphicsDeviceExtensions.textureHalfFloat);
+    _loseContext           = _hasExtension(extensions, GraphicsDeviceExtensions.loseContext);
+    _standardDerivatives   = _hasExtension(extensions, GraphicsDeviceExtensions.standardDerivatives);
+    _vertexArrayObjects    = _hasExtension(extensions, GraphicsDeviceExtensions.vertexArrayObject);
+    _debugRendererInfo     = _hasExtension(extensions, GraphicsDeviceExtensions.debugRendererInfo);
+    _debugShaders          = _hasExtension(extensions, GraphicsDeviceExtensions.debugShaders);
+    _compressedTextureS3TC = _hasExtension(extensions, GraphicsDeviceExtensions.compressedTextureS3TC);
+    _depthTextures         = _hasExtension(extensions, GraphicsDeviceExtensions.depthTexture);
+    _unsignedIntIndices    = _hasExtension(extensions, GraphicsDeviceExtensions.uintElementIndex);
 
     // Query the anisotropic extension and get the maximum anisotropy level
-    if (_hasExtension(gl, 'EXT_texture_filter_anisotropic') != null) {
+    if (_hasExtension(extensions, GraphicsDeviceExtensions.textureFilterAnisotropic)) {
       _anisotropicFiltering = true;
-      _maxAnisotropyLevel = gl.getParameter(
-          WebGL.ExtTextureFilterAnisotropic.MAX_TEXTURE_MAX_ANISOTROPY_EXT);
+      _maxAnisotropyLevel = gl.getParameter(WebGL.ExtTextureFilterAnisotropic.MAX_TEXTURE_MAX_ANISOTROPY_EXT);
     } else {
       _anisotropicFiltering = false;
       _maxAnisotropyLevel = 1;
     }
 
     // Draft
-    _compressedTextureATC = _hasExtension(gl, 'WEBGL_compressed_texture_atc');
-    _instancedArrays = _hasExtension(gl, 'ANGLE_instanced_arrays');
-    _compressedTexturePVRTC = _hasExtension(gl, 'WEBGL_compressed_texture_pvrtc');
-    _multipleRenderTargets = _hasExtension(gl, 'EXT_draw_buffers');
+    _compressedTextureAtc   = _hasExtension(extensions, GraphicsDeviceExtensions.compressedTextureAtc);
+    _compressedTexturePvrtc = _hasExtension(extensions, GraphicsDeviceExtensions.compressedTexturePvrtc);
+    _hasExtension(extensions, GraphicsDeviceExtensions.colorBufferHalfFloat);
+    _hasExtension(extensions, GraphicsDeviceExtensions.colorBufferFloat);
+    _hasExtension(extensions, GraphicsDeviceExtensions.fragDepth);
+    _hasExtension(extensions, GraphicsDeviceExtensions.sRGB);
+    _multipleRenderTargets  = _hasExtension(extensions, GraphicsDeviceExtensions.drawBuffers);
+    _instancedArrays        = _hasExtension(extensions, GraphicsDeviceExtensions.instancedArrays);
+    _hasExtension(extensions, GraphicsDeviceExtensions.textureFloatLinear);
+    _hasExtension(extensions, GraphicsDeviceExtensions.textureHalfFloatLinear);
   }
 
   //---------------------------------------------------------------------
   // Class methods
   //---------------------------------------------------------------------
 
-  /// Queries the [WebGL.RenderingContext] to see if the given extension is
-  /// available.
-  static bool _hasExtension(WebGL.RenderingContext gl, String name) {
-    return _getExtension(gl, name) != null;
-  }
-
-  /// Queries the [WebGL.RenderingContext] to retrieve the given extension.
-  ///
-  /// Returns [null] if the extension is not supported.
-  static Object _getExtension(WebGL.RenderingContext gl, String name) {
-    var extension;
-    int numVendorExtensions = _vendorExtensions.length;
-
-    for (int i = 0; i < numVendorExtensions; ++i) {
-      extension = gl.getExtension('${_vendorExtensions[i]}${name}');
-
-      if (extension != null) {
-        return extension;
-      }
-    }
-
-    // Extension not found
-    return null;
+  /// Queries whether the [name]d extension is present.
+  static bool _hasExtension(Map<String, dynamic> extensions, String name) {
+    return extensions[name] != null;
   }
 }
