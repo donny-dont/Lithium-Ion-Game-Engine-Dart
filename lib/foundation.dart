@@ -9,7 +9,7 @@ library lithium_foundation;
 // Standard libraries
 //---------------------------------------------------------------------
 
-import 'dart:typeddata';
+import 'dart:typed_data';
 
 //---------------------------------------------------------------------
 // Package libraries

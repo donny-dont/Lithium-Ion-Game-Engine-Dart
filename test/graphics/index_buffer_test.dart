@@ -5,7 +5,7 @@
 
 library vertex_buffer_test;
 
-import 'dart:typeddata';
+import 'dart:typed_data';
 import 'dart:web_gl' as WebGL;
 
 import 'package:unittest/unittest.dart';

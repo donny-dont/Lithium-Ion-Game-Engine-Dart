@@ -11,8 +11,9 @@ library lithium_graphics;
 
 import 'dart:async';
 import 'dart:html';
+import 'dart:math' as Math;
 import 'dart:mirrors';
-import 'dart:typeddata';
+import 'dart:typed_data';
 import 'dart:web_gl' as WebGL;
 
 //---------------------------------------------------------------------
@@ -40,7 +41,9 @@ part 'src/graphics/rendering_error_event.dart';
 part 'src/graphics/resource_created_event.dart';
 part 'src/graphics/resource_destroyed_event.dart';
 part 'src/graphics/vertex_buffer.dart';
+part 'src/graphics/vertex_declaration.dart';
 part 'src/graphics/vertex_element.dart';
 part 'src/graphics/vertex_element_format.dart';
 part 'src/graphics/vertex_element_usage.dart';
+part 'src/graphics/vertex_list.dart';
 part 'src/graphics/viewport.dart';

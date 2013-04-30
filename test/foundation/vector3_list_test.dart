@@ -5,7 +5,7 @@
 
 library vector3_list_test;
 
-import 'dart:typeddata';
+import 'dart:typed_data';
 import 'package:unittest/unittest.dart';
 import 'package:lithium_ion/foundation.dart';
 import 'strided_list_test_helper.dart';

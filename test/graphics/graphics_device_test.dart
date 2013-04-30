@@ -26,13 +26,15 @@ void main() {
     var viewport = new Viewport(device);
     var vertexBuffer = new VertexBuffer.static(device);
     var indexBuffer = new IndexBuffer.static(device);
+    var vertexDeclaration = new VertexDeclaration.position(device);
 
-    expect(resources, 3);
+    expect(resources, 4);
 
     // Destory all the GraphicsResource subclasses
     viewport.dispose();
     vertexBuffer.dispose();
     indexBuffer.dispose();
+    vertexDeclaration.dispose();
 
     expect(resources, 0);
   });

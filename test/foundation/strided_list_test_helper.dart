@@ -5,7 +5,7 @@
 
 library strided_list_test_helper;
 
-import 'dart:typeddata';
+import 'dart:typed_data';
 
 Float32List createSequentialList(int count) {
   var list = new Float32List(count);

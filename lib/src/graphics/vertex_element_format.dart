@@ -76,4 +76,17 @@ class VertexElementFormat {
 
     return false;
   }
+
+  /// Gets the size in bytes of the [VertexElementFormat].
+  static int sizeInBytes(int value) {
+    switch (value) {
+      case Scalar : return  4;
+      case Vector2: return  8;
+      case Vector3: return 12;
+      case Vector4: return 16;
+    }
+
+    assert(false);
+    return 0;
+  }
 }
