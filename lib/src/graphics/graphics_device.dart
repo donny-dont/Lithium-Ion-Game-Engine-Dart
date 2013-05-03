@@ -213,4 +213,24 @@ class GraphicsDevice {
 
     _notifyResourceDestroyed(resource);
   }
+
+  /// Binds a [Mesh] to the [GraphicsDevice].
+  void _createMesh(Mesh resource) {
+    if (_vao != null) {
+      resource._binding = _vao.createVertexArray();
+    }
+
+    _notifyResourceCreated(resource);
+  }
+
+  /// Releases a [Mesh] from the [GraphicsDevice].
+  void _destroyMesh(Mesh resource) {
+    if (_vao != null) {
+      _vao.deleteVertexArray(resource._binding);
+
+      resource._binding = null;
+    }
+
+    _notifyResourceDestroyed(resource);
+  }
 }

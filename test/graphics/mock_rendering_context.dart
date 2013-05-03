@@ -20,10 +20,11 @@ class MockShader implements WebGL.Shader { }
 //---------------------------------------------------------------------
 
 class MockExtension { }
+class MockVertexArrayObject implements WebGL.VertexArrayObject { }
 
 class MockOesVertexArrayObject extends Mock implements WebGL.OesVertexArrayObject {
-  MokcOesVertexArrayObject() {
-
+  MockOesVertexArrayObject() {
+    when(callsTo('createVertexArray')).alwaysReturn(new MockVertexArrayObject());
   }
 }
 

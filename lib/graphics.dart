@@ -37,6 +37,8 @@ part 'src/graphics/graphics_device_extensions.dart';
 part 'src/graphics/graphics_resource.dart';
 part 'src/graphics/index_buffer.dart';
 part 'src/graphics/index_element_size.dart';
+part 'src/graphics/mesh.dart';
+part 'src/graphics/primitive_type.dart';
 part 'src/graphics/rendering_error_event.dart';
 part 'src/graphics/resource_created_event.dart';
 part 'src/graphics/resource_destroyed_event.dart';

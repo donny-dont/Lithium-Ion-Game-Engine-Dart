@@ -88,6 +88,10 @@ class VertexList {
   // Public methods
   //---------------------------------------------------------------------
 
+  TypedData getBuffer(int index) {
+    return new Float32List.view(_buffers[index]);
+  }
+
   /// Gets a [StridedList] that holds the data of the [VertexElement] with the given [usage] and [usageIndex].
   StridedList getElement(int usage, int usageIndex) {
     var element = _vertexDeclaration._findElement(usage, usageIndex);

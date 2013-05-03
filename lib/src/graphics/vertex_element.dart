@@ -41,6 +41,9 @@ class VertexElement {
     assert(VertexElementFormat.isValid(format));
     assert(VertexElementUsage.isValid(usage));
     assert(usageIndex >= 0);
+
+    // \TODO REMOVE!
+    _vertexAttribIndex = usage;
   }
 
   //---------------------------------------------------------------------

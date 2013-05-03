@@ -12,6 +12,7 @@ import 'graphics/graphics_device_test.dart'       as graphics_device_test;
 import 'graphics/graphics_context_test.dart'      as graphics_context_test;
 import 'graphics/index_buffer_test.dart'          as index_buffer_test;
 import 'graphics/index_element_size_test.dart'    as index_element_size_test;
+import 'graphics/primitive_type_test.dart'        as primitive_type_test;
 import 'graphics/vertex_buffer_test.dart'         as vertex_buffer_test;
 import 'graphics/vertex_declaration_test.dart'    as vertex_declaration_test;
 import 'graphics/vertex_element_test.dart'        as vertex_element_test;
@@ -27,6 +28,7 @@ void main() {
     group('GraphicsContext tests'    , graphics_context_test.main);
     group('IndexBuffer tests'        , index_buffer_test.main);
     group('IndexElementSize tests'   , index_element_size_test.main);
+    group('PrimitiveType tests'      , primitive_type_test.main);
     group('VertexBuffer tests'       , vertex_buffer_test.main);
     group('VertexDeclaration tests'  , vertex_declaration_test.main);
     group('VertexElement tests'      , vertex_element_test.main);

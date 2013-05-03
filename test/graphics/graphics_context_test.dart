@@ -11,6 +11,7 @@ import 'package:lithium_ion/graphics.dart';
 
 import 'graphics_mocks.dart';
 
+part 'graphics_context_drawing_test.dart';
 part 'graphics_context_state_test.dart';
 
 //---------------------------------------------------------------------
@@ -34,4 +35,7 @@ void verifyInitialPipelineState(GraphicsDevice graphicsDevice) {
 void main() {
   // State tests
   testViewport();
+
+  // Drawing tests
+  testVertexDeclaration();
 }
