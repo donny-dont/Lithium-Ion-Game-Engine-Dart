@@ -159,21 +159,24 @@ class PlaneGenerator extends MeshGenerator {
     double minY = center.y - yExtent;
     double maxY = center.y + yExtent;
 
+    double z = center.z;
+
     List<double> xSegmentList = _createSegmentList(minX, maxX, _xSegments);
     List<double> ySegmentList = _createSegmentList(minY, maxY, _ySegments);
 
-    _generatePositionsSingleSide(positions, vertexOffset, xSegmentList, ySegmentList);
+    _generatePositionsSingleSide(positions, vertexOffset, xSegmentList, ySegmentList, z);
 
     if (_doubleSided) {
       _reverseList(ySegmentList);
 
-      _generatePositionsSingleSide(positions, vertexOffset + _singleSideVertexCount, xSegmentList, ySegmentList);
+      _generatePositionsSingleSide(positions, vertexOffset + _singleSideVertexCount, xSegmentList, ySegmentList, z);
     }
   }
 
   /// Populates the positions for a single side of the plane.
-  void _generatePositionsSingleSide(Vector3List positions, int vertexOffset, List<double> xSegmentList, List<double> ySegmentList) {
+  void _generatePositionsSingleSide(Vector3List positions, int vertexOffset, List<double> xSegmentList, List<double> ySegmentList, double z) {
     vec3 position = new vec3.zero();
+    position.z = z;
 
     for (int y = 0; y <= ySegments; ++y) {
       position.y = ySegmentList[y];

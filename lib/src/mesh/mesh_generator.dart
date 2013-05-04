@@ -166,14 +166,12 @@ abstract class MeshGenerator {
   /// The [MeshGenerator] should be supplied with any options regarding its creation
   /// before calling this.
   static Mesh _createMesh(GraphicsDevice graphicsDevice, VertexDeclaration declaration, MeshGenerator generator, vec3 center) {
-    int elementCount = elements[0].attributeStride ~/ 4;
-
     // Create storage space for the vertices and indices
-    var vertices = new VertexList(declaration, generator.vertexCount * elementCount);
+    var vertices = new VertexList(declaration, generator.vertexCount);
     var indices  = new Uint16List(generator.indexCount);
 
     // Generate the box
-    generator.generateMesh(vertexData, indices, center);
+    generator.generateMesh(vertices, indices, center);
 
     // Upload the graphics data
     var vertexBuffer = new VertexBuffer.static(graphicsDevice);
@@ -183,7 +181,7 @@ abstract class MeshGenerator {
     indexBuffer.setData(indices);
 
     // Create the mesh
-    Mesh mesh = new Mesh(graphicsDevice, [ vertexBuffer ], inputLayout, indexBuffer);
+    Mesh mesh = new Mesh(graphicsDevice, declaration, [ vertexBuffer ], indexBuffer);
 
     return mesh;
   }
