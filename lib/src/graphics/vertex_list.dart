@@ -19,20 +19,23 @@ class VertexList {
   List<ByteBuffer> _buffers;
   /// The [VertexDeclaration] for the data.
   VertexDeclaration _vertexDeclaration;
+  /// The number of vertices.
+  int _vertexCount;
 
   //---------------------------------------------------------------------
   // Construction
   //---------------------------------------------------------------------
 
-  VertexList(VertexDeclaration declaration, int vertices)
+  VertexList(VertexDeclaration declaration, int vertexCount)
       : _vertexDeclaration = declaration
+      , _vertexCount = vertexCount
   {
     int slotCount = declaration.slots;
 
     _buffers = new List<ByteBuffer>(slotCount);
 
     for (int i = 0; i < slotCount; ++i) {
-      int bytes = declaration.getVertexStride(i) * vertices;
+      int bytes = declaration.getVertexStride(i) * _vertexCount;
 
       _buffers[i] = new Uint8List(bytes).buffer;
     }
@@ -41,6 +44,9 @@ class VertexList {
   //---------------------------------------------------------------------
   // Properties
   //---------------------------------------------------------------------
+
+  /// The number of vertices present.
+  int get vertexCount => _vertexCount;
 
   /// The position data if present.
   ///

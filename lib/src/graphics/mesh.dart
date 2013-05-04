@@ -23,9 +23,16 @@ class Mesh extends GraphicsResource {
   // Construction
   //---------------------------------------------------------------------
 
-  Mesh(GraphicsDevice device)
-      : super._internal(device)
+  Mesh(GraphicsDevice device, VertexDeclaration vertexDeclaration, List<VertexBuffer> vertexBuffers, [IndexBuffer indexBuffer])
+      : _vertexDeclaration = vertexDeclaration
+      , _vertexBuffers = vertexBuffers
+      , _indexBuffer = indexBuffer
+      ,  super._internal(device)
   {
+    assert(vertexDeclaration != null);
+    assert(vertexBuffers != null);
+    assert(vertexBuffers.length > 0);
+
     _graphicsDevice._createMesh(this);
   }
 
