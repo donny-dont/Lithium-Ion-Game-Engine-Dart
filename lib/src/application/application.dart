@@ -110,7 +110,7 @@ class Application {
       // Start the update loop
       var updateLoop = new UpdateLoop();
       updateLoop.onFrame.listen(_onFrame);
-      updateLoop.running = true;
+      updateLoop.start();
     });
   }
 

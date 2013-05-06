@@ -13,7 +13,7 @@ part of lithium_foundation;
 /// One example is a class that subscribes to a [Stream]. Before the class is
 /// disposed of through garbage collection the subscription should be
 /// relinquished.
-class Disposable {
+abstract class Disposable {
   /// Whether the object has been disposed
   bool get isDisposed;
 

@@ -11,7 +11,7 @@ part of lithium_foundation;
 /// object into another object. This is to avoid creating additional objects on
 /// the heap and instead reuse objects that are already present which helps
 /// minimize the time spent in garbage collection.
-class Cloneable {
+abstract class Cloneable {
   /// Copies the values from the object into the [to] object.
-  void copy(Cloneable to);
+  void copyInto(Cloneable to);
 }

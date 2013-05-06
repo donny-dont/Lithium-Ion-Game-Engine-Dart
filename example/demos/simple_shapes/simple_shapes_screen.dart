@@ -107,7 +107,24 @@ class SimpleShapesScreen extends SimpleScreen {
 
   /// Updates the state of the [SimpleScreen].
   void _onUpdate() {
+    // \TODO REMOVE!
+    var state = new KeyboardState();
+    var keyboard = new Keyboard();
 
+    keyboard.getKeyboardState(state);
+
+    if (state.isKeyDown(Keys.Left)) {
+      print('Left arrow key is pressed');
+    }
+    if (state.isKeyDown(Keys.Up)) {
+      print('Up arrow key is pressed');
+    }
+    if (state.isKeyDown(Keys.Right)) {
+      print('Right arrow key is pressed');
+    }
+    if (state.isKeyDown(Keys.Down)) {
+      print('Down arrow key is pressed');
+    }
   }
 
   /// Renders the [SimpleScreen].

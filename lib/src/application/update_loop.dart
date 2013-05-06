@@ -50,20 +50,31 @@ class UpdateLoop {
 
   /// Whether the update loop is currently running.
   bool get running => _running;
-  set running(bool value) {
-    if (value != _running) {
-      if (value) {
-        _animationFrame = Html.window.requestAnimationFrame(_onUpdate);
-      } else {
-        Html.window.cancelAnimationFrame(_animationFrame);
-      }
-
-      _running = value;
-    }
-  }
 
   /// Event handler for when an animation frame is received.
   Stream<FrameEvent> get onFrame => _onFrame;
+
+  //---------------------------------------------------------------------
+  // Public methods
+  //---------------------------------------------------------------------
+
+  /// Starts up the update loop.
+  void start() {
+    if (!_running) {
+      _animationFrame = Html.window.requestAnimationFrame(_onUpdate);
+
+      _running = true;
+    }
+  }
+
+  /// Stops the update loop.
+  void stop() {
+    if (running) {
+      Html.window.cancelAnimationFrame(_animationFrame);
+
+      _running = false;
+    }
+  }
 
   //---------------------------------------------------------------------
   // Private methods

@@ -22,6 +22,7 @@ import 'dart:web_gl' as WebGL;
 import 'package:lithium_ion/application.dart';
 import 'package:lithium_ion/foundation.dart';
 import 'package:lithium_ion/graphics.dart';
+import 'package:lithium_ion/input.dart';
 import 'package:lithium_ion/mesh.dart';
 
 //---------------------------------------------------------------------
@@ -46,6 +47,8 @@ void main() {
   startApplication('#surface', new SimpleShapesScreen());
 
   var button = Html.query('#fullscreen');
+
+  var test = new Keyboard();
 
   button.onClick.listen((_) {
     Application.instance.window.fullscreen = true;
