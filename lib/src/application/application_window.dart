@@ -108,7 +108,6 @@ class ApplicationWindow {
   /// Currently just hooks into the [Html.Window.onResize] event to determine
   /// if the surface was resized.
   void _onResize() {
-    print('Resizing');
     _resize(
         _surface.clientWidth,
         _surface.clientHeight,

@@ -23,9 +23,31 @@ class Application {
   StreamController<ActivationEvent> _onActivatedController;
   /// Event handler for when the application gains focus.
   ///
-  /// Can be used with the
-  Stream<ResourceCreatedEvent> _onActivated;
-
+  /// Can be used with the [onDeactivated] event to unpause the application
+  /// when focus is returned.
+  ///
+  /// The Page Visibility API is used to determine when the application gains
+  /// or loses focus. The [onActivated] event will fire when the page gains
+  /// visibilty, such as when the tab hosting the application is selected.
+  Stream<ActivationEvent> _onActivated;
+  /// The controller for the [onDeactivated] stream.
+  StreamController<DeactivationEvent> _onDeactivatedController;
+  /// Event handler for when the application loses focus.
+  ///
+  /// Can be used with the [onActivated] event to pause the application
+  /// when focus is lost.
+  ///
+  /// The Page Visibility API is used to determine when the application gains
+  /// or loses focus. The [onDeactivated] event will fire when the page loses
+  /// visibilty, such as when another tab is chosen within the browser.
+  Stream<DeactivationEvent> _onDeactivated;
+  /// The controller for the [onExit] stream.
+  StreamController<ExitEvent> _onExitController;
+  /// Event handler for when the application is exiting.
+  ///
+  /// Hooks into [Html.Window.onBeforeUnload] to notify when the application is
+  /// exiting.
+  Stream<ExitEvent> _onExit;
 
   //---------------------------------------------------------------------
   // Construction
@@ -36,6 +58,28 @@ class Application {
 
     // Create the ApplicationWindow
     _window = new ApplicationWindow(surface);
+
+    // Create the activated stream
+    _onActivatedController = new StreamController<ActivationEvent>();
+    _onActivated = _onActivatedController.stream;
+
+    // \TODO Hook into visibility API
+
+    // Create the deactivated stream
+    _onDeactivatedController = new StreamController<DeactivationEvent>();
+    _onDeactivated = _onDeactivatedController.stream;
+
+    // \TODO Hook into visibility API
+
+    // Create the exit stream
+    _onExitController = new StreamController<ExitEvent>();
+    _onExit = _onExitController.stream;
+
+    Html.window.onBeforeUnload.listen((_) {
+      if (!_onExitController.isClosed) {
+        _onExitController.add(new ExitEvent._internal());
+      }
+    });
 
     // Create GraphicsDeviceService
     var graphicsDeviceService = new GraphicsDeviceManager();
@@ -64,7 +108,9 @@ class Application {
     // Start loading the screen
     screen.onLoad().then((loaded) {
       // Start the update loop
-      Html.window.animationFrame.then(update);
+      var updateLoop = new UpdateLoop();
+      updateLoop.onFrame.listen(_onFrame);
+      updateLoop.running = true;
     });
   }
 
@@ -87,16 +133,16 @@ class Application {
   static Application _instance;
 
   static Application get instance => _instance;
-}
 
-/// Update loop
-void update(num time) {
-  var application = Application.instance;
+  //---------------------------------------------------------------------
+  // Private methods
+  //---------------------------------------------------------------------
 
-  application.onUpdate();
-  application.onDraw();
-
-  Html.window.animationFrame.then(update);
+  /// Callback for when a [FrameEvent] is received.
+  static void _onFrame(FrameEvent event) {
+    _instance.onUpdate();
+    _instance.onDraw();
+  }
 }
 
 /// Hook to start up the application.
