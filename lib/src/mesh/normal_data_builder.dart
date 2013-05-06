@@ -28,7 +28,7 @@ class NormalDataBuilder {
     vec3 v2 = new vec3();
 
     // Get the maximum index within indices to use
-    int maxIndex =_VertexDataBuilder._getMaxIndex(indexOffset, indexCount, indices.length);
+    int maxIndex = _getMaxIndex(indexOffset, indexCount, indices.length);
 
     // Run through the indices computing the normals for each triangle
     // and adding them to the normal data
@@ -49,13 +49,13 @@ class NormalDataBuilder {
       v0.normalize();
 
       // Add the normal to the vertices
-      _VertexDataBuilder._addToVec3(i0, normals, v0, v1);
-      _VertexDataBuilder._addToVec3(i1, normals, v0, v1);
-      _VertexDataBuilder._addToVec3(i2, normals, v0, v1);
+      _addToVec3(i0, normals, v0, v1);
+      _addToVec3(i1, normals, v0, v1);
+      _addToVec3(i2, normals, v0, v1);
     }
 
     // Get the maximum vertex index
-    int maxVertex = _VertexDataBuilder._getMaxIndex(vertexOffset, vertexCount, normals.length);
+    int maxVertex = _getMaxIndex(vertexOffset, vertexCount, normals.length);
 
     // Normalize the values
     vec3 normal = new vec3();

@@ -87,13 +87,13 @@ class TangentSpaceBuilder {
         i1 -= vertexOffset;
         i2 -= vertexOffset;
 
-        _VertexDataBuilder._addToVec3(i0, tan1, sdir, v0);
-        _VertexDataBuilder._addToVec3(i1, tan1, sdir, v0);
-        _VertexDataBuilder._addToVec3(i2, tan1, sdir, v0);
+        _addToVec3(i0, tan1, sdir, v0);
+        _addToVec3(i1, tan1, sdir, v0);
+        _addToVec3(i2, tan1, sdir, v0);
 
-        _VertexDataBuilder._addToVec3(i0, tan2, tdir, v0);
-        _VertexDataBuilder._addToVec3(i1, tan2, tdir, v0);
-        _VertexDataBuilder._addToVec3(i2, tan2, tdir, v0);
+        _addToVec3(i0, tan2, tdir, v0);
+        _addToVec3(i1, tan2, tdir, v0);
+        _addToVec3(i2, tan2, tdir, v0);
       }
     }
 
