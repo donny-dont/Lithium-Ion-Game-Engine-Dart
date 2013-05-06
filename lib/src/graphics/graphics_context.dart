@@ -247,7 +247,9 @@ class GraphicsContext {
   void drawVertexPrimitiveRange(int primitiveType, int offset, int count) {
     assert(PrimitiveType.isValid(primitiveType));
 
-    _setupVertexData();
+    if (_shouldBindVertexData()) {
+      _setupVertexData();
+    }
 
     _gl.drawArrays(primitiveType, offset, count);
   }
@@ -261,6 +263,15 @@ class GraphicsContext {
     }
 
     _gl.drawElements(primitiveType, _indexBuffer.indexCount, _indexBuffer.indexElementSize, 0);
+  }
+
+  void drawIndexedPrimitiveRange(int primitiveType, int offset, int count) {
+    assert(PrimitiveType.isValid(primitiveType));
+    assert(_indexBuffer != null);
+
+    if (_shouldBindVertexData()) {
+      _setupVertexData();
+    }
   }
 
   //---------------------------------------------------------------------

@@ -22,6 +22,7 @@ import 'package:vector_math/vector_math.dart';
 //---------------------------------------------------------------------
 
 part 'src/foundation/bit_hacks.dart';
+part 'src/foundation/color.dart';
 part 'src/foundation/scalar_list.dart';
 part 'src/foundation/strided_list.dart';
 part 'src/foundation/vector2_list.dart';
