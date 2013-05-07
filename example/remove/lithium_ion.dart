@@ -15,26 +15,26 @@ EffectPass effectPass;
 
 String vertShader =
 '''
-attribute vec3 aVertexPosition;
-attribute vec4 aVertexColor;
+attribute vec3 vPosition;
+attribute vec4 vColor;
 
 uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
 
-varying lowp vec4 vColor;
+varying lowp vec4 color;
 
 void main(void) {
-  gl_Position = uPMatrix * vec4(aVertexPosition, 1.0);
-  vColor = aVertexColor;
+  gl_Position = uPMatrix * vec4(vPosition, 1.0);
+  color = vColor;
 }
 ''';
 
 String fragShader =
 '''
-varying lowp vec4 vColor;
+varying lowp vec4 color;
 
 void main(void) {
-  gl_FragColor = vColor;
+  gl_FragColor = color;
 }
 ''';
 

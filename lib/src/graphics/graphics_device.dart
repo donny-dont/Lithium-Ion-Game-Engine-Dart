@@ -240,20 +240,14 @@ class GraphicsDevice {
     var program = _gl.createProgram();
 
     // Create the vertex shader
-    var vertexShader = _gl.createShader(WebGL.VERTEX_SHADER);
-
-    _gl.shaderSource(vertexShader, vertexSource);
-    _gl.compileShader(vertexShader);
+    var vertexShader = _createShader(WebGL.VERTEX_SHADER, vertexSource);
 
     bool vertexCompiled = _gl.getShaderParameter(vertexShader, WebGL.COMPILE_STATUS);
 
     var vertexShaderLog = (!vertexCompiled) ? _gl.getShaderInfoLog(vertexShader) : '';
 
     // Create the fragment shader
-    var fragmentShader = _gl.createShader(WebGL.FRAGMENT_SHADER);
-
-    _gl.shaderSource(fragmentShader, fragmentSource);
-    _gl.compileShader(fragmentShader);
+    var fragmentShader = _createShader(WebGL.FRAGMENT_SHADER, fragmentSource);
 
     bool fragmentCompiled = _gl.getShaderParameter(fragmentShader, WebGL.COMPILE_STATUS);
 
@@ -270,16 +264,31 @@ class GraphicsDevice {
       bool programLinked = _gl.getProgramParameter(program, WebGL.LINK_STATUS);
 
       if (programLinked) {
-        int attributeCount = _gl.getProgramParameter(program, WebGL.ACTIVE_ATTRIBUTES);
+        // Bind the attributes to the defaults
+        var attributes = _getVertexAttribNames(program);
+        var defaultAttributes = SemanticMapper.defaultAttributes;
+        var defaultMapping = SemanticMapper.defaultMapping;
+
+        int attributeCount = attributes.length;
 
         for (int i = 0; i < attributeCount; ++i) {
-          var info = _gl.getActiveAttrib(program, i);
+          var attributeName = attributes[i];
 
-          print(info.name);
-          print(info.size);
-          print(info.type);
+          if (defaultAttributes.containsKey(attributeName)) {
+            int index = defaultMapping._indexOfSemantic(defaultAttributes[attributeName]);
+
+            if (index != -1) {
+              print('Binding $attributeName to $index');
+              _gl.bindAttribLocation(program, index, attributeName);
+            }
+          }
         }
 
+        // Attributes have potentially changed
+        // Need to relink the program before the changes are reflected
+        _gl.linkProgram(program);
+
+        /*
         var uniformCount = _gl.getProgramParameter(program, WebGL.ACTIVE_UNIFORMS);
 
         for (int i = 0; i < uniformCount; ++i) {
@@ -289,10 +298,10 @@ class GraphicsDevice {
           print(info.size);
           print(info.type);
         }
+        */
+      } else {
+
       }
-      //var programLog = (!programLinked) ? _gl.getProgramInfoLog(program) : '';
-
-
     } else {
 
     }
@@ -312,5 +321,35 @@ class GraphicsDevice {
     resource._binding = null;
 
     _notifyResourceDestroyed(resource);
+  }
+
+  //---------------------------------------------------------------------
+  // EffectPass methods
+  //---------------------------------------------------------------------
+
+  /// Creates a [WebGL.Shader] and compiles it with the specified [source].
+  WebGL.Shader _createShader(int type, String source) {
+    var shader = _gl.createShader(type);
+
+    _gl.shaderSource(shader, source);
+    _gl.compileShader(shader);
+
+    return shader;
+  }
+
+  /// Gets all the associated vertex attributes for the [WebGL.Program].
+  List<String> _getVertexAttribNames(WebGL.Program program) {
+    int attributeCount = _gl.getProgramParameter(program, WebGL.ACTIVE_ATTRIBUTES);
+
+    var attributes = new List<String>(attributeCount);
+
+    // During setup all the attributes are arranged
+    for (int i = 0; i < attributeCount; ++i) {
+      var info = _gl.getActiveAttrib(program, i);
+
+      attributes[i] = info.name;
+    }
+
+    return attributes;
   }
 }

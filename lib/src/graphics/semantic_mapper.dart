@@ -10,7 +10,10 @@ class SemanticMapper {
   // Class variables
   //---------------------------------------------------------------------
 
-  SemanticMapper _defaultMapping;
+  static SemanticMapper _defaultMapping;
+
+  /// Default vertex attribute names.
+  static Map<String, String> _defaultAttributes;
 
   //---------------------------------------------------------------------
   // Member variables
@@ -35,7 +38,7 @@ class SemanticMapper {
   int indexOf(int usage, int usageIndex) {
     var semanticName = VertexElementUsage._toSemanticName(usage, usageIndex);
 
-    return (_mapping.containsKey(semanticName)) ? _mapping[semanticName] : -1;
+    return _indexOfSemantic(semanticName);
   }
 
   /// Maps a [usage] and [usageIndex] to a vertex attribute [index].
@@ -59,13 +62,25 @@ class SemanticMapper {
 
     // Bind the mapping
     var semanticName = VertexElementUsage._toSemanticName(usage, usageIndex);
-    _mapping[VertexElementUsage] = index;
+    _mapping[semanticName] = index;
+  }
+
+  //---------------------------------------------------------------------
+  // Private methods
+  //---------------------------------------------------------------------
+
+  /// Retrieves the vertex attribute index with the given semantic [name].
+  int _indexOfSemantic(String name) {
+    return (_mapping.containsKey(name)) ? _mapping[name] : -1;
   }
 
   //---------------------------------------------------------------------
   // Class properties
   //---------------------------------------------------------------------
 
+  /// Gets the default [SemanticMapper] which is used whenever a mapper is not provided.
+  ///
+  ///
   static SemanticMapper get defaultMapping {
     if (_defaultMapping == null) {
       _defaultMapping = new SemanticMapper();
@@ -85,4 +100,24 @@ class SemanticMapper {
     return _defaultMapping;
   }
   static set defaultMapping(SemanticMapper value) { _defaultMapping = value; }
+
+  static Map<String, String> get defaultAttributes {
+    if (_defaultAttributes == null) {
+      _defaultAttributes = {
+          'vPosition' : VertexElementUsage._toSemanticName(VertexElementUsage.Position         , 0),
+          'vNormal'   : VertexElementUsage._toSemanticName(VertexElementUsage.Normal           , 0),
+          'vTangent'  : VertexElementUsage._toSemanticName(VertexElementUsage.Tangent          , 0),
+          'vBinormal' : VertexElementUsage._toSemanticName(VertexElementUsage.Binormal         , 0),
+          'vPointSize': VertexElementUsage._toSemanticName(VertexElementUsage.PointSize        , 0),
+          'vColor'    : VertexElementUsage._toSemanticName(VertexElementUsage.Color            , 0),
+          'vTexCoord0': VertexElementUsage._toSemanticName(VertexElementUsage.TextureCoordinate, 0),
+          'vTexCoord1': VertexElementUsage._toSemanticName(VertexElementUsage.TextureCoordinate, 1),
+          'vTexCoord2': VertexElementUsage._toSemanticName(VertexElementUsage.TextureCoordinate, 2),
+          'vTexCoord3': VertexElementUsage._toSemanticName(VertexElementUsage.TextureCoordinate, 3)
+      };
+    }
+
+    return _defaultAttributes;
+  }
+  static set defaultAttributes(Map<String, String> value) { _defaultAttributes = value; }
 }
