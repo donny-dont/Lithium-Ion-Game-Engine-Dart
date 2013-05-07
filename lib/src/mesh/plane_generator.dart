@@ -47,8 +47,6 @@ class PlaneGenerator extends MeshGenerator {
   //---------------------------------------------------------------------
 
   /// Gets the number of vertices that will be generated.
-  ///
-  /// For the amount of storage space required see [vertexBufferSize].
   int get vertexCount => _sides * _singleSideVertexCount;
 
   /// Retrieves the size of the index buffer necessary to hold the generated [Mesh].
@@ -145,9 +143,9 @@ class PlaneGenerator extends MeshGenerator {
 
   /// Generates the positions for the mesh.
   ///
-  /// Positions will be placed within the [positions] array starting at the specified
-  /// [vertexOffset]. When complete \[[vertexOffset], [vertexOffset] + [vertexCount]\]
-  /// within the [array] will contain position data.
+  /// Positions will be placed within the [positions] array starting at the
+  /// specified [vertexOffset]. When complete \[[vertexOffset], [vertexOffset]
+  /// + [vertexCount]\] within the array will be populated.
   ///
   /// The mesh will be centered at the given [center] position.
   void _generatePositions(Vector3List positions, vec3 center, int vertexOffset) {
@@ -193,9 +191,9 @@ class PlaneGenerator extends MeshGenerator {
 
   /// Generates the texture coordinates for the mesh.
   ///
-  /// Texture coordinates will be placed within the [array] starting at the
-  /// specified [vertexData]. When complete the \[[vertexOffset], [vertexOffset] + [vertexCount]\]
-  /// within the [array] will contain texture coordinate data.
+  /// Texture coordinates will be placed within the [texCoords] array starting
+  /// at the specified [vertexOffset]. When complete the \[[vertexOffset],
+  /// [vertexOffset] + [vertexCount]\] within the array will be populated.
   void _generateTextureCoordinates(Vector2List texCoords, int vertexOffset) {
     List<double> uSegmentList = _createSegmentList(0.0, 1.0, xSegments);
     List<double> vSegmentList = _createSegmentList(1.0, 0.0, ySegments);
@@ -228,9 +226,15 @@ class PlaneGenerator extends MeshGenerator {
 
   /// Generates the normals for the mesh.
   ///
-  /// Normals will be placed within the [vertexArray] starting at the specified
-  /// [vertexOffset]. When complete the \[[vertexOffset], [vertexOffset] + [vertexCount]\]
-  /// within the [vertexArray] will contain normal data.
+  /// Normals will be placed within the [normals] array starting at the
+  /// specified [vertexOffset]. When complete the \[[vertexOffset],
+  /// [vertexOffset] + [vertexCount]\] within the array will be populated.
+  ///
+  /// Uses the values in the [indices] array and the [positions] array to
+  /// calculate the normals of the mesh.
+  ///
+  /// A subclass should override this if the normals can easily be determined.
+  /// This is the case for something like a box or plane.
   void _generateNormals(Vector3List positions, Vector3List normals, Uint16List indices, int vertexOffset, int indexOffset) {
     int singleSideVertexCount = _singleSideVertexCount;
     vec3 normal = new vec3.raw(0.0, 0.0, 1.0);

@@ -126,6 +126,32 @@ class Application {
   /// Holds all the service providers attached to the [Application].
   Services get services => _services;
 
+  /// Event handler for when the application gains focus.
+  ///
+  /// Can be used with the [onDeactivated] event to unpause the application
+  /// when focus is returned.
+  ///
+  /// The Page Visibility API is used to determine when the application gains
+  /// or loses focus. The [onActivated] event will fire when the page gains
+  /// visibilty, such as when the tab hosting the application is selected.
+  Stream<ActivationEvent> get onActivated => _onActivated;
+
+  /// Event handler for when the application loses focus.
+  ///
+  /// Can be used with the [onActivated] event to pause the application
+  /// when focus is lost.
+  ///
+  /// The Page Visibility API is used to determine when the application gains
+  /// or loses focus. The [onDeactivated] event will fire when the page loses
+  /// visibilty, such as when another tab is chosen within the browser.
+  Stream<DeactivationEvent> get onDeactivated => _onDeactivated;
+
+  /// Event handler for when the application is exiting.
+  ///
+  /// Hooks into [Html.Window.onBeforeUnload] to notify when the application is
+  /// exiting.
+  Stream<ExitEvent> get onExit => _onExit;
+
   //---------------------------------------------------------------------
   // Class properties
   //---------------------------------------------------------------------

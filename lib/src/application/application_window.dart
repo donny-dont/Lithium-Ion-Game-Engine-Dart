@@ -80,6 +80,9 @@ class ApplicationWindow {
     }
   }
 
+  /// Event handler for when the [ApplicationWindow] is resized.
+  Stream<WindowResizedEvent> get onWindowResized => _onWindowResized;
+
   //---------------------------------------------------------------------
   // Private methods
   //---------------------------------------------------------------------

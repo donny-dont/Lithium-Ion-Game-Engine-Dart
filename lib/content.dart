@@ -3,32 +3,27 @@
 // Use of this source code is governed by a zlib license that can be found in
 // the LICENSE file.
 
-library lithium_foundation;
+library lithium_content;
 
 //---------------------------------------------------------------------
 // Standard libraries
 //---------------------------------------------------------------------
 
 import 'dart:async';
-import 'dart:typed_data';
+import 'dart:html' as Html;
 
 //---------------------------------------------------------------------
 // Package libraries
 //---------------------------------------------------------------------
 
-import 'package:vector_math/vector_math.dart';
+import 'package:lithium_ion/graphics.dart';
 
 //---------------------------------------------------------------------
-// Foundation library
+// Content library
 //---------------------------------------------------------------------
 
-part 'src/foundation/bit_hacks.dart';
-part 'src/foundation/cloneable.dart';
-part 'src/foundation/color.dart';
-part 'src/foundation/disposable.dart';
-part 'src/foundation/scalar_list.dart';
-part 'src/foundation/strided_list.dart';
-part 'src/foundation/vector2_list.dart';
-part 'src/foundation/vector3_list.dart';
-part 'src/foundation/vector4_list.dart';
-part 'src/foundation/vector_math_helpers.dart';
+part 'src/content/formats/gltf/opengl_transmission_format.dart';
+part 'src/content/formats/gltf/program_attribute.dart';
+part 'src/content/formats/gltf/program_format.dart';
+part 'src/content/formats/gltf/semantic_format.dart';
+part 'src/content/formats/gltf/shader_format.dart';

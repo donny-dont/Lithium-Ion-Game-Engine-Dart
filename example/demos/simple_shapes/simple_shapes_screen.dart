@@ -100,9 +100,9 @@ class SimpleShapesScreen extends SimpleScreen {
 
   /// Unloads all resources for the [SimpleScreen].
   void _onUnload() {
-    // Unload the meshes to reclaim memory
-    _pyramidMesh.unload();
-    _cubeMesh.unload();
+    // Dispose of the meshes to reclaim memory
+    _pyramidMesh.dispose();
+    _cubeMesh.dispose();
   }
 
   /// Updates the state of the [SimpleScreen].

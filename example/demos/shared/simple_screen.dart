@@ -46,7 +46,7 @@ abstract class SimpleScreen extends Screen {
   /// the [Future] completes.
   Future<bool> onLoad() {
     if (_isLoaded) {
-      return Future.value(true);
+      return new Future.value(true);
     } else {
       // Get references to the services
       var services = application.services;

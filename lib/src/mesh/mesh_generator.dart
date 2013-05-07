@@ -28,8 +28,6 @@ abstract class MeshGenerator {
   //---------------------------------------------------------------------
 
   /// Gets the number of vertices that will be generated.
-  ///
-  /// For the amount of storage space required see [vertexBufferSize].
   int get vertexCount;
 
   /// Retrieves the size of the index buffer necessary to hold the generated [Mesh].
@@ -41,10 +39,11 @@ abstract class MeshGenerator {
 
   /// Adds the generated mesh's data to the [vertices] and [indices].
   ///
-  /// Specifying the [center] point changes the location the position data is generated at. By default
-  /// the mesh will be centered at \[0.0, 0.0, 0.0\]. Additionally an offset into the vertex and index
-  /// data can be specified by [vertexOffset] and [indexOffset]. If unspecified the mesh will be generated
-  /// at the start of the arrays.
+  /// Specifying the [center] point changes the location the position data is
+  /// generated at. By default the mesh will be centered at \[0.0, 0.0, 0.0\].
+  /// Additionally an offset into the vertex and index data can be specified by
+  /// [vertexOffset] and [indexOffset]. If unspecified the mesh will be
+  /// generated at the start of the arrays.
   void generateMesh(VertexList vertices, Uint16List indices, [vec3 center, int vertexOffset = 0, int indexOffset = 0]) {
     // Ensure that there is enough room in the vertex and index data to hold the mesh
     if (vertices.vertexCount < vertexOffset + vertexCount) {
@@ -101,37 +100,37 @@ abstract class MeshGenerator {
 
   /// Populates the indices for the mesh.
   ///
-  /// Index data will be placed within the [indices] array starting at the specified
-  /// [indexOffset].
-  void _generateIndices(Uint16List indexBuffer, int vertexOffset, int indexOffset);
+  /// Index data will be placed within the [indices] array starting at the
+  /// specified [indexOffset].
+  void _generateIndices(Uint16List indices, int vertexOffset, int indexOffset);
 
   /// Generates the positions for the mesh.
   ///
-  /// Positions will be placed within the [positions] array starting at the specified
-  /// [vertexOffset]. When complete \[[vertexOffset], [vertexOffset] + [vertexCount]\]
-  /// within the [array] will contain position data.
+  /// Positions will be placed within the [positions] array starting at the
+  /// specified [vertexOffset]. When complete \[[vertexOffset], [vertexOffset]
+  /// + [vertexCount]\] within the array will be populated.
   ///
   /// The mesh will be centered at the given [center] position.
   void _generatePositions(Vector3List positions, vec3 center, int vertexOffset);
 
   /// Generates the texture coordinates for the mesh.
   ///
-  /// Texture coordinates will be placed within the [array] starting at the
-  /// specified [vertexData]. When complete the \[[vertexOffset], [vertexOffset] + [vertexCount]\]
-  /// within the [array] will contain texture coordinate data.
+  /// Texture coordinates will be placed within the [texCoords] array starting
+  /// at the specified [vertexOffset]. When complete the \[[vertexOffset],
+  /// [vertexOffset] + [vertexCount]\] within the array will be populated.
   void _generateTextureCoordinates(Vector2List texCoords, int vertexOffset);
 
   /// Generates the normals for the mesh.
   ///
-  /// Normals will be placed within the [vertexArray] starting at the specified
-  /// [vertexOffset]. When complete the \[[vertexOffset], [vertexOffset] + [vertexCount]\]
-  /// within the [vertexArray] will contain normal data.
+  /// Normals will be placed within the [normals] array starting at the
+  /// specified [vertexOffset]. When complete the \[[vertexOffset],
+  /// [vertexOffset] + [vertexCount]\] within the array will be populated.
   ///
-  /// Uses the indices present in the [indexArray] and the positions in the [vertexArray]
-  /// to calculate the normals of the mesh.
+  /// Uses the values in the [indices] array and the [positions] array to
+  /// calculate the normals of the mesh.
   ///
-  /// A subclass should override this if the normals can easily be determined. This
-  /// is the case for something like a box or plane.
+  /// A subclass should override this if the normals can easily be determined.
+  /// This is the case for something like a box or plane.
   void _generateNormals(Vector3List positions, Vector3List normals, Uint16List indices, int vertexOffset, int indexOffset) {
     NormalDataBuilder.build(
         positions,
@@ -162,9 +161,9 @@ abstract class MeshGenerator {
 
   /// Creates a single [Mesh] using the supplied [MeshGenerator].
   ///
-  /// Provides a shorthand way for [MeshGenerators] to create a single mesh.
-  /// The [MeshGenerator] should be supplied with any options regarding its creation
-  /// before calling this.
+  /// Provides a shorthand way for [MeshGenerator]s to create a single mesh.
+  /// The [MeshGenerator] should be supplied with any options regarding its
+  /// creation before calling this.
   static Mesh _createMesh(GraphicsDevice graphicsDevice, VertexDeclaration declaration, MeshGenerator generator, vec3 center) {
     // Create storage space for the vertices and indices
     var vertices = new VertexList(declaration, generator.vertexCount);

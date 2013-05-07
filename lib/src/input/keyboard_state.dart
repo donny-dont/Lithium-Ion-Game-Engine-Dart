@@ -44,7 +44,7 @@ class KeyboardState implements Cloneable {
     return _keyStates[key] == KeyState.Up;
   }
 
-  /// Copies the values from the object into the [to] object.
+  /// Copies the values from the object into the [state] object.
   void copyInto(KeyboardState state) {
     for (int i = 0; i < Keys.MaxEnumerations; ++i) {
       state._keyStates[i] = _keyStates[i];
@@ -55,7 +55,7 @@ class KeyboardState implements Cloneable {
   // Private methods
   //---------------------------------------------------------------------
 
-  /// Sets the [state] of a [Key].
+  /// Sets the [state] of a keyboard key.
   ///
   /// Used internally by [Keyboard] to respond to changes in the keyboard state.
   void _setKeyState(int key, int state) {

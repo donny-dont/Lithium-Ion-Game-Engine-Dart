@@ -36,21 +36,21 @@ abstract class Screen {
   // Public methods
   //---------------------------------------------------------------------
 
-  /// Loads all resources for the [SimpleScreen].
+  /// Loads all resources for the [Screen].
   ///
-  /// All resources required by the [SimpleScreen] should be loaded by the time
+  /// All resources required by the [Screen] should be loaded by the time
   /// the [Future] completes.
   Future<bool> onLoad();
 
-  /// Unloads all resources for the [SimpleScreen].
+  /// Unloads all resources for the [Screen].
   ///
   /// All resources loaded during [onLoad] should be disposed of by the time
   /// the method completes.
   void onUnload();
 
-  /// Updates the state of the [SimpleScreen].
+  /// Updates the state of the [Screen].
   void onUpdate();
 
-  /// Renders the [SimpleScreen].
+  /// Renders the [Screen].
   void onDraw();
 }

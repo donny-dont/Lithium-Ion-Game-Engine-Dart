@@ -29,6 +29,7 @@ import 'package:vector_math/vector_math.dart';
 
 part 'src/graphics/buffer_usage.dart';
 part 'src/graphics/debug_rendering_context.dart';
+part 'src/graphics/effect_pass.dart';
 part 'src/graphics/graphics_context.dart';
 part 'src/graphics/graphics_device.dart';
 part 'src/graphics/graphics_device_capabilities.dart';
@@ -42,6 +43,7 @@ part 'src/graphics/primitive_type.dart';
 part 'src/graphics/rendering_error_event.dart';
 part 'src/graphics/resource_created_event.dart';
 part 'src/graphics/resource_destroyed_event.dart';
+part 'src/graphics/texture.dart';
 part 'src/graphics/vertex_buffer.dart';
 part 'src/graphics/vertex_declaration.dart';
 part 'src/graphics/vertex_element.dart';
