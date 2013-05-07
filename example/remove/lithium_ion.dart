@@ -37,7 +37,6 @@ varying lowp vec4 vColor;
 
 void main(void) {
   gl_FragColor = vColor;
-  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
 }
 ''';
 
@@ -104,11 +103,11 @@ void init() {
 void update(num time) {
   gl.clear(WebGL.COLOR_BUFFER_BIT | WebGL.DEPTH_BUFFER_BIT);
 
-  context.setMesh(mesh);
-//  context.setVertexDeclaration(declaration);
-//  context.setVertexBuffers([ vertexBuffer ]);
+//  context.setMesh(mesh);
+  context.setVertexDeclaration(declaration);
+  context.setVertexBuffers([ vertexBuffer ]);
 
-  context.drawIndexedPrimitives(PrimitiveType.TriangleList);
+  context.drawVertexPrimitiveRange(PrimitiveType.TriangleStrip, 0, 4);
 
   window.animationFrame.then(update);
 }
@@ -142,7 +141,7 @@ void main() {
 
   var positions = vertexList.positions;
 
-  double positionZ = -4.0;
+  double positionZ = -2.0;
 
   positions[0] = new vec3( 1.0,  1.0, positionZ);
   positions[1] = new vec3(-1.0,  1.0, positionZ);

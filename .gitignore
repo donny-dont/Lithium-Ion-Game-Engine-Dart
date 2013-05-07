@@ -16,3 +16,8 @@ Thumbs.db
 packages
 pubspec.lock
 out
+
+# Generated JavaScript files
+*.js
+*.js.map
+*.js.deps

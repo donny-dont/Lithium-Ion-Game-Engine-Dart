@@ -81,7 +81,7 @@ class GraphicsDevice {
 
     // Create the VAO extension if present
     if (_capabilities.hasVertexArrayObjects) {
-      _vao = GraphicsDeviceExtensions._getExtension(_gl, GraphicsDeviceExtensions.vertexArrayObject);
+      //_vao = GraphicsDeviceExtensions._getExtension(_gl, GraphicsDeviceExtensions.vertexArrayObject);
     }
 
     // Create the resource created stream
