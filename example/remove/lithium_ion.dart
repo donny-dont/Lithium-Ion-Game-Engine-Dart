@@ -10,10 +10,8 @@ GraphicsContext context;
 WebGL.RenderingContext gl;
 VertexDeclaration declaration;
 VertexBuffer vertexBuffer;
-Viewport viewport;
 Mesh mesh;
-
-WebGL.Program program;
+EffectPass effectPass;
 
 String vertShader =
 '''
@@ -45,47 +43,19 @@ void onGLError(RenderingErrorEvent error) {
 }
 
 void init() {
-  var vert = gl.createShader(WebGL.VERTEX_SHADER);
+  effectPass = new EffectPass(device, vertShader, fragShader);
 
-  gl.shaderSource(vert, vertShader);
-  gl.compileShader(vert);
+  print('Compiled ${effectPass.compiled}');
+  print('Linked   ${effectPass.linked}');
 
-  if (!gl.getShaderParameter(vert, WebGL.COMPILE_STATUS)) {
-    print('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(vert));
-  }
-
-  var frag = gl.createShader(WebGL.FRAGMENT_SHADER);
-
-  gl.shaderSource(frag, fragShader);
-  gl.compileShader(frag);
-
-  if (!gl.getShaderParameter(frag, WebGL.COMPILE_STATUS)) {
-    print('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(frag));
-  }
-
-  program = gl.createProgram();
-
-  gl.attachShader(program, vert);
-  gl.attachShader(program, frag);
-
-  gl.bindAttribLocation(program, VertexElementUsage.Position, 'aVertexPosition');
-  gl.bindAttribLocation(program, VertexElementUsage.Color   , 'aVertexColor');
-
-  gl.linkProgram(program);
-
-  gl.deleteShader(vert);
-  gl.deleteShader(frag);
-
-  if (!gl.getProgramParameter(program, WebGL.LINK_STATUS)) {
-    print('Unable to initialize the shader program.');
-  }
-
-  gl.useProgram(program);
+  context.effectPass = effectPass;
 
   var pMatrixList = new Float32List(16);
   var pMatrix = makePerspectiveMatrix(45.0, 640.0 / 480.0, 0.1, 100.0);
 
   pMatrix.copyIntoArray(pMatrixList);
+
+  var program = effectPass.binding;
 
   var pUniform  = gl.getUniformLocation(program, 'uPMatrix');
   gl.uniformMatrix4fv(pUniform, false, pMatrixList);

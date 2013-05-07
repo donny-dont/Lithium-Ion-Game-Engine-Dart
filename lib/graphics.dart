@@ -43,6 +43,7 @@ part 'src/graphics/primitive_type.dart';
 part 'src/graphics/rendering_error_event.dart';
 part 'src/graphics/resource_created_event.dart';
 part 'src/graphics/resource_destroyed_event.dart';
+part 'src/graphics/semantic_mapper.dart';
 part 'src/graphics/texture.dart';
 part 'src/graphics/vertex_buffer.dart';
 part 'src/graphics/vertex_declaration.dart';

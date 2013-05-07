@@ -233,4 +233,84 @@ class GraphicsDevice {
 
     _notifyResourceDestroyed(resource);
   }
+
+  /// Binds an [EffectPass] to the [GraphicsDevice].
+  void _createEffectPass(EffectPass resource, String vertexSource, String fragmentSource) {
+    // Create the binding
+    var program = _gl.createProgram();
+
+    // Create the vertex shader
+    var vertexShader = _gl.createShader(WebGL.VERTEX_SHADER);
+
+    _gl.shaderSource(vertexShader, vertexSource);
+    _gl.compileShader(vertexShader);
+
+    bool vertexCompiled = _gl.getShaderParameter(vertexShader, WebGL.COMPILE_STATUS);
+
+    var vertexShaderLog = (!vertexCompiled) ? _gl.getShaderInfoLog(vertexShader) : '';
+
+    // Create the fragment shader
+    var fragmentShader = _gl.createShader(WebGL.FRAGMENT_SHADER);
+
+    _gl.shaderSource(fragmentShader, fragmentSource);
+    _gl.compileShader(fragmentShader);
+
+    bool fragmentCompiled = _gl.getShaderParameter(fragmentShader, WebGL.COMPILE_STATUS);
+
+    var fragmentShaderLog = (!fragmentCompiled) ? _gl.getShaderInfoLog(fragmentShader) : '';
+
+    // Check the compilation
+    if ((vertexCompiled) && (fragmentCompiled)) {
+      // Attach the shaders
+      _gl.attachShader(program, vertexShader);
+      _gl.attachShader(program, fragmentShader);
+
+      _gl.linkProgram(program);
+
+      bool programLinked = _gl.getProgramParameter(program, WebGL.LINK_STATUS);
+
+      if (programLinked) {
+        int attributeCount = _gl.getProgramParameter(program, WebGL.ACTIVE_ATTRIBUTES);
+
+        for (int i = 0; i < attributeCount; ++i) {
+          var info = _gl.getActiveAttrib(program, i);
+
+          print(info.name);
+          print(info.size);
+          print(info.type);
+        }
+
+        var uniformCount = _gl.getProgramParameter(program, WebGL.ACTIVE_UNIFORMS);
+
+        for (int i = 0; i < uniformCount; ++i) {
+          var info = _gl.getActiveUniform(program, i);
+
+          print(info.name);
+          print(info.size);
+          print(info.type);
+        }
+      }
+      //var programLog = (!programLinked) ? _gl.getProgramInfoLog(program) : '';
+
+
+    } else {
+
+    }
+
+    // Delete the shader objects
+    // After they are attached to the program they are no longer needed
+    _gl.deleteShader(vertexShader);
+    _gl.deleteShader(fragmentShader);
+
+    // Associate the binding
+    resource._binding = program;
+  }
+
+  /// Releases an [EffectPass] from the [GraphicsDevice].
+  void _destroyEffectPass(EffectPass resource) {
+    _gl.deleteProgram(resource._binding);
+    resource._binding = null;
+
+    _notifyResourceDestroyed(resource);
+  }
 }

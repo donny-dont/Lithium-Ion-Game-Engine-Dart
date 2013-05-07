@@ -111,6 +111,13 @@ class GraphicsContext {
   Mesh _mesh;
 
   //---------------------------------------------------------------------
+  // EffectPass variables
+  //---------------------------------------------------------------------
+
+  /// The currently bound [EffectPass].
+  EffectPass _boundEffectPass;
+
+  //---------------------------------------------------------------------
   // Construction
   //---------------------------------------------------------------------
 
@@ -179,6 +186,15 @@ class GraphicsContext {
 
       _viewport.minDepth = value.minDepth;
       _viewport.maxDepth = value.maxDepth;
+    }
+  }
+
+  /// Sets an [EffectPass] that controls rendering.
+  set effectPass(EffectPass value) {
+    if (_boundEffectPass != value) {
+      _gl.useProgram(value._binding);
+
+      _boundEffectPass = value;
     }
   }
 

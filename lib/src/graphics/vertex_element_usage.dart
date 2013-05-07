@@ -97,4 +97,30 @@ class VertexElementUsage {
 
     return false;
   }
+
+  //---------------------------------------------------------------------
+  // Private class methods
+  //---------------------------------------------------------------------
+
+  /// Uses the [VertexElementUsage] and usage index to create a semantic name.
+  ///
+  /// A semantic name is used to map between the [VertexDeclaration] and the
+  /// vertex attributes used in an [EffectPass].
+  ///
+  /// This aligns to DirectX conventions.
+  static String _toSemanticName(int value, int index) {
+    String semantic;
+
+    switch (value) {
+      case VertexElementUsage.Position         : semantic = 'POSITION'; break;
+      case VertexElementUsage.Normal           : semantic = 'NORMAL'  ; break;
+      case VertexElementUsage.Tangent          : semantic = 'TANGENT' ; break;
+      case VertexElementUsage.Binormal         : semantic = 'BINORMAL'; break;
+      case VertexElementUsage.TextureCoordinate: semantic = 'TEXCOORD'; break;
+      case VertexElementUsage.Color            : semantic = 'COLOR'   ; break;
+      case VertexElementUsage.PointSize        : semantic = 'PSIZE'   ; break;
+    }
+
+    return '${semantic}${index}';
+  }
 }

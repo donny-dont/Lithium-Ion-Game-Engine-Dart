@@ -6,7 +6,7 @@
 part of lithium_graphics;
 
 /// Base class for resources allocated from the [GraphicsDevice].
-abstract class GraphicsResource {
+abstract class GraphicsResource implements Disposable {
   //---------------------------------------------------------------------
   // Member variables
   //---------------------------------------------------------------------

@@ -76,18 +76,6 @@ class VertexElement {
   ///
   /// This aligns to DirectX conventions.
   String _toSemanticName() {
-    String semantic;
-
-    switch (usage) {
-      case VertexElementUsage.Position         : semantic = 'POSITION'; break;
-      case VertexElementUsage.Normal           : semantic = 'NORMAL'  ; break;
-      case VertexElementUsage.Tangent          : semantic = 'TANGENT' ; break;
-      case VertexElementUsage.Binormal         : semantic = 'BINORMAL'; break;
-      case VertexElementUsage.TextureCoordinate: semantic = 'TEXCOORD'; break;
-      case VertexElementUsage.Color            : semantic = 'COLOR'   ; break;
-      case VertexElementUsage.PointSize        : semantic = 'PSIZE'   ; break;
-    }
-
-    return '${semantic}${usageIndex}';
+    return VertexElementUsage._toSemanticName(_usage, _usageIndex);
   }
 }
