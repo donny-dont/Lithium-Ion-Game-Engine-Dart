@@ -6,20 +6,32 @@
 part of lithium_graphics;
 
 abstract class EffectParameter<T> {
-  ///
+  /// The name of the paramter
+  String _name;
+
+  EffectParameter._internal(String name)
+      : _name = name;
 
   void setValue(T value);
 }
 
-class EffectParamterScalar extends EffectParameter<double> {
+class EffectParameterScalar extends EffectParameter<double> {
+  EffectParameterScalar._internal(String name)
+      : super._internal(name);
 
+  void setValue(double value) {
+
+  }
 }
 
-class EffectParamterMatrix4 extends EffectParameter<mat4> {
+class EffectParameterMatrix4 extends EffectParameter<Matrix4> {
 
   Float32List _values = new Float32List(16);
 
-  void setValue(mat4 value) {
+  EffectParameterMatrix4._internal(String name)
+      : super._internal(name);
+
+  void setValue(Matrix4 value) {
 
   }
 }

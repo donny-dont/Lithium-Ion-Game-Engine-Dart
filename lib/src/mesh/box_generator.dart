@@ -12,7 +12,7 @@ class BoxGenerator extends MeshGenerator {
   //---------------------------------------------------------------------
 
   /// The extents of the [Mesh] to generate.
-  vec3 _extents = new vec3.raw(0.5, 0.5, 0.5);
+  Vector3 _extents = new Vector3(0.5, 0.5, 0.5);
 
   //---------------------------------------------------------------------
   // Construction
@@ -32,8 +32,8 @@ class BoxGenerator extends MeshGenerator {
   int get indexCount => 36;
 
   /// The extents of the box.
-  vec3 get extents => _extents;
-  set extents(vec3 value) {
+  Vector3 get extents => _extents;
+  set extents(Vector3 value) {
     _extents.copyInto(value);
 
     // Get absolute value
@@ -81,7 +81,7 @@ class BoxGenerator extends MeshGenerator {
   /// + [vertexCount]\] within the array will be populated.
   ///
   /// The mesh will be centered at the given [center] position.
-  void _generatePositions(Vector3List positions, vec3 center, int vertexOffset) {
+  void _generatePositions(Vector3List positions, Vector3 center, int vertexOffset) {
     // Create the position values
     double xExtent = _extents.x;
     double yExtent = _extents.y;
@@ -91,15 +91,15 @@ class BoxGenerator extends MeshGenerator {
     double yCenter = center.y;
     double zCenter = center.z;
 
-    List<vec3> positionValues = [
-      new vec3.raw(-xExtent + xCenter,  yExtent + yCenter,  zExtent + zCenter),
-      new vec3.raw(-xExtent + xCenter,  yExtent + yCenter, -zExtent + zCenter),
-      new vec3.raw(-xExtent + xCenter, -yExtent + yCenter, -zExtent + zCenter),
-      new vec3.raw(-xExtent + xCenter, -yExtent + yCenter,  zExtent + zCenter),
-      new vec3.raw( xExtent + xCenter, -yExtent + yCenter, -zExtent + zCenter),
-      new vec3.raw( xExtent + xCenter, -yExtent + yCenter,  zExtent + zCenter),
-      new vec3.raw( xExtent + xCenter,  yExtent + yCenter, -zExtent + zCenter),
-      new vec3.raw( xExtent + xCenter,  yExtent + yCenter,  zExtent + zCenter)
+    List<Vector3> positionValues = [
+      new Vector3(-xExtent + xCenter,  yExtent + yCenter,  zExtent + zCenter),
+      new Vector3(-xExtent + xCenter,  yExtent + yCenter, -zExtent + zCenter),
+      new Vector3(-xExtent + xCenter, -yExtent + yCenter, -zExtent + zCenter),
+      new Vector3(-xExtent + xCenter, -yExtent + yCenter,  zExtent + zCenter),
+      new Vector3( xExtent + xCenter, -yExtent + yCenter, -zExtent + zCenter),
+      new Vector3( xExtent + xCenter, -yExtent + yCenter,  zExtent + zCenter),
+      new Vector3( xExtent + xCenter,  yExtent + yCenter, -zExtent + zCenter),
+      new Vector3( xExtent + xCenter,  yExtent + yCenter,  zExtent + zCenter)
     ];
 
     // Negative X
@@ -145,11 +145,11 @@ class BoxGenerator extends MeshGenerator {
   /// at the specified [vertexOffset]. When complete the \[[vertexOffset],
   /// [vertexOffset] + [vertexCount]\] within the array will be populated.
   void _generateTextureCoordinates(Vector2List texCoords, int vertexOffset) {
-    List<vec2> texCoordValues = [
-      new vec2(0.0, 1.0),
-      new vec2(0.0, 0.0),
-      new vec2(1.0, 1.0),
-      new vec2(1.0, 0.0)
+    List<Vector2> texCoordValues = [
+      new Vector2(0.0, 1.0),
+      new Vector2(0.0, 0.0),
+      new Vector2(1.0, 1.0),
+      new Vector2(1.0, 0.0)
     ];
 
     // Negative X
@@ -201,13 +201,13 @@ class BoxGenerator extends MeshGenerator {
   /// A subclass should override this if the normals can easily be determined.
   /// This is the case for something like a box or plane.
   void _generateNormals(Vector3List positions, Vector3List normals, Uint16List indices, int vertexOffset, int indexOffset) {
-    List<vec3> normalValues = [
-        new vec3(-1.0,  0.0,  0.0),
-        new vec3( 0.0, -1.0,  0.0),
-        new vec3( 0.0,  0.0, -1.0),
-        new vec3( 0.0,  1.0,  0.0),
-        new vec3( 0.0,  0.0,  1.0),
-        new vec3( 1.0,  0.0,  0.0)
+    List<Vector3> normalValues = [
+        new Vector3(-1.0,  0.0,  0.0),
+        new Vector3( 0.0, -1.0,  0.0),
+        new Vector3( 0.0,  0.0, -1.0),
+        new Vector3( 0.0,  1.0,  0.0),
+        new Vector3( 0.0,  0.0,  1.0),
+        new Vector3( 1.0,  0.0,  0.0)
     ];
 
     // Negative X
@@ -258,8 +258,8 @@ class BoxGenerator extends MeshGenerator {
   /// multiple meshes.
   static Mesh createBox(GraphicsDevice graphicsDevice,
                         VertexDeclaration declaration,
-                       {vec3 extents,
-                        vec3 center})
+                       {Vector3 extents,
+                        Vector3 center})
   {
     // Setup the generator
     BoxGenerator generator = new BoxGenerator();

@@ -3,7 +3,7 @@
 // Use of this source code is governed by a zlib license that can be found in
 // the LICENSE file.
 
-library vertex_buffer_test;
+library index_buffer_test;
 
 import 'dart:typed_data';
 import 'dart:web_gl' as WebGL;

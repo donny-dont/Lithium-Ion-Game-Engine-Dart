@@ -9,7 +9,7 @@ part of lithium_foundation;
 ///
 /// The [Vector2List] class provides easy random access to 2D vector values
 /// interleaved within vertex data.
-class Vector2List extends StridedList<vec2> {
+class Vector2List extends StridedList<Vector2> {
   //---------------------------------------------------------------------
   // Class variables
   //---------------------------------------------------------------------
@@ -40,19 +40,19 @@ class Vector2List extends StridedList<vec2> {
   /// Returns the element at the given index in the list.
   ///
   /// Throws a RangeError if index is out of bounds.
-  vec2 operator[](int index) {
+  Vector2 operator[](int index) {
     int actualIndex = _getActualIndex(index);
 
     double x = _list[actualIndex++];
     double y = _list[actualIndex];
 
-    return new vec2.raw(x, y);
+    return new Vector2(x, y);
   }
 
   /// Sets the entry at the given index in the list to value.
   ///
   /// Throws a RangeError if index is out of bounds.
-  void operator[]=(int index, vec2 value) {
+  void operator[]=(int index, Vector2 value) {
     int actualIndex = _getActualIndex(index);
 
     _list[actualIndex++] = value.x;
@@ -75,7 +75,7 @@ class Vector2List extends StridedList<vec2> {
   /// Copies the value at [index] into [value]. This method will not create
   /// a new object like the \[\] operator will. Prefer this method whenever
   /// possible.
-  void getAt(int index, vec2 value) {
+  void getAt(int index, Vector2 value) {
     int actualIndex = _getActualIndex(index);
 
     value.x = _list[actualIndex++];
@@ -83,7 +83,7 @@ class Vector2List extends StridedList<vec2> {
   }
 
   /// Sets the [value] at the specified [index].
-  void setAt(int index, vec2 value) {
+  void setAt(int index, Vector2 value) {
     int actualIndex = _getActualIndex(index);
 
     _list[actualIndex++] = value.x;

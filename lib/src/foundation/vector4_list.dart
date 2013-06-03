@@ -9,7 +9,7 @@ part of lithium_foundation;
 ///
 /// The [Vector4List] class provides easy random access to 4D vector values
 /// interleaved within vertex data.
-class Vector4List extends StridedList<vec3> {
+class Vector4List extends StridedList<Vector4> {
   //---------------------------------------------------------------------
   // Class variables
   //---------------------------------------------------------------------
@@ -40,7 +40,7 @@ class Vector4List extends StridedList<vec3> {
   /// Returns the element at the given index in the list.
   ///
   /// Throws a RangeError if index is out of bounds.
-  vec4 operator[](int index) {
+  Vector4 operator[](int index) {
     int actualIndex = _getActualIndex(index);
 
     double x = _list[actualIndex++];
@@ -48,13 +48,13 @@ class Vector4List extends StridedList<vec3> {
     double z = _list[actualIndex++];
     double w = _list[actualIndex];
 
-    return new vec4.raw(x, y, z, w);
+    return new Vector4(x, y, z, w);
   }
 
   /// Sets the entry at the given index in the list to value.
   ///
   /// Throws a RangeError if index is out of bounds.
-  void operator[]=(int index, vec4 value) {
+  void operator[]=(int index, Vector4 value) {
     int actualIndex = _getActualIndex(index);
 
     _list[actualIndex++] = value.x;
@@ -79,7 +79,7 @@ class Vector4List extends StridedList<vec3> {
   /// Copies the value at [index] into [value]. This method will not create
   /// a new object like the \[\] operator will. Prefer this method whenever
   /// possible.
-  void getAt(int index, vec4 value) {
+  void getAt(int index, Vector4 value) {
     int actualIndex = _getActualIndex(index);
 
     value.x = _list[actualIndex++];
@@ -89,7 +89,7 @@ class Vector4List extends StridedList<vec3> {
   }
 
   /// Sets the [value] at the specified [index].
-  void setAt(int index, vec4 value) {
+  void setAt(int index, Vector4 value) {
     int actualIndex = _getActualIndex(index);
 
     _list[actualIndex++] = value.x;

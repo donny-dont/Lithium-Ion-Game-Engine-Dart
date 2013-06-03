@@ -158,7 +158,7 @@ class VertexDeclaration extends GraphicsResource {
   ///
   /// If [simdAligned] is set to true then each [VertexElement] will be aligned
   /// to a 128-bit value.
-  void _createElements(List<VertexElementUsage> elements, bool simdAligned) {
+  void _createElements(List<int> elements, bool simdAligned) {
     // Create the offsets in bytes for the data
     int scalarSize  = (simdAligned) ? 16 :  4;
     int vector2Size = (simdAligned) ? 16 :  8;

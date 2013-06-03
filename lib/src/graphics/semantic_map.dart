@@ -5,12 +5,16 @@
 
 part of lithium_graphics;
 
-class SemanticMapper {
+///
+///
+class SemanticMap {
   //---------------------------------------------------------------------
   // Class variables
   //---------------------------------------------------------------------
 
-  static SemanticMapper _defaultMapping;
+  static const int notFound = -1;
+
+  static SemanticMap _defaultMapping;
 
   /// Default vertex attribute names.
   static Map<String, String> _defaultAttributes;
@@ -26,7 +30,7 @@ class SemanticMapper {
   // Construction
   //---------------------------------------------------------------------
 
-  SemanticMapper();
+  SemanticMap();
 
   //---------------------------------------------------------------------
   // Public methods
@@ -34,7 +38,7 @@ class SemanticMapper {
 
   /// Retrives the vertex attribute index with the given [usage] and [usageIndex].
   ///
-  /// Returns -1 if the semantic is not found.
+  /// Returns [SemanticMap.notFound] if the semantic is not found.
   int indexOf(int usage, int usageIndex) {
     var semanticName = VertexElementUsage._toSemanticName(usage, usageIndex);
 
@@ -71,19 +75,19 @@ class SemanticMapper {
 
   /// Retrieves the vertex attribute index with the given semantic [name].
   int _indexOfSemantic(String name) {
-    return (_mapping.containsKey(name)) ? _mapping[name] : -1;
+    return (_mapping.containsKey(name)) ? _mapping[name] : notFound;
   }
 
   //---------------------------------------------------------------------
   // Class properties
   //---------------------------------------------------------------------
 
-  /// Gets the default [SemanticMapper] which is used whenever a mapper is not provided.
+  /// Gets the default [SemanticMap] which is used whenever a mapper is not provided.
   ///
   ///
-  static SemanticMapper get defaultMapping {
+  static SemanticMap get defaultMapping {
     if (_defaultMapping == null) {
-      _defaultMapping = new SemanticMapper();
+      _defaultMapping = new SemanticMap();
 
       _defaultMapping.add(VertexElementUsage.Position         , 0, 0);
       _defaultMapping.add(VertexElementUsage.Normal           , 0, 1);
@@ -99,7 +103,7 @@ class SemanticMapper {
 
     return _defaultMapping;
   }
-  static set defaultMapping(SemanticMapper value) { _defaultMapping = value; }
+  static set defaultMapping(SemanticMap value) { _defaultMapping = value; }
 
   static Map<String, String> get defaultAttributes {
     if (_defaultAttributes == null) {

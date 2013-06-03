@@ -3,7 +3,7 @@
 // Use of this source code is governed by a zlib license that can be found in
 // the LICENSE file.
 
-library buffer_usage_test;
+library index_element_size_test;
 
 import 'dart:web_gl' as WebGL;
 

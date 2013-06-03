@@ -9,7 +9,7 @@ part of lithium_foundation;
 ///
 /// The [Vector3List] class provides easy random access to 3D vector values
 /// interleaved within vertex data.
-class Vector3List extends StridedList<vec3> {
+class Vector3List extends StridedList<Vector3> {
   //---------------------------------------------------------------------
   // Class variables
   //---------------------------------------------------------------------
@@ -40,20 +40,20 @@ class Vector3List extends StridedList<vec3> {
   /// Returns the element at the given index in the list.
   ///
   /// Throws a RangeError if index is out of bounds.
-  vec3 operator[](int index) {
+  Vector3 operator[](int index) {
     int actualIndex = _getActualIndex(index);
 
     double x = _list[actualIndex++];
     double y = _list[actualIndex++];
     double z = _list[actualIndex];
 
-    return new vec3.raw(x, y, z);
+    return new Vector3(x, y, z);
   }
 
   /// Sets the entry at the given index in the list to value.
   ///
   /// Throws a RangeError if index is out of bounds.
-  void operator[]=(int index, vec3 value) {
+  void operator[]=(int index, Vector3 value) {
     int actualIndex = _getActualIndex(index);
 
     _list[actualIndex++] = value.x;
@@ -77,7 +77,7 @@ class Vector3List extends StridedList<vec3> {
   /// Copies the value at [index] into [value]. This method will not create
   /// a new object like the \[\] operator will. Prefer this method whenever
   /// possible.
-  void getAt(int index, vec3 value) {
+  void getAt(int index, Vector3 value) {
     int actualIndex = _getActualIndex(index);
 
     value.x = _list[actualIndex++];
@@ -86,7 +86,7 @@ class Vector3List extends StridedList<vec3> {
   }
 
   /// Sets the [value] at the specified [index].
-  void setAt(int index, vec3 value) {
+  void setAt(int index, Vector3 value) {
     int actualIndex = _getActualIndex(index);
 
     _list[actualIndex++] = value.x;

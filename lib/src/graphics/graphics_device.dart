@@ -266,8 +266,8 @@ class GraphicsDevice {
       if (programLinked) {
         // Bind the attributes to the defaults
         var attributes = _getVertexAttribNames(program);
-        var defaultAttributes = SemanticMapper.defaultAttributes;
-        var defaultMapping = SemanticMapper.defaultMapping;
+        var defaultAttributes = SemanticMap.defaultAttributes;
+        var defaultMapping = SemanticMap.defaultMapping;
 
         int attributeCount = attributes.length;
 
@@ -277,7 +277,7 @@ class GraphicsDevice {
           if (defaultAttributes.containsKey(attributeName)) {
             int index = defaultMapping._indexOfSemantic(defaultAttributes[attributeName]);
 
-            if (index != -1) {
+            if (index != SemanticMap.notFound) {
               print('Binding $attributeName to $index');
               _gl.bindAttribLocation(program, index, attributeName);
             }
@@ -288,7 +288,6 @@ class GraphicsDevice {
         // Need to relink the program before the changes are reflected
         _gl.linkProgram(program);
 
-        /*
         var uniformCount = _gl.getProgramParameter(program, WebGL.ACTIVE_UNIFORMS);
 
         for (int i = 0; i < uniformCount; ++i) {
@@ -296,13 +295,27 @@ class GraphicsDevice {
 
           print(info.name);
           print(info.size);
-          print(info.type);
+          print(info.type.toRadixString(16));
+
+          bool isList = info.size > 1;
+          var uniform;
+          var name = info.name;
+          int type = info.type;
+
+          if (isList) {
+
+          } else {
+            switch (type) {
+              case WebGL.FLOAT     : uniform = new EffectParameterScalar._internal(name); break;
+              case WebGL.FLOAT_MAT4: uniform = new EffectParameterMatrix4._internal(name); break;
+            }
+          }
         }
-        */
       } else {
 
       }
     } else {
+      print(vertexShaderLog);
 
     }
 
@@ -351,5 +364,23 @@ class GraphicsDevice {
     }
 
     return attributes;
+  }
+
+  ///
+  void _setSemantic(EffectPass resource,
+                    String name,
+                    int usage,
+                    int usageIndex,
+                    SemanticMap semanticMap)
+  {
+    int index = semanticMap.indexOf(usage, usageIndex);
+
+    assert(index != SemanticMap.notFound);
+
+    _gl.bindAttribLocation(resource._binding, index, name);
+  }
+
+  void _linkProgram(EffectPass resource) {
+    _gl.linkProgram(resource._binding);
   }
 }

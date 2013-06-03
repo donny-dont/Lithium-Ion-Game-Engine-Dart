@@ -3,7 +3,7 @@
 // Use of this source code is governed by a zlib license that can be found in
 // the LICENSE file.
 
-library foundation_test;
+library graphics_test;
 
 import 'package:unittest/unittest.dart';
 

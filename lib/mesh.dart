@@ -54,7 +54,7 @@ int _getMaxIndex(int offset, int length, int lastIndex) {
 /// Helper method to add a [value] to the [array] at the given [index].
 ///
 /// A [temp] value is passed in to the function to prevent additional allocations.
-void _addToVec3(int index, Vector3List array, vec3 value, vec3 temp) {
+void _addToVector3(int index, Vector3List array, Vector3 value, Vector3 temp) {
   array.getAt(index, temp);
   temp.add(value);
   array.setAt(index, temp);

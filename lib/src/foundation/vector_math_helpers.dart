@@ -8,17 +8,17 @@ part of lithium_foundation;
 // \TODO These functions should go away if vector_math gets any equality
 //       operators for their classes
 
-/// Determines whether two [vec2] instances are equal.
-bool isVec2Equal(vec2 lhs, vec2 rhs) {
+/// Determines whether two [Vector2] instances are equal.
+bool isVector2Equal(Vector2 lhs, Vector2 rhs) {
   return (lhs.x == rhs.x) && (lhs.y == rhs.y);
 }
 
-/// Determines whether two [vec3] instances are equal.
-bool isVec3Equal(vec3 lhs, vec3 rhs) {
+/// Determines whether two [Vector3] instances are equal.
+bool isVector3Equal(Vector3 lhs, Vector3 rhs) {
   return (lhs.x == rhs.x) && (lhs.y == rhs.y) && (lhs.z == rhs.z);
 }
 
-/// Determines whether two [vec4] instances are equal.
-bool isVec4Equal(vec4 lhs, vec4 rhs) {
+/// Determines whether two [Vector4] instances are equal.
+bool isVector4Equal(Vector4 lhs, Vector4 rhs) {
   return (lhs.x == rhs.x) && (lhs.y == rhs.y) && (lhs.z == rhs.z) && (lhs.w == rhs.w);
 }

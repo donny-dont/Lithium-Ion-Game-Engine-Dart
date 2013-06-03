@@ -44,7 +44,7 @@ abstract class MeshGenerator {
   /// Additionally an offset into the vertex and index data can be specified by
   /// [vertexOffset] and [indexOffset]. If unspecified the mesh will be
   /// generated at the start of the arrays.
-  void generateMesh(VertexList vertices, Uint16List indices, [vec3 center, int vertexOffset = 0, int indexOffset = 0]) {
+  void generateMesh(VertexList vertices, Uint16List indices, [Vector3 center, int vertexOffset = 0, int indexOffset = 0]) {
     // Ensure that there is enough room in the vertex and index data to hold the mesh
     if (vertices.vertexCount < vertexOffset + vertexCount) {
       throw new ArgumentError('The vertex data does not have enough space to hold the mesh');
@@ -56,11 +56,11 @@ abstract class MeshGenerator {
 
     // Default to a center at (0, 0, 0)
     if (center == null) {
-      center = new vec3.zero();
+      center = new Vector3.zero();
     }
 
     // Generate position data
-    Vector3List positions = vertices.positions;
+    var positions = vertices.positions;
 
     if (positions == null) {
       throw new ArgumentError('The vertex data does not contain a position attribute');
@@ -86,8 +86,8 @@ abstract class MeshGenerator {
     }
 
     // Generate texture data if requested
-    Vector3List tangents  = vertices.tangents;
-    Vector3List binormals = vertices.binormals;
+    var tangents  = vertices.tangents;
+    var binormals = vertices.binormals;
 
     if ((tangents != null) && (binormals != null)) {
       _generateTangents(positions, texCoords, normals, tangents, binormals, indices, vertexOffset, indexOffset);
@@ -111,7 +111,7 @@ abstract class MeshGenerator {
   /// + [vertexCount]\] within the array will be populated.
   ///
   /// The mesh will be centered at the given [center] position.
-  void _generatePositions(Vector3List positions, vec3 center, int vertexOffset);
+  void _generatePositions(Vector3List positions, Vector3 center, int vertexOffset);
 
   /// Generates the texture coordinates for the mesh.
   ///
@@ -164,7 +164,7 @@ abstract class MeshGenerator {
   /// Provides a shorthand way for [MeshGenerator]s to create a single mesh.
   /// The [MeshGenerator] should be supplied with any options regarding its
   /// creation before calling this.
-  static Mesh _createMesh(GraphicsDevice graphicsDevice, VertexDeclaration declaration, MeshGenerator generator, vec3 center) {
+  static Mesh _createMesh(GraphicsDevice graphicsDevice, VertexDeclaration declaration, MeshGenerator generator, Vector3 center) {
     // Create storage space for the vertices and indices
     var vertices = new VertexList(declaration, generator.vertexCount);
     var indices  = new Uint16List(generator.indexCount);

@@ -3,7 +3,7 @@
 // Use of this source code is governed by a zlib license that can be found in
 // the LICENSE file.
 
-library input_element_format_test;
+library vertex_element_format_test;
 
 import 'package:unittest/unittest.dart';
 import 'package:lithium_ion/graphics.dart';

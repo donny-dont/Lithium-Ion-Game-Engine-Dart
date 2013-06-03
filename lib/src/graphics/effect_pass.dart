@@ -46,4 +46,27 @@ class EffectPass extends GraphicsResource {
 
   /// \TODO REMOVE
   WebGL.Program get binding => _binding;
+
+  //---------------------------------------------------------------------
+  // Public methods
+  //---------------------------------------------------------------------
+
+  /// Associates the attribute [name] with the given semantic.
+  void setSemantic(String name, int usage, int usageIndex, [SemanticMap semanticMap]) {
+    assert(VertexElementUsage.isValid(usage));
+
+    if (semanticMap == null) {
+      semanticMap = SemanticMap.defaultMapping;
+    }
+
+    _graphicsDevice._setSemantic(this, name, usage, usageIndex, semanticMap);
+  }
+
+  /// Links the [EffectPass].
+  ///
+  /// After calls to [setSemantic] this method must be called before the
+  /// changes will be reflected.
+  void link() {
+    _graphicsDevice._linkProgram(this);
+  }
 }

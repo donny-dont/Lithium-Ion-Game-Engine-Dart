@@ -101,7 +101,7 @@ class ApplicationWindow {
 
       // Notify the change of dimensions
       if (!_onWindowResizedController.isPaused) {
-        _onWindowResizedController.add(new WindowResizedEvent(newWidth, newHeight));
+        _onWindowResizedController.add(new WindowResizedEvent._internal(newWidth, newHeight));
       }
     }
   }

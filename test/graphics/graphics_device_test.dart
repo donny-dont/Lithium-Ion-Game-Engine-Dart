@@ -27,7 +27,7 @@ void main() {
     var vertexBuffer = new VertexBuffer.static(device);
     var indexBuffer = new IndexBuffer.static(device);
     var vertexDeclaration = new VertexDeclaration.position(device);
-    var mesh = new Mesh(device);
+    var mesh = new Mesh(device, vertexDeclaration, [vertexBuffer], indexBuffer);
 
     expect(resources, 5);
 

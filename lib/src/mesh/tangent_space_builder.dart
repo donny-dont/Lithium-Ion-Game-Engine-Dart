@@ -29,16 +29,16 @@ class TangentSpaceBuilder {
     Vector3List tan2 = new Vector3List(vertexCount);
 
     {
-      vec3 v0 = new vec3();
-      vec3 v1 = new vec3();
-      vec3 v2 = new vec3();
+      var v0 = new Vector3.zero();
+      var v1 = new Vector3.zero();
+      var v2 = new Vector3.zero();
 
-      vec2 w0 = new vec2();
-      vec2 w1 = new vec2();
-      vec2 w2 = new vec2();
+      var w0 = new Vector2.zero();
+      var w1 = new Vector2.zero();
+      var w2 = new Vector2.zero();
 
-      vec3 tdir = new vec3();
-      vec3 sdir = new vec3();
+      var tdir = new Vector3.zero();
+      var sdir = new Vector3.zero();
 
       // Get the maximum index within indices to use
       int maxIndex = _getMaxIndex(indexOffset, indexCount, indices.length);
@@ -87,27 +87,27 @@ class TangentSpaceBuilder {
         i1 -= vertexOffset;
         i2 -= vertexOffset;
 
-        _addToVec3(i0, tan1, sdir, v0);
-        _addToVec3(i1, tan1, sdir, v0);
-        _addToVec3(i2, tan1, sdir, v0);
+        _addToVector3(i0, tan1, sdir, v0);
+        _addToVector3(i1, tan1, sdir, v0);
+        _addToVector3(i2, tan1, sdir, v0);
 
-        _addToVec3(i0, tan2, tdir, v0);
-        _addToVec3(i1, tan2, tdir, v0);
-        _addToVec3(i2, tan2, tdir, v0);
+        _addToVector3(i0, tan2, tdir, v0);
+        _addToVector3(i1, tan2, tdir, v0);
+        _addToVector3(i2, tan2, tdir, v0);
       }
     }
 
     {
-      vec3 n = new vec3();
-      vec3 t = new vec3();
-      vec3 nCrossT = new vec3();
+      Vector3 n = new Vector3.zero();
+      Vector3 t = new Vector3.zero();
+      Vector3 nCrossT = new Vector3.zero();
 
       for (int i = vertexOffset, j = 0; i < maxVertex; ++i, ++j) {
         normals.getAt(i, n);
         tan1.getAt(j, t);
 
         double nDotT = n.dot(t);
-        n.cross(t, nCrossT);
+        n.crossInto(t, nCrossT);
 
         n.x *= nDotT;
         n.y *= nDotT;

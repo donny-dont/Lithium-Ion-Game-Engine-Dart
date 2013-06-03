@@ -15,23 +15,32 @@ EffectPass effectPass;
 
 String vertShader =
 '''
-attribute vec3 vPosition;
-attribute vec4 vColor;
+attribute Vector3 vPosition;
+attribute Vector4 vColor;
 
 uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
 
-varying lowp vec4 color;
+struct Light {
+  Vector4 uPointLightingLocation[16];
+};
+
+uniform Light light;
+
+varying lowp Vector4 color;
 
 void main(void) {
-  gl_Position = uPMatrix * vec4(vPosition, 1.0);
-  color = vColor;
+  gl_Position = uPMatrix * uMVMatrix * Vector4(vPosition, 1.0);
+
+  for (int i = 0; i < 16; ++i) {
+    color += vColor * light.uPointLightingLocation[i];
+  }
 }
 ''';
 
 String fragShader =
 '''
-varying lowp vec4 color;
+varying lowp Vector4 color;
 
 void main(void) {
   gl_FragColor = color;
@@ -60,8 +69,8 @@ void init() {
   var pUniform  = gl.getUniformLocation(program, 'uPMatrix');
   gl.uniformMatrix4fv(pUniform, false, pMatrixList);
 
-  var vMatrix = new mat4.identity();//makeViewMatrix(new vec3(0.0, 0.0, -6.0), new vec3.zero(), new vec3(0.0, 1.0, 0.0));
-  vMatrix.setTranslation(new vec3(0.0, 0.0, -6.0));
+  var vMatrix = new Matrix4.identity();//makeViewMatrix(new Vector3(0.0, 0.0, -6.0), new Vector3.zero(), new Vector3(0.0, 1.0, 0.0));
+  vMatrix.setTranslation(new Vector3(0.0, 0.0, -6.0));
   var vMatrixList = new Float32List(16);
 
   vMatrix.copyIntoArray(pMatrixList);
@@ -104,8 +113,8 @@ void main() {
 
   declaration = new VertexDeclaration.positionColor(device);
 
-  mesh = PlaneGenerator.createPlane(device, declaration, doubleSided: true, center: new vec3(0.0, 0.0, -2.0));
-  //BoxGenerator.createBox(device, declaration, center: new vec3(0.0, 0.0, -2.0));
+  mesh = PlaneGenerator.createPlane(device, declaration, doubleSided: true, center: new Vector3(0.0, 0.0, -2.0));
+  //BoxGenerator.createBox(device, declaration, center: new Vector3(0.0, 0.0, -2.0));
 
   var vertexList = new VertexList(declaration, 4);
 
@@ -113,17 +122,17 @@ void main() {
 
   double positionZ = -2.0;
 
-  positions[0] = new vec3( 1.0,  1.0, positionZ);
-  positions[1] = new vec3(-1.0,  1.0, positionZ);
-  positions[2] = new vec3( 1.0, -1.0, positionZ);
-  positions[3] = new vec3(-1.0, -1.0, positionZ);
+  positions[0] = new Vector3( 1.0,  1.0, positionZ);
+  positions[1] = new Vector3(-1.0,  1.0, positionZ);
+  positions[2] = new Vector3( 1.0, -1.0, positionZ);
+  positions[3] = new Vector3(-1.0, -1.0, positionZ);
 
   var colors = vertexList.colors;
 
-  colors[0] = new vec4(1.0, 1.0, 1.0, 1.0); // white
-  colors[1] = new vec4(1.0, 0.0, 0.0, 1.0); // red
-  colors[2] = new vec4(0.0, 1.0, 0.0, 1.0); // green
-  colors[3] = new vec4(0.0, 0.0, 1.0, 1.0); // blue
+  colors[0] = new Vector4(1.0, 1.0, 1.0, 1.0); // white
+  colors[1] = new Vector4(1.0, 0.0, 0.0, 1.0); // red
+  colors[2] = new Vector4(0.0, 1.0, 0.0, 1.0); // green
+  colors[3] = new Vector4(0.0, 0.0, 1.0, 1.0); // blue
 
   vertexBuffer = new VertexBuffer.static(device);
 

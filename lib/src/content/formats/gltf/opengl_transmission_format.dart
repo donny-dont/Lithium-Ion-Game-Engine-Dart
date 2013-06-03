@@ -72,10 +72,10 @@ class OpenGLTransmissionFormat {
   /// Uses the [create] function to populate a [Map] containing the values
   /// where the [name] is the key value.
   static Map _parseList(List values, _CreateFormat create) {
-    Map formats = new Map();
+    var formats = new Map();
 
     values.forEach((value) {
-      OpenGLTransmissionFormat format = create(value);
+      var format = create(value);
 
       if (formats.containsKey(format.name)) {
         throw new ArgumentError('The name ${format.name} is not unique');

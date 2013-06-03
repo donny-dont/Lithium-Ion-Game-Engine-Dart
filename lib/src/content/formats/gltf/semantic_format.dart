@@ -33,7 +33,7 @@ class _SemanticFormat {
 
     // The '_' character is used to separate the semantic name from
     // an optional index
-    List<String> values = value.split('_');
+    var values = value.split('_');
     int valueCount = values.length;
 
     if ((valueCount <= 0) || (valueCount > 2)) {

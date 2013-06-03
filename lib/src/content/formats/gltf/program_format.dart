@@ -37,7 +37,7 @@ class ProgramFormat extends OpenGLTransmissionFormat {
   ProgramFormat.fromJson(Map json)
       : super._fromJson(json)
   {
-    List attributes = json['attributes'];
+    var attributes = json['attributes'];
 
     if (attributes == null) {
       throw new ArgumentError('No attribute data is provided');

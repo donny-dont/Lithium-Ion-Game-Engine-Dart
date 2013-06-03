@@ -21,7 +21,7 @@ class PlaneGenerator extends MeshGenerator {
   //---------------------------------------------------------------------
 
   /// The extents of the [Mesh] to generate.
-  vec2 _extents = new vec2.raw(0.5, 0.5);
+  Vector2 _extents = new Vector2(0.5, 0.5);
   /// The number of segments in the x direction.
   int _xSegments = _defaultSegments;
   /// The number of segments in the y direction.
@@ -53,8 +53,8 @@ class PlaneGenerator extends MeshGenerator {
   int get indexCount => _sides * _singleSideIndexCount;
 
   /// The extents of the box.
-  vec2 get extents => _extents;
-  set extents(vec2 value) {
+  Vector2 get extents => _extents;
+  set extents(Vector2 value) {
     _extents.copyInto(value);
 
     // Get absolute value
@@ -148,7 +148,7 @@ class PlaneGenerator extends MeshGenerator {
   /// + [vertexCount]\] within the array will be populated.
   ///
   /// The mesh will be centered at the given [center] position.
-  void _generatePositions(Vector3List positions, vec3 center, int vertexOffset) {
+  void _generatePositions(Vector3List positions, Vector3 center, int vertexOffset) {
     double xExtent = _extents.x;
     double yExtent = _extents.y;
 
@@ -173,7 +173,7 @@ class PlaneGenerator extends MeshGenerator {
 
   /// Populates the positions for a single side of the plane.
   void _generatePositionsSingleSide(Vector3List positions, int vertexOffset, List<double> xSegmentList, List<double> ySegmentList, double z) {
-    vec3 position = new vec3.zero();
+    Vector3 position = new Vector3.zero();
     position.z = z;
 
     for (int y = 0; y <= ySegments; ++y) {
@@ -209,7 +209,7 @@ class PlaneGenerator extends MeshGenerator {
 
   /// Populates the texture coordinates for a single side of the plane.
   void _generateTextureCoordinatesSingleSide(Vector2List texCoords, int vertexOffset, List<double> uSegmentList, List<double> vSegmentList) {
-    vec2 texCoord = new vec2();
+    Vector2 texCoord = new Vector2.zero();
 
     for (int y = 0; y <= ySegments; ++y) {
       texCoord.y = vSegmentList[y];
@@ -237,7 +237,7 @@ class PlaneGenerator extends MeshGenerator {
   /// This is the case for something like a box or plane.
   void _generateNormals(Vector3List positions, Vector3List normals, Uint16List indices, int vertexOffset, int indexOffset) {
     int singleSideVertexCount = _singleSideVertexCount;
-    vec3 normal = new vec3.raw(0.0, 0.0, 1.0);
+    Vector3 normal = new Vector3(0.0, 0.0, 1.0);
 
     int maxIndex = vertexOffset + singleSideVertexCount;
     for (int i = vertexOffset; i < maxIndex; ++i) {
@@ -304,11 +304,11 @@ class PlaneGenerator extends MeshGenerator {
   /// multiple meshes.
   static Mesh createPlane(GraphicsDevice graphicsDevice,
                           VertexDeclaration declaration,
-                         {vec2 extents,
+                         {Vector2 extents,
                           int xSegments : _defaultSegments,
                           int ySegments : _defaultSegments,
                           bool doubleSided : _defaultDoubleSided,
-                          vec3 center})
+                          Vector3 center})
   {
     // Setup the generator
     PlaneGenerator generator = new PlaneGenerator();
@@ -332,8 +332,8 @@ class PlaneGenerator extends MeshGenerator {
   /// multiple quads.
   static Mesh createQuad(GraphicsDevice graphicsDevice,
                          VertexDeclaration declaration,
-                        {vec2 extents,
-                         vec3 center})
+                        {Vector2 extents,
+                         Vector3 center})
   {
     // Setup the generator
     PlaneGenerator generator = new PlaneGenerator.quads();
