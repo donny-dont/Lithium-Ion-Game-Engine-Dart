@@ -43,6 +43,8 @@ part 'simple_shapes/simple_shapes_screen.dart';
 
 /// Application entry-point.
 void main() {
+  enableLogging();
+
   // Start the application
   startApplication('#surface', new SimpleShapesScreen());
 

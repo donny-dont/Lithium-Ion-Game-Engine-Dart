@@ -8,7 +8,7 @@ library vertex_element_format_test;
 import 'package:unittest/unittest.dart';
 import 'package:lithium_ion/graphics.dart';
 
-var throwsAssertionError = throwsA(new isInstanceOf<AssertionError>());
+import '../test_helpers.dart';
 
 void main() {
   test('values', () {

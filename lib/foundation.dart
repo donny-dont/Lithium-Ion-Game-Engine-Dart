@@ -16,6 +16,7 @@ import 'dart:typed_data';
 // Package libraries
 //---------------------------------------------------------------------
 
+import 'package:logging/logging.dart';
 import 'package:vector_math/vector_math.dart';
 
 //---------------------------------------------------------------------
@@ -26,6 +27,9 @@ part 'src/foundation/bit_hacks.dart';
 part 'src/foundation/cloneable.dart';
 part 'src/foundation/color.dart';
 part 'src/foundation/disposable.dart';
+part 'src/foundation/enum.dart';
+part 'src/foundation/flags.dart';
+part 'src/foundation/logging.dart';
 part 'src/foundation/scalar_list.dart';
 part 'src/foundation/strided_list.dart';
 part 'src/foundation/vector2_list.dart';

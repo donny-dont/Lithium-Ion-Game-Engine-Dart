@@ -8,7 +8,7 @@ library vertex_element_test;
 import 'package:unittest/unittest.dart';
 import 'package:lithium_ion/graphics.dart';
 
-var throwsAssertionError = throwsA(new isInstanceOf<AssertionError>());
+import '../test_helpers.dart';
 
 void testConstructor(int offset, int format, int usage, int usageIndex, int slot) {
   var element = new VertexElement(offset, format, usage, usageIndex: usageIndex, slot: slot);

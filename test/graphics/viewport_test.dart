@@ -10,9 +10,9 @@ import 'package:lithium_ion/graphics.dart';
 
 import 'graphics_resource_equality.dart';
 import 'graphics_mocks.dart';
+import '../test_helpers.dart';
 
 var graphicsDevice;
-var throwsAssertionError = throwsA(new isInstanceOf<AssertionError>());
 
 void testDimensionSetter(String testName, dynamic function) {
   var viewport = new Viewport(graphicsDevice);

@@ -9,7 +9,6 @@ part of lithium_foundation;
 ///
 /// The standard colors correspond to values within the .NET framework.
 class Color {
-
   //---------------------------------------------------------------------
   // Standard colors
   //---------------------------------------------------------------------

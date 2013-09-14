@@ -6,14 +6,12 @@
 library vertex_declaration_test;
 
 import 'package:unittest/unittest.dart';
-import 'package:unittest/mock.dart';
 import 'package:lithium_ion/graphics.dart';
 
 import 'graphics_mocks.dart';
+import '../test_helpers.dart';
 
 var graphicsDevice;
-
-var throwsAssertionError = throwsA(new isInstanceOf<AssertionError>());
 
 void testStrides(VertexDeclaration declaration, dynamic strides) {
   if (strides is int) {

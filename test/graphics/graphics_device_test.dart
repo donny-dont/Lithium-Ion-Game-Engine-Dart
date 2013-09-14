@@ -19,15 +19,17 @@ void main() {
     int resources = 0;
 
     // Attach to the events
-    device.onResourceCreated.listen  ((_) { resources++; });
-    device.onResourceDestroyed.listen((_) { resources--; });
+    device.onResourceCreated.listen  ((_) { print('Resource created'); resources++; });
+    device.onResourceDestroyed.listen((_) { print('Resource destroyed'); resources--; });
 
     // Create all the GraphicsResource subclasses
     var viewport = new Viewport(device);
+    print(resources);
     var vertexBuffer = new VertexBuffer.static(device);
     var indexBuffer = new IndexBuffer.static(device);
     var vertexDeclaration = new VertexDeclaration.position(device);
     var mesh = new Mesh(device, vertexDeclaration, [vertexBuffer], indexBuffer);
+    print(resources);
 
     expect(resources, 5);
 

@@ -81,7 +81,7 @@ class GraphicsDevice {
 
     // Create the VAO extension if present
     if (_capabilities.hasVertexArrayObjects) {
-      //_vao = GraphicsDeviceExtensions._getExtension(_gl, GraphicsDeviceExtensions.vertexArrayObject);
+      _vao = GraphicsDeviceExtensions._getExtension(_gl, GraphicsDeviceExtensions.vertexArrayObject);
     }
 
     // Create the resource created stream
@@ -148,16 +148,16 @@ class GraphicsDevice {
   //---------------------------------------------------------------------
 
   /// Notify that a [GraphicsResource] has been created.
-  void _notifyResourceCreated(GraphicsResource resource) {
+  void _notifyResourceCreated(GraphicsResource graphicsResource) {
     if (!_onResourceCreatedController.isPaused) {
-      _onResourceCreatedController.add(new ResourceCreatedEvent._internal(resource));
+      _onResourceCreatedController.add(new ResourceCreatedEvent._internal(graphicsResource));
     }
   }
 
   /// Notify that a [GraphicsResource] has been destroyed.
-  void _notifyResourceDestroyed(GraphicsResource resource) {
+  void _notifyResourceDestroyed(GraphicsResource graphicsResource) {
     if (!_onResourceDestroyedController.isPaused) {
-      _onResourceDestroyedController.add(new ResourceDestroyedEvent._internal(resource));
+      _onResourceDestroyedController.add(new ResourceDestroyedEvent._internal(graphicsResource));
     }
   }
 
@@ -169,73 +169,73 @@ class GraphicsDevice {
   ///
   /// Used for [GraphicsResource]s that do not require a binding to the
   /// underlying [WebGL] implementation.
-  void _createWithoutBinding(GraphicsResource resource) {
-    _notifyResourceCreated(resource);
+  void _createWithoutBinding(GraphicsResource graphicsResource) {
+    _notifyResourceCreated(graphicsResource);
   }
 
   /// Releases a [GraphicsResource] from the [GraphicsDevice].
   ///
   /// Used for [GraphicsResource]s that do not require a binding to the
   /// underlying [WebGL] implementation.
-  void _destroyWithoutBinding(GraphicsResource resource) {
-    _notifyResourceDestroyed(resource);
+  void _destroyWithoutBinding(GraphicsResource graphicsResource) {
+    _notifyResourceDestroyed(graphicsResource);
   }
 
   /// Binds an [IndexBuffer] to the [GraphicsDevice].
-  void _createIndexBuffer(IndexBuffer resource) {
+  void _createIndexBuffer(IndexBuffer graphicsResource) {
     // Check that the unsigned int extension is available if the resource uses it
-    assert(resource.indexElementSize == IndexElementSize.Short || _capabilities.hasUnsignedIntIndices);
+    assert(graphicsResource.indexElementSize == IndexElementSize.Short || _capabilities.hasUnsignedIntIndices);
 
-    resource._binding = _gl.createBuffer();
+    graphicsResource._binding = _gl.createBuffer();
 
-    _notifyResourceCreated(resource);
+    _notifyResourceCreated(graphicsResource);
   }
 
   /// Releases a [IndexBuffer] from the [GraphicsDevice].
-  void _destroyIndexBuffer(IndexBuffer resource) {
-    _gl.deleteBuffer(resource._binding);
-    resource._binding = null;
+  void _destroyIndexBuffer(IndexBuffer graphicsResource) {
+    _gl.deleteBuffer(graphicsResource._binding);
+    graphicsResource._binding = null;
 
-    _notifyResourceDestroyed(resource);
+    _notifyResourceDestroyed(graphicsResource);
   }
 
   /// Binds a [VertexBuffer] to the [GraphicsDevice].
-  void _createVertexBuffer(VertexBuffer resource) {
-    resource._binding = _gl.createBuffer();
+  void _createVertexBuffer(VertexBuffer graphicsResource) {
+    graphicsResource._binding = _gl.createBuffer();
 
-    _notifyResourceCreated(resource);
+    _notifyResourceCreated(graphicsResource);
   }
 
   /// Releases a [VertexBuffer] from the [GraphicsDevice].
-  void _destroyVertexBuffer(VertexBuffer resource) {
-    _gl.deleteBuffer(resource._binding);
-    resource._binding = null;
+  void _destroyVertexBuffer(VertexBuffer graphicsResource) {
+    _gl.deleteBuffer(graphicsResource._binding);
+    graphicsResource._binding = null;
 
-    _notifyResourceDestroyed(resource);
+    _notifyResourceDestroyed(graphicsResource);
   }
 
   /// Binds a [Mesh] to the [GraphicsDevice].
-  void _createMesh(Mesh resource) {
+  void _createMesh(Mesh graphicsResource) {
     if (_vao != null) {
-      resource._binding = _vao.createVertexArray();
+      graphicsResource._binding = _vao.createVertexArray();
     }
 
-    _notifyResourceCreated(resource);
+    _notifyResourceCreated(graphicsResource);
   }
 
   /// Releases a [Mesh] from the [GraphicsDevice].
-  void _destroyMesh(Mesh resource) {
+  void _destroyMesh(Mesh graphicsResource) {
     if (_vao != null) {
-      _vao.deleteVertexArray(resource._binding);
+      _vao.deleteVertexArray(graphicsResource._binding);
 
-      resource._binding = null;
+      graphicsResource._binding = null;
     }
 
-    _notifyResourceDestroyed(resource);
+    _notifyResourceDestroyed(graphicsResource);
   }
 
   /// Binds an [EffectPass] to the [GraphicsDevice].
-  void _createEffectPass(EffectPass resource, String vertexSource, String fragmentSource) {
+  void _createEffectPass(EffectPass graphicsResource, String vertexSource, String fragmentSource) {
     // Create the binding
     var program = _gl.createProgram();
 
@@ -278,7 +278,7 @@ class GraphicsDevice {
             int index = defaultMapping._indexOfSemantic(defaultAttributes[attributeName]);
 
             if (index != SemanticMap.notFound) {
-              print('Binding $attributeName to $index');
+              debug('Binding $attributeName to $index', 'lithium_graphics.GraphicsDevice');
               _gl.bindAttribLocation(program, index, attributeName);
             }
           }
@@ -325,15 +325,30 @@ class GraphicsDevice {
     _gl.deleteShader(fragmentShader);
 
     // Associate the binding
-    resource._binding = program;
+    graphicsResource._binding = program;
   }
 
   /// Releases an [EffectPass] from the [GraphicsDevice].
-  void _destroyEffectPass(EffectPass resource) {
-    _gl.deleteProgram(resource._binding);
-    resource._binding = null;
+  void _destroyEffectPass(EffectPass graphicsResource) {
+    _gl.deleteProgram(graphicsResource._binding);
+    graphicsResource._binding = null;
 
-    _notifyResourceDestroyed(resource);
+    _notifyResourceDestroyed(graphicsResource);
+  }
+
+  /// Binds a [Texture] to the [GraphicsDevice].
+  void _createTexture(Texture graphicsResource) {
+    graphicsResource._binding = _gl.createTexture();
+
+    _notifyResourceCreated(graphicsResource);
+  }
+
+  /// Releases a [Texture] from the [GraphicsDevice].
+  void _destroyTexture(Texture graphicsResource) {
+    _gl.deleteTexture(graphicsResource._binding);
+    graphicsResource._binding = null;
+
+    _notifyResourceDestroyed(graphicsResource);
   }
 
   //---------------------------------------------------------------------
@@ -367,7 +382,7 @@ class GraphicsDevice {
   }
 
   ///
-  void _setSemantic(EffectPass resource,
+  void _setSemantic(EffectPass graphicsResource,
                     String name,
                     int usage,
                     int usageIndex,
@@ -377,10 +392,10 @@ class GraphicsDevice {
 
     assert(index != SemanticMap.notFound);
 
-    _gl.bindAttribLocation(resource._binding, index, name);
+    _gl.bindAttribLocation(graphicsResource._binding, index, name);
   }
 
-  void _linkProgram(EffectPass resource) {
-    _gl.linkProgram(resource._binding);
+  void _linkProgram(EffectPass graphicsResource) {
+    _gl.linkProgram(graphicsResource._binding);
   }
 }

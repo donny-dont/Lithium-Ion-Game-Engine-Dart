@@ -145,7 +145,7 @@ class BoxGenerator extends MeshGenerator {
   /// at the specified [vertexOffset]. When complete the \[[vertexOffset],
   /// [vertexOffset] + [vertexCount]\] within the array will be populated.
   void _generateTextureCoordinates(Vector2List texCoords, int vertexOffset) {
-    List<Vector2> texCoordValues = [
+    var texCoordValues = [
       new Vector2(0.0, 1.0),
       new Vector2(0.0, 0.0),
       new Vector2(1.0, 1.0),
@@ -201,7 +201,7 @@ class BoxGenerator extends MeshGenerator {
   /// A subclass should override this if the normals can easily be determined.
   /// This is the case for something like a box or plane.
   void _generateNormals(Vector3List positions, Vector3List normals, Uint16List indices, int vertexOffset, int indexOffset) {
-    List<Vector3> normalValues = [
+    var normalValues = [
         new Vector3(-1.0,  0.0,  0.0),
         new Vector3( 0.0, -1.0,  0.0),
         new Vector3( 0.0,  0.0, -1.0),
@@ -262,7 +262,7 @@ class BoxGenerator extends MeshGenerator {
                         Vector3 center})
   {
     // Setup the generator
-    BoxGenerator generator = new BoxGenerator();
+    var generator = new BoxGenerator();
 
     if (extents != null) {
       generator.extents = extents;

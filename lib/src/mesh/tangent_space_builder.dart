@@ -25,8 +25,8 @@ class TangentSpaceBuilder {
     // Create temporary arrays to hold the tangent data
     vertexCount = maxVertex - vertexOffset;
 
-    Vector3List tan1 = new Vector3List(vertexCount);
-    Vector3List tan2 = new Vector3List(vertexCount);
+    var tan1 = new Vector3List(vertexCount);
+    var tan2 = new Vector3List(vertexCount);
 
     {
       var v0 = new Vector3.zero();
@@ -98,9 +98,9 @@ class TangentSpaceBuilder {
     }
 
     {
-      Vector3 n = new Vector3.zero();
-      Vector3 t = new Vector3.zero();
-      Vector3 nCrossT = new Vector3.zero();
+      var n = new Vector3.zero();
+      var t = new Vector3.zero();
+      var nCrossT = new Vector3.zero();
 
       for (int i = vertexOffset, j = 0; i < maxVertex; ++i, ++j) {
         normals.getAt(i, n);

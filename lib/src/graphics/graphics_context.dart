@@ -48,9 +48,20 @@ class GraphicsContext {
   int _clearStencil = 0;
 
   //---------------------------------------------------------------------
+  // Default variables
+  //---------------------------------------------------------------------
+
+  /// The default [RasterizerState] to use.
+  ///
+  /// Constructed with the values in [RasterizerState.cullClockwise].
+  RasterizerState _rasterizerStateDefault;
+
+  //---------------------------------------------------------------------
   // State variables
   //---------------------------------------------------------------------
 
+  /// The current [RasterizerState] of the pipeline.
+  RasterizerState _rasterizerState;
   /// The current [Viewport] of the pipeline.
   Viewport _viewport;
 
@@ -166,26 +177,128 @@ class GraphicsContext {
       return;
     }
 
-    if ((_viewport.x      != value.x)     ||
-        (_viewport.y      != value.y)     ||
-        (_viewport.width  != value.width) ||
-        (_viewport.height != value.height))
-    {
-      _gl.viewport(value.x, value.y, value.width, value.height);
+    // Set the viewport values
+    var x = value.x,
+        y = value.y,
+        width = value.width,
+        height = value.height;
 
-      _viewport.x      = value.x;
-      _viewport.y      = value.y;
-      _viewport.width  = value.width;
-      _viewport.height = value.height;
+    if ((x      != _viewport.x)     ||
+        (y      != _viewport.y)     ||
+        (width  != _viewport.width) ||
+        (height != _viewport.height))
+    {
+      _gl.viewport(x, y, width, height);
+
+      _viewport.x      = x;
+      _viewport.y      = y;
+      _viewport.width  = width;
+      _viewport.height = height;
     }
 
-    if ((_viewport.minDepth != value.minDepth) ||
-        (_viewport.maxDepth != value.maxDepth))
-    {
-      _gl.depthRange(value.minDepth, value.maxDepth);
+    // Set the depth values
+    var minDepth = value.minDepth,
+        maxDepth = value.maxDepth;
 
-      _viewport.minDepth = value.minDepth;
-      _viewport.maxDepth = value.maxDepth;
+    if ((minDepth != _viewport.minDepth) ||
+        (maxDepth != _viewport.maxDepth))
+    {
+      _gl.depthRange(minDepth, maxDepth);
+
+      _viewport.minDepth = minDepth;
+      _viewport.maxDepth = maxDepth;
+    }
+  }
+
+  /// Sets the current [RasterizerState] to use on the pipeline.
+  ///
+  /// If [rasterizerState] is null all values of the pipeline associated with
+  /// rasterization will be reset to their defaults.
+  set rasterizerState(RasterizerState value) {
+    if (value == null) {
+      rasterizerState = _rasterizerStateDefault;
+      return;
+    }
+
+    // Disable/Enable culling if necessary
+    var cullMode = value.cullMode,
+        currentCullMode = _rasterizerState.cullMode,
+        cullModeChanged = cullMode != currentCullMode;
+
+    if (cullModeChanged) {
+      if (cullMode == CullMode.None) {
+        _gl.disable(WebGL.CULL_FACE);
+      } else if (currentCullMode == CullMode.None) {
+        _gl.enable(WebGL.CULL_FACE);
+      }
+
+      _rasterizerState.cullMode = cullMode;
+    }
+
+    // If culling is enabled enable culling mode and winding order
+    if (cullMode != CullMode.None) {
+      // Modify the cull mode if necessary
+      if (cullModeChanged) {
+        _gl.cullFace(_cullModeToWebGL(cullMode));
+
+        _rasterizerState.cullMode = cullMode;
+      }
+
+      // Modify the front face if necessary
+      var frontFace = value.frontFace,
+          currentFrontFace = _rasterizerState.frontFace;
+
+      if (frontFace != currentFrontFace) {
+        _gl.frontFace(_frontFaceToWebGL(frontFace));
+
+        _rasterizerState.frontFace = frontFace;
+      }
+    }
+
+    // Check for a polygon offset
+    var depthBias = value.depthBias,
+        slopeScaleDepthBias = value.slopeScaleDepthBias,
+        offsetEnabled = ((depthBias != 0.0) || (slopeScaleDepthBias != 0.0)),
+        currentDepthBias = _rasterizerState.depthBias,
+        currentSlopeScaleDepthBias = _rasterizerState.slopeScaleDepthBias,
+        currentOffsetEnabled = ((currentDepthBias != 0.0) || (currentSlopeScaleDepthBias != 0.0));
+
+    if (offsetEnabled) {
+      // Enable polygon offset
+      if (!currentOffsetEnabled) {
+        _gl.enable(WebGL.POLYGON_OFFSET_FILL);
+      }
+
+      // Modify the polygon offset if necessary
+      if ((depthBias           != currentDepthBias) ||
+          (slopeScaleDepthBias != currentSlopeScaleDepthBias))
+      {
+        _gl.polygonOffset(depthBias, slopeScaleDepthBias);
+
+        _rasterizerState.depthBias           = depthBias;
+        _rasterizerState.slopeScaleDepthBias = slopeScaleDepthBias;
+      }
+    } else {
+      // Disable polygon offset
+      if (!currentOffsetEnabled) {
+        _gl.disable(WebGL.POLYGON_OFFSET_FILL);
+
+        _rasterizerState.depthBias           = depthBias;
+        _rasterizerState.slopeScaleDepthBias = slopeScaleDepthBias;
+      }
+    }
+
+    // Disable/Enable scissor test if necessary
+    var scissorTestEnabled = value.scissorTestEnabled;
+
+    if (scissorTestEnabled != _rasterizerState.scissorTestEnabled) {
+      if (scissorTestEnabled) {
+        _gl.enable(WebGL.SCISSOR_TEST);
+      } else {
+        _gl.disable(WebGL.SCISSOR_TEST);
+      }
+
+      _rasterizerState.scissorTestEnabled = scissorTestEnabled;
     }
   }
 
@@ -278,7 +391,12 @@ class GraphicsContext {
       _setupVertexData();
     }
 
-    _gl.drawElements(primitiveType, _indexBuffer.indexCount, _indexBuffer.indexElementSize, 0);
+    _gl.drawElements(
+        primitiveType,
+        _indexBuffer.indexCount,
+        _indexElementSizeToWebGL(_indexBuffer.indexElementSize),
+        0
+    );
   }
 
   void drawIndexedPrimitiveRange(int primitiveType, int offset, int count) {
@@ -394,7 +512,11 @@ class GraphicsContext {
   void _setIndexBufferData(IndexBuffer buffer, TypedData data) {
     _bindIndexBuffer(buffer);
 
-    _gl.bufferData(WebGL.ELEMENT_ARRAY_BUFFER, data, buffer._bufferUsage);
+    _gl.bufferDataTyped(
+        WebGL.ELEMENT_ARRAY_BUFFER,
+        data,
+        _bufferUsageToWebGL(buffer._bufferUsage)
+    );
   }
 
   /// Replaces a portion of the buffer with the values contained in [data].
@@ -404,7 +526,7 @@ class GraphicsContext {
   void _replaceIndexBufferData(IndexBuffer buffer, TypedData data, int offset) {
     _bindIndexBuffer(buffer);
 
-    _gl.bufferSubData(WebGL.ELEMENT_ARRAY_BUFFER, offset, data);
+    _gl.bufferSubDataTyped(WebGL.ELEMENT_ARRAY_BUFFER, offset, data);
   }
 
   //---------------------------------------------------------------------
@@ -425,7 +547,11 @@ class GraphicsContext {
   void _setVertexBufferData(VertexBuffer buffer, TypedData data) {
     _bindVertexBuffer(buffer);
 
-    _gl.bufferData(WebGL.ARRAY_BUFFER, data, buffer._bufferUsage);
+    _gl.bufferDataTyped(
+        WebGL.ARRAY_BUFFER,
+        data,
+        _bufferUsageToWebGL(buffer._bufferUsage)
+    );
   }
 
   /// Replaces a portion of the buffer with the values contained in [data].
@@ -435,7 +561,7 @@ class GraphicsContext {
   void _replaceVertexBufferData(VertexBuffer buffer, TypedData data, int offset) {
     _bindVertexBuffer(buffer);
 
-    _gl.bufferSubData(WebGL.ARRAY_BUFFER, offset, data);
+    _gl.bufferSubDataTyped(WebGL.ARRAY_BUFFER, offset, data);
   }
 
   //---------------------------------------------------------------------

@@ -1,6 +1,7 @@
 name: lithium_ion
 description: A sample web application
 dependencies:
+  logging: any
   vector_math:
     git: https://github.com/johnmccutchan/vector_math.git
 dev_dependencies:

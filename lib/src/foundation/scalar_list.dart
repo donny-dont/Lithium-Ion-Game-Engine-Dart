@@ -25,15 +25,13 @@ class ScalarList extends StridedList<double> {
   // Construction
   //---------------------------------------------------------------------
 
-  /// Creates an instance of the [ScalarList] class with the given [length]
-  /// (in elements).
+  /// Creates an instance of the [ScalarList] class with the given [length] (in elements).
   ///
   /// Initially all elements are set to zero.
   ScalarList(int length)
       : super._create(length, _itemCount);
 
-  /// Creates a [ScalarList] view of the specified region in the specified byte
-  /// buffer.
+  /// Creates a [ScalarList] view of the specified region in the specified byte buffer.
   ScalarList.view(ByteBuffer buffer, [int offsetInBytes = 0, int strideInBytes = BYTES_PER_ELEMENT])
       : super._view(buffer, offsetInBytes, strideInBytes, BYTES_PER_ELEMENT);
 

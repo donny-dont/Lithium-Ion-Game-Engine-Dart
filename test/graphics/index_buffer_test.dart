@@ -13,12 +13,12 @@ import 'package:unittest/mock.dart';
 import 'package:lithium_ion/graphics.dart';
 
 import 'graphics_mocks.dart';
+import '../test_helpers.dart';
 
 var graphicsDevice;
 var gl;
-var throwsAssertionError = throwsA(new isInstanceOf<AssertionError>());
 
-void testSetData(IndexBuffer buffer, int elementSize) {
+void testSetData(IndexBuffer buffer, IndexElementSize elementSize) {
   // Create buffer data
   var data = (elementSize == IndexElementSize.Short)
       ? new Uint16List(4)
@@ -33,10 +33,10 @@ void testSetData(IndexBuffer buffer, int elementSize) {
 
   expect(buffer.indexCount, data.length);
 
-  gl.getLogs(callsTo('bufferData', WebGL.ELEMENT_ARRAY_BUFFER, data, buffer.bufferUsage)).verify(happenedOnce);
+  gl.getLogs(callsTo('bufferDataTyped', WebGL.ELEMENT_ARRAY_BUFFER, data, buffer.bufferUsage)).verify(happenedOnce);
 }
 
-void testReplaceData(IndexBuffer buffer, int elementSize) {
+void testReplaceData(IndexBuffer buffer, IndexElementSize elementSize) {
   // Replace portions of the buffer data
   var subData = (elementSize == IndexElementSize.Short)
       ? new Uint16List(2)
@@ -49,10 +49,10 @@ void testReplaceData(IndexBuffer buffer, int elementSize) {
 
   buffer.replaceData(subData, offset);
 
-  gl.getLogs(callsTo('bufferSubData', WebGL.ELEMENT_ARRAY_BUFFER, offset, subData)).verify(happenedOnce);
+  gl.getLogs(callsTo('bufferSubDataTyped', WebGL.ELEMENT_ARRAY_BUFFER, offset, subData)).verify(happenedOnce);
 }
 
-void testConstructor(int bufferUsage, int elementSize) {
+void testConstructor(BufferUsage bufferUsage, IndexElementSize elementSize) {
   // Clear the logs
   gl.clearLogs();
 

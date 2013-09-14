@@ -30,10 +30,7 @@ class Viewport extends GraphicsResource {
 
   /// Creates an instance of the [Viewport] class.
   Viewport(GraphicsDevice device)
-    : super._internal(device)
-  {
-    _graphicsDevice._createWithoutBinding(this);
-  }
+    : super._internalWithoutBinding(device);
 
   /// Creates an instance of the [Viewport] class.
   ///
@@ -101,14 +98,5 @@ class Viewport extends GraphicsResource {
     assert((value >= 0.0) && (value <= 1.0));
 
     _maxDepth = value;
-  }
-
-  //---------------------------------------------------------------------
-  // Public methods
-  //---------------------------------------------------------------------
-
-  /// Immediately releases the unmanaged resources used by this object.
-  void dispose() {
-    _graphicsDevice._destroyWithoutBinding(this);
   }
 }

@@ -159,8 +159,8 @@ class PlaneGenerator extends MeshGenerator {
 
     double z = center.z;
 
-    List<double> xSegmentList = _createSegmentList(minX, maxX, _xSegments);
-    List<double> ySegmentList = _createSegmentList(minY, maxY, _ySegments);
+    var xSegmentList = _createSegmentList(minX, maxX, _xSegments);
+    var ySegmentList = _createSegmentList(minY, maxY, _ySegments);
 
     _generatePositionsSingleSide(positions, vertexOffset, xSegmentList, ySegmentList, z);
 
@@ -173,7 +173,7 @@ class PlaneGenerator extends MeshGenerator {
 
   /// Populates the positions for a single side of the plane.
   void _generatePositionsSingleSide(Vector3List positions, int vertexOffset, List<double> xSegmentList, List<double> ySegmentList, double z) {
-    Vector3 position = new Vector3.zero();
+    var position = new Vector3.zero();
     position.z = z;
 
     for (int y = 0; y <= ySegments; ++y) {
@@ -195,8 +195,8 @@ class PlaneGenerator extends MeshGenerator {
   /// at the specified [vertexOffset]. When complete the \[[vertexOffset],
   /// [vertexOffset] + [vertexCount]\] within the array will be populated.
   void _generateTextureCoordinates(Vector2List texCoords, int vertexOffset) {
-    List<double> uSegmentList = _createSegmentList(0.0, 1.0, xSegments);
-    List<double> vSegmentList = _createSegmentList(1.0, 0.0, ySegments);
+    var uSegmentList = _createSegmentList(0.0, 1.0, xSegments);
+    var vSegmentList = _createSegmentList(1.0, 0.0, ySegments);
 
     _generateTextureCoordinatesSingleSide(texCoords, vertexOffset, uSegmentList, vSegmentList);
 
@@ -209,7 +209,7 @@ class PlaneGenerator extends MeshGenerator {
 
   /// Populates the texture coordinates for a single side of the plane.
   void _generateTextureCoordinatesSingleSide(Vector2List texCoords, int vertexOffset, List<double> uSegmentList, List<double> vSegmentList) {
-    Vector2 texCoord = new Vector2.zero();
+    var texCoord = new Vector2.zero();
 
     for (int y = 0; y <= ySegments; ++y) {
       texCoord.y = vSegmentList[y];
@@ -237,7 +237,7 @@ class PlaneGenerator extends MeshGenerator {
   /// This is the case for something like a box or plane.
   void _generateNormals(Vector3List positions, Vector3List normals, Uint16List indices, int vertexOffset, int indexOffset) {
     int singleSideVertexCount = _singleSideVertexCount;
-    Vector3 normal = new Vector3(0.0, 0.0, 1.0);
+    var normal = new Vector3(0.0, 0.0, 1.0);
 
     int maxIndex = vertexOffset + singleSideVertexCount;
     for (int i = vertexOffset; i < maxIndex; ++i) {
@@ -261,7 +261,7 @@ class PlaneGenerator extends MeshGenerator {
 
   /// Creates a [List] containing the segments.
   static List<double> _createSegmentList(double minValue, double maxValue, int segments) {
-    List<double> list = new List<double>(segments + 1);
+    var list = new List<double>(segments + 1);
 
     double value = minValue;
     double increment = (maxValue - minValue) / segments;
@@ -311,7 +311,7 @@ class PlaneGenerator extends MeshGenerator {
                           Vector3 center})
   {
     // Setup the generator
-    PlaneGenerator generator = new PlaneGenerator();
+    var generator = new PlaneGenerator();
 
     generator.xSegments = xSegments;
     generator.ySegments = ySegments;
@@ -336,7 +336,7 @@ class PlaneGenerator extends MeshGenerator {
                          Vector3 center})
   {
     // Setup the generator
-    PlaneGenerator generator = new PlaneGenerator.quads();
+    var generator = new PlaneGenerator.quads();
 
     if (extents != null) {
       generator.extents = extents;

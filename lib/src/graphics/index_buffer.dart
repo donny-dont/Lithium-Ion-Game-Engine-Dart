@@ -14,9 +14,9 @@ class IndexBuffer extends GraphicsResource {
   /// The binding to [WebGL].
   WebGL.Buffer _binding;
   /// The [BufferUsage] of the buffer.
-  int _bufferUsage;
+  BufferUsage _bufferUsage;
   /// The [IndexElementSize] of the buffer.
-  int _indexElementSize;
+  IndexElementSize _indexElementSize;
   /// The number of indices.
   int _indexCount = 0;
 
@@ -34,7 +34,7 @@ class IndexBuffer extends GraphicsResource {
   /// multiple times, but doing so could have a negative performance impact.
   /// If the data is changing every frame or so the [IndexBuffer] should be
   /// created using the [IndexBuffer.dynamic] constructor.
-  IndexBuffer.static(GraphicsDevice device, [int elementSize = IndexElementSize.Short])
+  IndexBuffer.static(GraphicsDevice device, [IndexElementSize elementSize = IndexElementSize.Short])
       : _bufferUsage = BufferUsage.Static
       , _indexElementSize = elementSize
       , super._internal(device)
@@ -51,7 +51,7 @@ class IndexBuffer extends GraphicsResource {
   /// If [setData], or [replaceData] are not being called on a frequent basis,
   /// then the [IndexBuffer] should be created using the [IndexBuffer.static]
   /// constructor.
-  IndexBuffer.dynamic(GraphicsDevice device, [int elementSize = IndexElementSize.Short])
+  IndexBuffer.dynamic(GraphicsDevice device, [IndexElementSize elementSize = IndexElementSize.Short])
       : _bufferUsage = BufferUsage.Dynamic
       , _indexElementSize = elementSize
       , super._internal(device)
@@ -64,10 +64,10 @@ class IndexBuffer extends GraphicsResource {
   //---------------------------------------------------------------------
 
   /// The [BufferUsage] of the buffer.
-  int get bufferUsage => _bufferUsage;
+  BufferUsage get bufferUsage => _bufferUsage;
 
   /// The [IndexElementSize] of the buffer.
-  int get indexElementSize => _indexElementSize;
+  IndexElementSize get indexElementSize => _indexElementSize;
 
   /// The number of indices.
   int get indexCount => _indexCount;
@@ -83,7 +83,7 @@ class IndexBuffer extends GraphicsResource {
 
     _graphicsDevice._graphicsContext._setIndexBufferData(this, data);
 
-    _indexCount = data.lengthInBytes ~/ IndexElementSize._getSizeInBytes(_indexElementSize);
+    _indexCount = data.lengthInBytes ~/ _indexElementSizeInBytes(_indexElementSize);
   }
 
   /// Replaces a portion of the buffer with the values contained in [data].

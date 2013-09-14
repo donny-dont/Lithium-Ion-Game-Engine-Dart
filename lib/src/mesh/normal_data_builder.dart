@@ -23,9 +23,9 @@ class NormalDataBuilder {
   /// is not the case the values within [normals] will be incorrect.
   static void build(Vector3List positions, Vector3List normals, Uint16List indices, [int vertexOffset = 0, int vertexCount, int indexOffset = 0, int indexCount]) {
     // Temporary variables
-    Vector3 v0 = new Vector3.zero();
-    Vector3 v1 = new Vector3.zero();
-    Vector3 v2 = new Vector3.zero();
+    var v0 = new Vector3.zero();
+    var v1 = new Vector3.zero();
+    var v2 = new Vector3.zero();
 
     // Get the maximum index within indices to use
     int maxIndex = _getMaxIndex(indexOffset, indexCount, indices.length);
@@ -58,7 +58,7 @@ class NormalDataBuilder {
     int maxVertex = _getMaxIndex(vertexOffset, vertexCount, normals.length);
 
     // Normalize the values
-    Vector3 normal = new Vector3.zero();
+    var normal = new Vector3.zero();
 
     for (int i = vertexOffset; i < maxVertex; ++i) {
       normals.getAt(i, normal);

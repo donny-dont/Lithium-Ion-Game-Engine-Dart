@@ -63,13 +63,18 @@ class Application {
     _onActivatedController = new StreamController<ActivationEvent>();
     _onActivated = _onActivatedController.stream;
 
-    // \TODO Hook into visibility API
-
     // Create the deactivated stream
     _onDeactivatedController = new StreamController<DeactivationEvent>();
     _onDeactivated = _onDeactivatedController.stream;
 
-    // \TODO Hook into visibility API
+    // Hook into visibility API
+    Html.document.onVisibilityChange.listen((event) {
+      if (Html.document.hidden) {
+        _onDeactivatedController.add(new DeactivationEvent._internal());
+      } else {
+        _onActivatedController.add(new ActivationEvent._internal());
+      }
+    });
 
     // Create the exit stream
     _onExitController = new StreamController<ExitEvent>();

@@ -6,65 +6,56 @@
 part of lithium_graphics;
 
 /// Defines the size of an element of an index buffer.
-class IndexElementSize {
+class IndexElementSize implements Enum {
   //---------------------------------------------------------------------
-  // Serialization names
+  // Member variables
   //---------------------------------------------------------------------
 
-  /// String representation of [Short].
-  static const String _shortName = 'Short';
-  /// String representation of [Integer].
-  static const String _integerName = 'Integer';
+  /// The index of the enumeration within [values].
+  final int index;
+
+  //---------------------------------------------------------------------
+  // Construction
+  //---------------------------------------------------------------------
+
+  /// Create an enumeration with the given index.
+  const IndexElementSize._internal(this.index);
 
   //---------------------------------------------------------------------
   // Enumerations
   //---------------------------------------------------------------------
 
   /// Each index element is a 16-bit short value.
-  static const int Short = WebGL.UNSIGNED_SHORT;
+  static const IndexElementSize Short = const IndexElementSize._internal(0);
   /// Each index element is a 32-bit integer value.
   ///
   /// 32-bit indices are only supported through a [WebGL] extension. This can
   /// be verified through [GraphicsDeviceCapabilities.hasUnsignedIntIndices].
-  static const int Integer = WebGL.UNSIGNED_INT;
+  static const IndexElementSize Integer = const IndexElementSize._internal(1);
 
   //---------------------------------------------------------------------
-  // Class methods
+  // Values
   //---------------------------------------------------------------------
 
-  /// Convert from a [String] name to the corresponding [IndexElementSize] enumeration.
-  static int parse(String name) {
-    if (name == _shortName) {
-      return Short;
-    } else if (name == _integerName) {
-      return Integer;
-    }
+  /// List of enumerations.
+  static const List<IndexElementSize> values = const [
+      Short,
+      Integer
+  ];
+}
 
-    assert(false);
-    return Short;
-  }
+/// Mapping of [IndexElementSize] enumerations to WebGL.
+const List<int> _indexElementSizeMapping = const [
+    WebGL.UNSIGNED_SHORT, // Static
+    WebGL.UNSIGNED_INT    // Dynamic
+];
 
-  /// Converts the [IndexElementSize] enumeration to a [String].
-  static String stringify(int value) {
-    if (value == Short) {
-      return _shortName;
-    } else if (value == Integer) {
-      return _integerName;
-    }
+/// Converts the [IndexElementSize] enumeration to its WebGL value.
+int _indexElementSizeToWebGL(IndexElementSize indexElementSize) {
+  return _indexElementSizeMapping[indexElementSize.index];
+}
 
-    assert(false);
-    return _shortName;
-  }
-
-  /// Checks whether the value is a valid enumeration.
-  ///
-  /// Should be gotten rid of when enums are supported properly.
-  static bool isValid(int value) {
-    return ((value == Short) || (value == Integer));
-  }
-
-  /// The size of the [IndexElementSize] in bytes.
-  static int _getSizeInBytes(int value) {
-    return (value == Short) ? 2 : 4;
-  }
+/// Gets the size in bytes of the [IndexElementSize].
+int _indexElementSizeInBytes(IndexElementSize indexElementSize) {
+  return (IndexElementSize.Short == indexElementSize) ? 2 : 4;
 }

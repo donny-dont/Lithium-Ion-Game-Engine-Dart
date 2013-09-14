@@ -10,7 +10,7 @@ part of lithium_content;
 /// This corresponds roughly to the shader specification within the
 /// [OpenGL Transmission Format (glTF)](https://github.com/KhronosGroup/glTF/blob/master/specification/README.md#shader)
 /// with the addition of a field that can hold the source code.
-class ShaderFormat extends OpenGLTransmissionFormat {
+class PassFormat extends OpenGLTransmissionFormat {
   //---------------------------------------------------------------------
   // Member variables
   //---------------------------------------------------------------------

@@ -72,14 +72,14 @@ abstract class MeshGenerator {
     _generateIndices(indices, vertexOffset, indexOffset);
 
     // Generate texture coordinates if requested
-    Vector2List texCoords = vertices.textureCoordinates;
+    var texCoords = vertices.textureCoordinates;
 
     if (texCoords != null) {
       _generateTextureCoordinates(texCoords, vertexOffset);
     }
 
     // Generate normals if requested
-    Vector3List normals = vertices.normals;
+    var normals = vertices.normals;
 
     if (normals != null) {
       _generateNormals(positions, normals, indices, vertexOffset, indexOffset);
@@ -180,7 +180,7 @@ abstract class MeshGenerator {
     indexBuffer.setData(indices);
 
     // Create the mesh
-    Mesh mesh = new Mesh(graphicsDevice, declaration, [ vertexBuffer ], indexBuffer);
+    var mesh = new Mesh(graphicsDevice, declaration, [ vertexBuffer ], indexBuffer);
 
     return mesh;
   }

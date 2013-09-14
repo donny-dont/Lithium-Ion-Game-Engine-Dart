@@ -17,7 +17,13 @@ import 'graphics_mocks.dart';
 var graphicsDevice;
 var gl;
 
-void testConstructor(int bufferUsage) {
+int bufferUsageToWebGL(BufferUsage bufferUsage) {
+  return (bufferUsage == BufferUsage.Static)
+      ? WebGL.STATIC_DRAW
+      : WebGL.DYNAMIC_DRAW;
+}
+
+void testConstructor(BufferUsage bufferUsage) {
   // Clear the logs
   gl.clearLogs();
 
@@ -51,8 +57,8 @@ void testConstructor(int bufferUsage) {
   // Check GL calls
   gl.getLogs(callsTo('createBuffer')).verify(happenedOnce);
   gl.getLogs(callsTo('bindBuffer')).verify(happenedOnce);
-  gl.getLogs(callsTo('bufferData', WebGL.ARRAY_BUFFER, data, bufferUsage)).verify(happenedOnce);
-  gl.getLogs(callsTo('bufferSubData', WebGL.ARRAY_BUFFER, offset, subData)).verify(happenedOnce);
+  gl.getLogs(callsTo('bufferDataTyped', WebGL.ARRAY_BUFFER, data, bufferUsageToWebGL(bufferUsage))).verify(happenedOnce);
+  gl.getLogs(callsTo('bufferSubDataTyped', WebGL.ARRAY_BUFFER, offset, subData)).verify(happenedOnce);
 
   expect(gl.log.logs.length, 4);
 }

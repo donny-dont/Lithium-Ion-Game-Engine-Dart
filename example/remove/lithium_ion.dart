@@ -1,6 +1,7 @@
 import 'dart:html';
 import 'dart:typed_data';
 import 'dart:web_gl' as WebGL;
+import 'package:lithium_ion/foundation.dart';
 import 'package:lithium_ion/graphics.dart';
 import 'package:lithium_ion/mesh.dart';
 import 'package:vector_math/vector_math.dart';
@@ -15,32 +16,24 @@ EffectPass effectPass;
 
 String vertShader =
 '''
-attribute Vector3 vPosition;
-attribute Vector4 vColor;
+attribute vec3 vPosition;
+attribute vec4 vColor;
 
 uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
 
-struct Light {
-  Vector4 uPointLightingLocation[16];
-};
-
-uniform Light light;
-
-varying lowp Vector4 color;
+varying lowp vec4 color;
 
 void main(void) {
-  gl_Position = uPMatrix * uMVMatrix * Vector4(vPosition, 1.0);
+  gl_Position = uPMatrix * uMVMatrix * vec4(vPosition, 1.0);
 
-  for (int i = 0; i < 16; ++i) {
-    color += vColor * light.uPointLightingLocation[i];
-  }
+  color = vColor;
 }
 ''';
 
 String fragShader =
 '''
-varying lowp Vector4 color;
+varying lowp vec4 color;
 
 void main(void) {
   gl_FragColor = color;
@@ -69,11 +62,11 @@ void init() {
   var pUniform  = gl.getUniformLocation(program, 'uPMatrix');
   gl.uniformMatrix4fv(pUniform, false, pMatrixList);
 
-  var vMatrix = new Matrix4.identity();//makeViewMatrix(new Vector3(0.0, 0.0, -6.0), new Vector3.zero(), new Vector3(0.0, 1.0, 0.0));
-  vMatrix.setTranslation(new Vector3(0.0, 0.0, -6.0));
+  var vMatrix = makeViewMatrix(new Vector3(0.0, 0.0, -6.0), new Vector3.zero(), new Vector3(0.0, 1.0, 0.0));
+  //vMatrix.setTranslation(new Vector3(0.0, 0.0, -6.0));
   var vMatrixList = new Float32List(16);
 
-  vMatrix.copyIntoArray(pMatrixList);
+  vMatrix.copyIntoArray(vMatrixList);
 
   var mvUniform = gl.getUniformLocation(program, 'uMVMatrix');
   gl.uniformMatrix4fv(mvUniform, false, vMatrixList);
@@ -82,7 +75,7 @@ void init() {
 void update(num time) {
   gl.clear(WebGL.COLOR_BUFFER_BIT | WebGL.DEPTH_BUFFER_BIT);
 
-//  context.setMesh(mesh);
+  //context.setMesh(mesh);
   context.setVertexDeclaration(declaration);
   context.setVertexBuffers([ vertexBuffer ]);
 
@@ -96,21 +89,29 @@ void main() {
   surface.width = 640;
   surface.height = 480;
 
-  var config = new GraphicsDeviceConfig();
-  //config.debug = f;
+  enableLogging();
 
+  print('GraphicsDeviceConfig');
+  var config = new GraphicsDeviceConfig();
+  //config.debug = true;
+
+  print('new GraphicsDevice');
   device = new GraphicsDevice(surface, config);
 
-  //print(device.capabilities);
+  print(device.capabilities);
 
+  print('context');
   context = device.graphicsContext;
   gl = device.gl;
   //gl.onError.listen(onGLError);
 
+  print('gl.clearColor');
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
+  print('init');
   init();
 
+  print('declaration');
   declaration = new VertexDeclaration.positionColor(device);
 
   mesh = PlaneGenerator.createPlane(device, declaration, doubleSided: true, center: new Vector3(0.0, 0.0, -2.0));

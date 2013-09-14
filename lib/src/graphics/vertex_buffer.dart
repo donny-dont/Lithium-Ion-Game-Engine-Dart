@@ -14,7 +14,7 @@ class VertexBuffer extends GraphicsResource {
   /// The binding to [WebGL].
   WebGL.Buffer _binding;
   /// The [BufferUsage] of the buffer.
-  int _bufferUsage;
+  BufferUsage _bufferUsage;
 
   //---------------------------------------------------------------------
   // Construction
@@ -58,7 +58,7 @@ class VertexBuffer extends GraphicsResource {
   //---------------------------------------------------------------------
 
   /// The [BufferUsage] of the buffer.
-  int get bufferUsage => _bufferUsage;
+  BufferUsage get bufferUsage => _bufferUsage;
 
   //---------------------------------------------------------------------
   // Public methods

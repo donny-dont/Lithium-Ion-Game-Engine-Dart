@@ -30,6 +30,20 @@ abstract class GraphicsResource implements Disposable {
     assert(device != null);
   }
 
+  /// Creates an instance of the [GraphicsResource] class.
+  ///
+  /// The [device] is used to bind any resources to the underlying [WebGL]
+  /// implementation.
+  ///
+  /// This constructor should be used for resources that do not have an
+  /// internal binding to WebGL.
+  GraphicsResource._internalWithoutBinding(GraphicsDevice device)
+      : _graphicsDevice = device
+  {
+    assert(device != null);
+    device._createWithoutBinding(this);
+  }
+
   //---------------------------------------------------------------------
   // Properties
   //---------------------------------------------------------------------
@@ -41,10 +55,15 @@ abstract class GraphicsResource implements Disposable {
   String get name => _name;
   set name(String value) { _name = value; }
 
+  /// Whether the object has been disposed
+  bool get isDisposed => _graphicsDevice == null;
+
   //---------------------------------------------------------------------
   // Public methods
   //---------------------------------------------------------------------
 
   /// Immediately releases the unmanaged resources used by this object.
-  void dispose();
+  void dispose() {
+    _graphicsDevice._destroyWithoutBinding(this);
+  }
 }
