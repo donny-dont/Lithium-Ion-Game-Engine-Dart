@@ -87,6 +87,8 @@ class UpdateLoop {
   /// the updating of [GamePad]s because the API is not event based.
   static void _onUpdate(num time) {
     // Update the game time
+    var time = new Time();
+    time._update();
 
     // Update the GamePads
 

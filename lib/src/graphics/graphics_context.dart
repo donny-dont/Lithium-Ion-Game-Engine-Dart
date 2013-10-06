@@ -127,6 +127,8 @@ class GraphicsContext {
 
   /// The currently bound [EffectPass].
   EffectPass _boundEffectPass;
+  /// The [EffectPass] to bind.
+  EffectPass _effectPass;
 
   //---------------------------------------------------------------------
   // Construction
@@ -165,11 +167,23 @@ class GraphicsContext {
 
     _gl.viewport(_viewport.x, _viewport.y, _viewport.width, _viewport.height);
     _gl.depthRange(_viewport.minDepth, _viewport.maxDepth);
+
+    _gl.enable(WebGL.DEPTH_TEST);
+
   }
 
   //---------------------------------------------------------------------
   // State properties
   //---------------------------------------------------------------------
+
+  /// Sets the color to clear the color buffer with.
+  set clearColor(Vector4 value) {
+    if (!isVector4Equal(_clearColor, value)) {
+      value.copyInto(_clearColor);
+
+      _gl.clearColor(value.r, value.g, value.b, value.a);
+    }
+  }
 
   /// Sets a [Viewport] identifying the portion of the render target to receive draw calls.
   set viewport(Viewport value) {
@@ -304,11 +318,15 @@ class GraphicsContext {
 
   /// Sets an [EffectPass] that controls rendering.
   set effectPass(EffectPass value) {
-    if (_boundEffectPass != value) {
-      _gl.useProgram(value._binding);
+    _effectPass = value;
+  }
 
-      _boundEffectPass = value;
-    }
+  //---------------------------------------------------------------------
+  // Clear methods
+  //---------------------------------------------------------------------
+
+  void clearBuffers() {
+    _gl.clear(WebGL.COLOR_BUFFER_BIT | WebGL.DEPTH_BUFFER_BIT | WebGL.STENCIL_BUFFER_BIT);
   }
 
   //---------------------------------------------------------------------
@@ -385,11 +403,14 @@ class GraphicsContext {
 
   void drawIndexedPrimitives(int primitiveType) {
     assert(PrimitiveType.isValid(primitiveType));
-    assert(_indexBuffer != null);
+    assert((_indexBuffer != null) || ((_mesh != null) && (_mesh._indexBuffer != null)));
 
     if (_shouldBindVertexData()) {
       _setupVertexData();
     }
+
+    _bindEffectPass(_effectPass);
+    _setEffectParameters();
 
     _gl.drawElements(
         primitiveType,
@@ -412,8 +433,39 @@ class GraphicsContext {
   // Drawing internal methods
   //---------------------------------------------------------------------
 
+  /// Determines if the vertex data should be bound.
+  bool _shouldBindVertexData() {
+    // Check for VertexArrayObject
+    if (_mesh != null) {
+      return _boundMesh != _mesh;
+    }
+
+    // Check the vertex declaration
+    if (_boundVertexDeclaration == _vertexDeclaration) {
+      // See if the vertex buffers have changed
+      for (int i = 0; i < _vertexBufferCount; ++i) {
+        if (_boundVertexBuffers[i] != _vertexBuffers[i]) {
+          return true;
+        }
+      }
+
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   /// Sets up all vertex data for rendering.
   void _setupVertexData() {
+    if (_mesh != null) {
+      _bindMeshData();
+    } else {
+      _bindVertexData();
+    }
+  }
+
+  /// Binds vertex data to the pipeline.
+  void _bindVertexData() {
     // Setup the VertexDeclaration
     var elements = _vertexDeclaration._elements;
     int elementCount = elements.length;
@@ -472,25 +524,19 @@ class GraphicsContext {
     _bindIndexBuffer(_indexBuffer);
   }
 
-  /// Determines if the vertex data should be bound.
-  bool _shouldBindVertexData() {
-    // Check for VertexArrayObject
-    if (_mesh != null) {
-      return _boundMesh != _mesh;
-    }
+  void _bindMeshData() {
+    var binding = _mesh._binding;
 
-    // Check the vertex declaration
-    if (_boundVertexDeclaration == _vertexDeclaration) {
-      // See if the vertex buffers have changed
-      for (int i = 0; i < _vertexBufferCount; ++i) {
-        if (_boundVertexBuffers[i] != _vertexBuffers[i]) {
-          return true;
-        }
-      }
+    _vao.bindVertexArray(binding);
+  }
 
-      return false;
-    } else {
-      return true;
+  /// Binds the [Mesh] to the pipeline
+  void _bindMesh(Mesh mesh) {
+    if (_boundMesh != mesh) {
+      var binding = (mesh != null) ? mesh._binding : null;
+      _vao.bindVertexArray(binding);
+
+      _boundMesh = mesh;
     }
   }
 
@@ -565,16 +611,49 @@ class GraphicsContext {
   }
 
   //---------------------------------------------------------------------
-  // Mesh internal methods
+  // EffectPass internal methods
   //---------------------------------------------------------------------
 
-  /// Binds the [Mesh] to the pipeline
-  void _bindMesh(Mesh mesh) {
-    if (_boundMesh != mesh) {
-      var binding = (mesh != null) ? mesh._binding : null;
-      _vao.bindVertexArray(binding);
+  void _bindEffectPass(EffectPass effectPass) {
+    if (_boundEffectPass != effectPass) {
+      _gl.useProgram(effectPass._binding);
 
-      _boundMesh = mesh;
+      _boundEffectPass = effectPass;
     }
+  }
+
+  void _setEffectParameters() {
+    // Get the parameters
+    var parameters = _boundEffectPass._effect.parameters;
+
+    // Setup the uniforms
+    var uniforms = _boundEffectPass._uniforms;
+    var uniformCount = uniforms.length;
+
+    for (var i = 0; i < uniformCount; ++i) {
+      var uniform = uniforms[i];
+      var value = parameters._getParameterValue(uniform.name);
+
+      uniform.setValue(_gl, value);
+    }
+
+    // Setup the samplers
+    var samplers = _boundEffectPass._samplers;
+    var samplerCount = samplers.length;
+
+    for (var i = 0; i < samplerCount; ++i) {
+      var sampler = samplers[i];
+      var value = parameters._getParameterValue(sampler.name);
+
+      _setTextureAt(sampler.textureUnit, value);
+    }
+  }
+
+  //---------------------------------------------------------------------
+  // Texture internal methods
+  //---------------------------------------------------------------------
+
+  void _setTextureAt(int textureUnit, Texture texture) {
+
   }
 }

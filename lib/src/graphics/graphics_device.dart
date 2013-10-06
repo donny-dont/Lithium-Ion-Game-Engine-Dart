@@ -81,7 +81,7 @@ class GraphicsDevice {
 
     // Create the VAO extension if present
     if (_capabilities.hasVertexArrayObjects) {
-      _vao = GraphicsDeviceExtensions._getExtension(_gl, GraphicsDeviceExtensions.vertexArrayObject);
+      //_vao = GraphicsDeviceExtensions._getExtension(_gl, GraphicsDeviceExtensions.vertexArrayObject);
     }
 
     // Create the resource created stream
@@ -234,108 +234,6 @@ class GraphicsDevice {
     _notifyResourceDestroyed(graphicsResource);
   }
 
-  /// Binds an [EffectPass] to the [GraphicsDevice].
-  void _createEffectPass(EffectPass graphicsResource, String vertexSource, String fragmentSource) {
-    // Create the binding
-    var program = _gl.createProgram();
-
-    // Create the vertex shader
-    var vertexShader = _createShader(WebGL.VERTEX_SHADER, vertexSource);
-
-    bool vertexCompiled = _gl.getShaderParameter(vertexShader, WebGL.COMPILE_STATUS);
-
-    var vertexShaderLog = (!vertexCompiled) ? _gl.getShaderInfoLog(vertexShader) : '';
-
-    // Create the fragment shader
-    var fragmentShader = _createShader(WebGL.FRAGMENT_SHADER, fragmentSource);
-
-    bool fragmentCompiled = _gl.getShaderParameter(fragmentShader, WebGL.COMPILE_STATUS);
-
-    var fragmentShaderLog = (!fragmentCompiled) ? _gl.getShaderInfoLog(fragmentShader) : '';
-
-    // Check the compilation
-    if ((vertexCompiled) && (fragmentCompiled)) {
-      // Attach the shaders
-      _gl.attachShader(program, vertexShader);
-      _gl.attachShader(program, fragmentShader);
-
-      _gl.linkProgram(program);
-
-      bool programLinked = _gl.getProgramParameter(program, WebGL.LINK_STATUS);
-
-      if (programLinked) {
-        // Bind the attributes to the defaults
-        var attributes = _getVertexAttribNames(program);
-        var defaultAttributes = SemanticMap.defaultAttributes;
-        var defaultMapping = SemanticMap.defaultMapping;
-
-        int attributeCount = attributes.length;
-
-        for (int i = 0; i < attributeCount; ++i) {
-          var attributeName = attributes[i];
-
-          if (defaultAttributes.containsKey(attributeName)) {
-            int index = defaultMapping._indexOfSemantic(defaultAttributes[attributeName]);
-
-            if (index != SemanticMap.notFound) {
-              debug('Binding $attributeName to $index', 'lithium_graphics.GraphicsDevice');
-              _gl.bindAttribLocation(program, index, attributeName);
-            }
-          }
-        }
-
-        // Attributes have potentially changed
-        // Need to relink the program before the changes are reflected
-        _gl.linkProgram(program);
-
-        var uniformCount = _gl.getProgramParameter(program, WebGL.ACTIVE_UNIFORMS);
-
-        for (int i = 0; i < uniformCount; ++i) {
-          var info = _gl.getActiveUniform(program, i);
-
-          print(info.name);
-          print(info.size);
-          print(info.type.toRadixString(16));
-
-          bool isList = info.size > 1;
-          var uniform;
-          var name = info.name;
-          int type = info.type;
-
-          if (isList) {
-
-          } else {
-            switch (type) {
-              case WebGL.FLOAT     : uniform = new EffectParameterScalar._internal(name); break;
-              case WebGL.FLOAT_MAT4: uniform = new EffectParameterMatrix4._internal(name); break;
-            }
-          }
-        }
-      } else {
-
-      }
-    } else {
-      print(vertexShaderLog);
-
-    }
-
-    // Delete the shader objects
-    // After they are attached to the program they are no longer needed
-    _gl.deleteShader(vertexShader);
-    _gl.deleteShader(fragmentShader);
-
-    // Associate the binding
-    graphicsResource._binding = program;
-  }
-
-  /// Releases an [EffectPass] from the [GraphicsDevice].
-  void _destroyEffectPass(EffectPass graphicsResource) {
-    _gl.deleteProgram(graphicsResource._binding);
-    graphicsResource._binding = null;
-
-    _notifyResourceDestroyed(graphicsResource);
-  }
-
   /// Binds a [Texture] to the [GraphicsDevice].
   void _createTexture(Texture graphicsResource) {
     graphicsResource._binding = _gl.createTexture();
@@ -362,7 +260,77 @@ class GraphicsDevice {
     _gl.shaderSource(shader, source);
     _gl.compileShader(shader);
 
-    return shader;
+    var compiled = _gl.getShaderParameter(shader, WebGL.COMPILE_STATUS);
+
+    if (!compiled) {
+      debug('Could not compile shader ${_gl.getShaderInfoLog(shader)}, pname)', 'lithium_graphics.GraphicsDevice');
+
+      _gl.deleteShader(shader);
+
+      return null;
+    } else {
+      return shader;
+    }
+  }
+
+  /// Deletes a [WebGL.Shader].
+  ///
+  /// The shader is not needed after linking the program and can be deleted
+  /// at that point.
+  void _deleteShader(WebGL.Shader shader) {
+    _gl.deleteShader(shader);
+  }
+
+  WebGL.Program _createProgram(WebGL.Shader vertexShader, WebGL.Shader pixelShader) {
+    var program = _gl.createProgram();
+
+    // Attach the shaders
+    _gl.attachShader(program, vertexShader);
+    _gl.attachShader(program, pixelShader);
+
+    // Link them together
+    _gl.linkProgram(program);
+
+    var linked = _gl.getProgramParameter(program, WebGL.LINK_STATUS);
+
+    if (!linked) {
+      debug('Could not link effect pass ${_gl.getProgramInfoLog(program)}, pname)', 'lithium_graphics.GraphicsDevice');
+
+      _gl.deleteProgram(program);
+
+      return null;
+    } else {
+      return program;
+    }
+  }
+
+  /// Applys a [SemanticMap] to the [program].
+  ///
+  /// The [SemanticMap] specifies the vertex attribute locations.
+  void _applySemanticMap(WebGL.Program program) {
+    // Bind the attributes to the defaults
+    var attributes = _getVertexAttribNames(program);
+    var defaultAttributes = SemanticMap.defaultAttributes;
+    var defaultMapping = SemanticMap.defaultMapping;
+
+    int attributeCount = attributes.length;
+
+    for (int i = 0; i < attributeCount; ++i) {
+      var attributeName = attributes[i];
+
+      if (defaultAttributes.containsKey(attributeName)) {
+        int index = defaultMapping._indexOfSemantic(defaultAttributes[attributeName]);
+
+        if (index != SemanticMap.notFound) {
+          debug('Binding $attributeName to $index', 'lithium_graphics.GraphicsDevice');
+          _gl.bindAttribLocation(program, index, attributeName);
+        }
+      }
+    }
+
+    // Attributes have potentially changed
+    // Need to relink the program before the changes are reflected
+    _gl.linkProgram(program);
   }
 
   /// Gets all the associated vertex attributes for the [WebGL.Program].
@@ -381,6 +349,20 @@ class GraphicsDevice {
     return attributes;
   }
 
+  /// Gets a list of uniform values for the given program.
+  List<WebGL.ActiveInfo> _getUniforms(WebGL.Program program) {
+    var uniformCount = _gl.getProgramParameter(program, WebGL.ACTIVE_UNIFORMS);
+    var uniforms = new List<WebGL.ActiveInfo>(uniformCount);
+
+    for (int i = 0; i < uniformCount; ++i) {
+      var info = _gl.getActiveUniform(program, i);
+
+      uniforms[i] = info;
+    }
+
+    return uniforms;
+  }
+
   ///
   void _setSemantic(EffectPass graphicsResource,
                     String name,
@@ -397,5 +379,161 @@ class GraphicsDevice {
 
   void _linkProgram(EffectPass graphicsResource) {
     _gl.linkProgram(graphicsResource._binding);
+  }
+
+  void _createEffect(Effect graphicsResource) {
+    var parameters = new EffectParameterBlock();
+    var techniques = graphicsResource.techniques;
+
+    // Iterate over all techniques to get the parameters
+    techniques.forEach((_, technique) {
+      var passes = technique.passes;
+      var passCount = passes.length;
+
+      for (var i = 0; i < passCount; ++i) {
+        _createEffectParameters(parameters, passes[i]);
+      }
+    });
+
+    // Get the samplers
+    var samplers = new List<String>();
+
+    _getSamplers(parameters, samplers, '');
+
+    // Iterate over all techniques to
+    techniques.forEach((_, technique) {
+      var passes = technique.passes;
+      var passCount = passes.length;
+
+      for (var i = 0; i < passCount; ++i) {
+        _initializeEffectPass(graphicsResource, passes[i], samplers);
+      }
+    });
+
+    graphicsResource._parameters = parameters;
+  }
+
+  void _createEffectParameters(EffectParameterBlock root, EffectPass pass) {
+    var uniforms = _getUniforms(pass._binding);
+    var uniformCount = uniforms.length;
+
+    // Iterate over each uniform
+    for (var j = 0; j < uniformCount; ++j) {
+      var uniform = uniforms[j];
+      var name = uniform.name;
+      var block = root;
+      var blockNames = name.split('.');
+      var blockCountMinusOne = blockNames.length - 1;
+
+      for (var i = 0; i < blockCountMinusOne; ++i) {
+        var blockName = blockNames[i];
+
+        // See if a structure of arrays is being used
+        var leftBracketIndex = blockName.indexOf('[');
+
+        if (leftBracketIndex != -1) {
+          var arrayName = blockName.substring(0, leftBracketIndex);
+          var rightBracketIndex = blockName.indexOf(']');
+          var arrayIndex = int.parse(blockName.substring(leftBracketIndex + 1, rightBracketIndex));
+
+          block._addEffectParameterBlockList(arrayName);
+
+          var blockList = block[arrayName] as EffectParameterBlockList;
+
+          blockList._addEffectParameterBlock(arrayIndex);
+
+          block = blockList[arrayIndex];
+
+          debug('Array found ${arrayName} [${arrayIndex}]', 'lithium_graphics.GraphicsDevice');
+        } else {
+          block._addEffectParameterBlock(blockName);
+          block = block[blockName];
+
+          debug('Structure found ${blockName}', 'lithium_graphics.GraphicsDevice');
+        }
+      }
+
+      // Create the parameter
+      var parameterName = blockNames[blockCountMinusOne];
+      var parameterType = _webGLToEffectParameterType(uniform);
+
+      block._addEffectParameter(name, parameterType, uniform.size);
+    }
+  }
+
+  void _getSamplers(EffectParameterBlock root, List<String> samplers, String structName) {
+    var parameters = root._parameters;
+
+    parameters.forEach((name, value) {
+      var type = value.type;
+
+      if ((type == EffectParameterType.Texture2D) || (type == EffectParameterType.TextureCube)) {
+        var samplerName = '${structName}${name}';
+
+        debug('Sampler found ${samplerName}', 'lithium_graphics.GraphicsDevice');
+
+        samplers.add(name);
+      } else if (type == EffectParameterType.BlockList) {
+
+
+      } else if (type == EffectParameterType.Block) {
+        _getSamplers(value.value, samplers, '${structName}${name}.');
+      }
+    });
+  }
+
+  void _initializeEffectPass(Effect effect, EffectPass effectPass, List<String> samplers) {
+    var program = effectPass._binding;
+    var uniforms = _getUniforms(program);
+    var uniformCount = uniforms.length;
+
+    // Associate the Effect with the EffectPass.
+    //
+    // This is used to access the EffectParameterBlock used by the Effect.
+    effectPass._effect = effect;
+
+    // Bind the effect pass to the pipeline
+    _graphicsContext._bindEffectPass(effectPass);
+
+    for (var i = 0; i < uniformCount; ++i) {
+      var uniform = uniforms[i];
+      var name = uniform.name;
+      var type = _webGLToEffectParameterType(uniform);
+      var location = _gl.getUniformLocation(program, name);
+
+      if ((type == EffectParameterType.Texture2D) || (type == EffectParameterType.TextureCube)) {
+        // Determine what texture unit should be used.
+        //
+        // The texture unit to use corresponds to the location within the
+        // samplers array that has the same name as the uniform.
+        var textureUnit = samplers.indexOf(name);
+
+        assert(textureUnit != -1);
+
+        // Add the effect parameter sampler
+        effectPass._samplers.add(new _EffectParameterSampler._internal(name, textureUnit));
+
+        // Set the texture unit the sampler will be found at.
+        //
+        // This value only needs to be set once.
+        _gl.uniform1i(location, textureUnit);
+      } else {
+        var parameter;
+
+        switch (type) {
+          case EffectParameterType.Scalar:
+            parameter = new _EffectParameterScalar._internal(name, location);
+            break;
+          case EffectParameterType.Matrix4:
+            parameter = new _EffectParameterMatrix4._internal(name, location);
+            break;
+        }
+
+        assert(parameter != null);
+
+        // Add the effect parameter
+        effectPass._uniforms.add(parameter);
+      }
+    }
   }
 }

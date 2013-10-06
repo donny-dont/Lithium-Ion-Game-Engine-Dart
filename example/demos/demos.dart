@@ -13,7 +13,6 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'dart:html' as Html;
-import 'dart:web_gl' as WebGL;
 
 //---------------------------------------------------------------------
 // Package libraries
@@ -24,18 +23,24 @@ import 'package:lithium_ion/foundation.dart';
 import 'package:lithium_ion/graphics.dart';
 import 'package:lithium_ion/input.dart';
 import 'package:lithium_ion/mesh.dart';
+import 'package:vector_math/vector_math.dart';
 
 //---------------------------------------------------------------------
 // Shared files
 //---------------------------------------------------------------------
 
+part 'shared/colored_vertex_effect.dart';
 part 'shared/simple_screen.dart';
+
+part 'shared/lighting_effect.dart';
+part 'shared/simple_texture_effect.dart';
 
 //---------------------------------------------------------------------
 // Graphics demos
 //---------------------------------------------------------------------
 
 part 'simple_shapes/simple_shapes_screen.dart';
+part 'texture_mapping/texture_mapping_screen.dart';
 
 //---------------------------------------------------------------------
 // Main entry point

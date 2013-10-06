@@ -32,4 +32,5 @@ part 'src/application/graphics_device_service.dart';
 part 'src/application/screen.dart';
 part 'src/application/services.dart';
 part 'src/application/update_loop.dart';
+part 'src/application/time.dart';
 part 'src/application/window_resized_event.dart';

@@ -5,33 +5,67 @@
 
 part of lithium_graphics;
 
-abstract class EffectParameter<T> {
-  /// The name of the paramter
+//---------------------------------------------------------------------
+// Base class
+//---------------------------------------------------------------------
+
+abstract class _EffectParameter<T> {
+  /// The name of the paramter.
   String _name;
+  /// The location of the uniform value.
+  WebGL.UniformLocation _location;
 
-  EffectParameter._internal(String name)
-      : _name = name;
+  _EffectParameter._internal(String name, WebGL.UniformLocation location)
+      : _name = name
+      , _location = location;
 
-  void setValue(T value);
+  String get name => _name;
+
+  void setValue(WebGL.RenderingContext gl, T value);
 }
 
-class EffectParameterScalar extends EffectParameter<double> {
-  EffectParameterScalar._internal(String name)
-      : super._internal(name);
+//---------------------------------------------------------------------
+// Scalar parameters
+//---------------------------------------------------------------------
 
-  void setValue(double value) {
+class _EffectParameterScalar extends _EffectParameter<double> {
+  double _value;
 
+  _EffectParameterScalar._internal(String name, WebGL.UniformLocation location)
+      : super._internal(name, location);
+
+  void setValue(WebGL.RenderingContext gl, double value) {
+    if (value != value) {
+      gl.uniform1f(_location, value);
+
+      _value = value;
+    }
   }
 }
 
-class EffectParameterMatrix4 extends EffectParameter<Matrix4> {
+//---------------------------------------------------------------------
+// Matrix4 parameters
+//---------------------------------------------------------------------
 
-  Float32List _values = new Float32List(16);
+class _EffectParameterMatrix4 extends _EffectParameter<Matrix4> {
+  _EffectParameterMatrix4._internal(String name, WebGL.UniformLocation location)
+    : super._internal(name, location);
 
-  EffectParameterMatrix4._internal(String name)
-      : super._internal(name);
-
-  void setValue(Matrix4 value) {
-
+  void setValue(WebGL.RenderingContext gl, Matrix4 value) {
+    gl.uniformMatrix4fv(_location, false, value.storage);
   }
+}
+
+//---------------------------------------------------------------------
+// Sampler parameters
+//---------------------------------------------------------------------
+
+class _EffectParameterSampler {
+  String _name;
+  int _textureUnit;
+
+  _EffectParameterSampler._internal(String name, int textureUnit);
+
+  String get name => _name;
+  int get textureUnit => _textureUnit;
 }

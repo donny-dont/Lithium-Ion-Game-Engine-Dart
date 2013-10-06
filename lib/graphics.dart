@@ -3,6 +3,7 @@
 // Use of this source code is governed by a zlib license that can be found in
 // the LICENSE file.
 
+/// Graphics library for the Lithium-Ion engine.
 library lithium_graphics;
 
 //---------------------------------------------------------------------
@@ -10,6 +11,7 @@ library lithium_graphics;
 //---------------------------------------------------------------------
 
 import 'dart:async';
+import 'dart:collection';
 import 'dart:html';
 import 'dart:math' as Math;
 import 'dart:mirrors';
@@ -35,8 +37,13 @@ part 'src/graphics/cube_map_face.dart';
 part 'src/graphics/cull_mode.dart';
 part 'src/graphics/debug_rendering_context.dart';
 part 'src/graphics/depth_stencil_state.dart';
+part 'src/graphics/effect.dart';
+part 'src/graphics/effect_builder.dart';
 part 'src/graphics/effect_parameter.dart';
+part 'src/graphics/effect_parameter_block.dart';
+part 'src/graphics/effect_parameter_type.dart';
 part 'src/graphics/effect_pass.dart';
+part 'src/graphics/effect_technique.dart';
 part 'src/graphics/front_face.dart';
 part 'src/graphics/graphics_context.dart';
 part 'src/graphics/graphics_device.dart';

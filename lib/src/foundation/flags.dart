@@ -92,4 +92,6 @@ class Flags<T extends Enum> {
       return 0;
     }
   }
+
+  get hashCode => _value;
 }

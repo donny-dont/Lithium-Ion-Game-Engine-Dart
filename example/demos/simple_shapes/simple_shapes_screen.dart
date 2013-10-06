@@ -15,8 +15,20 @@ class SimpleShapesScreen extends SimpleScreen {
 
   /// The [Mesh] containing the pyramid.
   Mesh _pyramidMesh;
+  /// The model matrix for the pyramid.
+  Matrix4 _pyramidMatrix = new Matrix4.identity();
   /// The [Mesh] containing the cube.
   Mesh _cubeMesh;
+  /// The model matrix for the cube.
+  Matrix4 _cubeMatrix = new Matrix4.identity();
+  /// The [Effect] to use for rendering.
+  Effect _effect;
+  /// The [EffectPass] to use for rendering.
+  EffectPass _effectPass;
+  /// The view projection matrix.
+  Matrix4 _vpMatrix;
+  /// The model view projection matrix.
+  Matrix4 _mvpMatrix;
 
   //---------------------------------------------------------------------
   // Construction
@@ -30,10 +42,39 @@ class SimpleShapesScreen extends SimpleScreen {
 
   /// Loads all resources for the [SimpleScreen].
   Future<bool> _onLoad() {
+    // Create the effect
+    _effect = createColoredVertexEffect(_graphicsDevice);
+
+    //createLightingEffect(_graphicsDevice);
+
+    // Get the effect pass
+    _effectPass = _effect.techniques['color'].passes[0];
+
+    // Create the view projection matrix
+    var view = makeViewMatrix(
+        new Vector3(0.0, 0.0, 0.0), // Camera position
+        new Vector3(0.0, 0.0, 1.0), // Look at
+        new Vector3(0.0, 1.0, 0.0)  // Up direction
+    );
+
+    var projection = makePerspectiveMatrix(
+        45,         // Degrees
+        16.0 / 9.0, // Aspect ratio
+        0.0001,
+        1000.0
+    );
+
+    _vpMatrix = projection * view;
+
+    print(_vpMatrix);
+
+    _graphicsContext.viewport = new Viewport.bounds(_graphicsDevice, 0, 0, 1280, 720);
+
     // Create the meshes
     _pyramidMesh = _createPyramid();
     _cubeMesh = _createCube();
 
+    // Everything has loaded successfully return a completed future
     return new Future.value(true);
   }
 
@@ -57,6 +98,8 @@ class SimpleShapesScreen extends SimpleScreen {
     // Query the storage requirements for creating a cube and create the data
     var vertices = new VertexList(declaration, generator.vertexCount);
     var indices  = new Uint16List(generator.indexCount);
+
+    generator.generateMesh(vertices, indices);
 
     // The BoxGenerator does not know how to create color data so this
     // needs to be created manually
@@ -107,29 +150,37 @@ class SimpleShapesScreen extends SimpleScreen {
 
   /// Updates the state of the [SimpleScreen].
   void _onUpdate() {
-    // \TODO REMOVE!
-    var state = new KeyboardState();
-    var keyboard = new Keyboard();
+    var time = new Time();
+    var angle = time.currentTime * 0.000001;
 
-    keyboard.getKeyboardState(state);
+    // Position the pyramid and rotate around its y axis
+    _pyramidMatrix.setTranslationRaw(-1.5, 0.0, -8.0);
+    _pyramidMatrix.rotateY(angle);
 
-    if (state.isKeyDown(Keys.Left)) {
-      print('Left arrow key is pressed');
-    }
-    if (state.isKeyDown(Keys.Up)) {
-      print('Up arrow key is pressed');
-    }
-    if (state.isKeyDown(Keys.Right)) {
-      print('Right arrow key is pressed');
-    }
-    if (state.isKeyDown(Keys.Down)) {
-      print('Down arrow key is pressed');
-    }
+    // Position the cube and rotate it around an axis
+    _cubeMatrix.setTranslationRaw(2.0, 0.0, 4.0);
+    _cubeMatrix.rotate(new Vector3(1.0, 1.0, 1.0), angle);
   }
 
   /// Renders the [SimpleScreen].
   void _onDraw() {
-    _graphicsDevice.gl.clearColor(1.0, 0.0, 0.0, 1.0);
-    _graphicsDevice.gl.clear(WebGL.COLOR_BUFFER_BIT);
+    // Clear the screen
+    _graphicsContext.clearColor = Color.blueViolet;
+    _graphicsContext.clearBuffers();
+
+    // Set the EffectPass
+    _graphicsContext.effectPass = _effectPass;
+
+    // Draw the pyramid
+    //_effect.parameters['uMVPMatrix'] = _pyramidMatrix;
+
+    //_graphicsContext.setMesh(_pyramidMesh);
+    //_graphicsContext.drawIndexedPrimitives(PrimitiveType.TriangleStrip);
+
+    // Draw the cube
+    _effect.parameters['uMVPMatrix'] = _vpMatrix * _cubeMatrix;
+
+    _graphicsContext.setMesh(_cubeMesh);
+    _graphicsContext.drawIndexedPrimitives(PrimitiveType.TriangleList);
   }
 }
