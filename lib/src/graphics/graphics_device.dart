@@ -19,7 +19,7 @@ class GraphicsDevice {
   //---------------------------------------------------------------------
 
   /// The [CanvasElement] containing the surface to draw to.
-  CanvasElement _surface;
+  Html.CanvasElement _surface;
   /// The [WebGL.RenderingContext] to use.
   WebGL.RenderingContext _gl;
   /// The [WebGL.OesVertexArrayObject] extension.
@@ -52,7 +52,7 @@ class GraphicsDevice {
   /// A [WebGL.RenderingContext] is created from the given [surface].
   /// Additionally an optional instance of [GraphicsDeviceConfig] can be passed
   /// in to control the creation of the underlying frame buffer.
-  GraphicsDevice(CanvasElement surface, [GraphicsDeviceConfig config = null]) {
+  GraphicsDevice(Html.CanvasElement surface, [GraphicsDeviceConfig config = null]) {
     assert(surface != null);
 
     _surface = surface;

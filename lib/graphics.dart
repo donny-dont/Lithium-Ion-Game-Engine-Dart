@@ -12,7 +12,7 @@ library lithium_graphics;
 
 import 'dart:async';
 import 'dart:collection';
-import 'dart:html';
+import 'dart:html' as Html;
 import 'dart:math' as Math;
 import 'dart:mirrors';
 import 'dart:typed_data';

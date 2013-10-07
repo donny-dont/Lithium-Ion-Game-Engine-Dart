@@ -22,6 +22,7 @@ import 'package:lithium_ion/graphics.dart';
 // Content library
 //---------------------------------------------------------------------
 
+part 'src/content/texture_manager.dart';
 part 'src/content/formats/gltf/opengl_transmission_format.dart';
 part 'src/content/formats/gltf/program_attribute.dart';
 part 'src/content/formats/gltf/program_format.dart';

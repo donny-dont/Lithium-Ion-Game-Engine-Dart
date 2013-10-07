@@ -10,15 +10,12 @@ library lithium_input;
 //---------------------------------------------------------------------
 
 import 'dart:html' as Html;
-import 'dart:math' as Math;
-import 'dart:typed_data';
 
 //---------------------------------------------------------------------
 // Package libraries
 //---------------------------------------------------------------------
 
 import 'package:lithium_ion/foundation.dart';
-import 'package:vector_math/vector_math.dart';
 
 //---------------------------------------------------------------------
 // Input library

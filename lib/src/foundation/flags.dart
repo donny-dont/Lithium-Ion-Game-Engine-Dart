@@ -84,7 +84,7 @@ class Flags<T extends Enum> {
 
       return flags._value;
     } else if (value is T) {
-      var flags = value as T;
+      var flags = value as Enum;
 
       return (1 << flags.index);
     } else {

@@ -10,9 +10,10 @@ class Texture2D extends Texture {
   // Construction
   //---------------------------------------------------------------------
 
-  Texture2D(GraphicsDevice device, int width, int height)
-      : super._internal(device, WebGL.TEXTURE_2D)
-  {
+  Texture2D(GraphicsDevice device)
+      : super._internal(device, WebGL.TEXTURE_2D);
+
+  void setElement(Html.ImageElement image) {
 
   }
 }

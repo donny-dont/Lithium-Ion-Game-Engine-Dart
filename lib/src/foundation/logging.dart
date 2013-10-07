@@ -14,7 +14,7 @@ void debug(String message, String name) {
 void warn(String message, String name) {
   var logger = new Logger(name);
 
-  logger.warn(message);
+  logger.warning(message);
 }
 
 void _logHandler(LogRecord record) {

@@ -5,13 +5,10 @@
 
 library vertex_list_test;
 
-import 'dart:typed_data';
-
 import 'package:unittest/unittest.dart';
 import 'package:lithium_ion/graphics.dart';
 
 import 'graphics_mocks.dart';
-import '../test_helpers.dart';
 
 var graphicsDevice;
 

@@ -20,6 +20,8 @@ abstract class SimpleScreen extends Screen {
   GraphicsDevice _graphicsDevice;
   /// The [GraphicsContext] to use for rendering.
   GraphicsContext _graphicsContext;
+  /// The [TextureManager] used by the [SimpleScreen].
+  TextureManager _textureManager;
   /// Whether the [SimpleScreen] is loaded already.
   bool _isLoaded = false;
 
@@ -52,6 +54,7 @@ abstract class SimpleScreen extends Screen {
       var services = application.services;
       _graphicsDevice = services.graphicsDeviceManager.graphicsDevice;
       _graphicsContext = _graphicsDevice.graphicsContext;
+      _textureManager = new TextureManager(_graphicsDevice);
 
       return _onLoad();
     }

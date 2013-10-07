@@ -3,7 +3,6 @@
 // Use of this source code is governed by a zlib license that can be found in
 // the LICENSE file.
 
-import 'package:unittest/unittest.dart';
 import 'package:unittest/html_enhanced_config.dart';
 
 import 'foundation_test.dart' as foundation_test;
@@ -15,5 +14,5 @@ void main() {
 
   foundation_test.main();
   graphics_test.main();
-  //content_test.main();
+  content_test.main();
 }

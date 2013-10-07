@@ -9,14 +9,14 @@ part of lithium_demos;
 const String _simpleTextureVertexSource =
 '''
 attribute vec3 vPosition;
-attribute vec2 vTexCoord;
+attribute vec2 vTexCoord0;
 
 uniform mat4 uMVPMatrix;
 
 varying highp vec2 texCoord;
 
 void main() {
-  texCoord = vTexCoord;
+  texCoord = vTexCoord0;
 
   gl_Position = uMVPMatrix[0] * vec4(vPosition, 1.0);
 }
@@ -40,22 +40,23 @@ const String _simpleTextureVertexName = 'textureVertex';
 const String _simpleTexturePixelName = 'texturePixel';
 
 
-/// Creates an [Effect] for rendering colored vertices.
+/// Creates an [Effect] for rendering a texture onto a mesh.
 ///
 /// The created [Effect] has a single [EffectTechnique] which contains a single
 /// [EffectPass].
 ///
-///     var effect = createColoredVertexEffect(device);
+///     var effect = createSimpleTextureEffect(device);
 ///
 ///     // Apply the effect paramter
-///     effect.parameters['uMVPMatrix'].setValue(mvpMatrix);
+///     effect.parameters['uMVPMatrix'] = mvpMatrix;
+///     effect.parameters['uTexture'] = texture;
 ///
 ///     // Get the pass
-///     var technique = effect.techniques['color'];
+///     var technique = effect.techniques['texmap'];
 ///     var pass = technique.passes[0];
 ///
 ///     // Apply the effect
-///     pass.apply();
+///     context.effectPass = pass;
 ///
 ///     // Draw the mesh
 ///     context.setMesh(mesh);

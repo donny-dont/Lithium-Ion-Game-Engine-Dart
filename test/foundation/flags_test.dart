@@ -36,19 +36,19 @@ class TestEnum implements Enum {
 class FlagsTest extends Flags<TestEnum> {}
 
 void setAll(FlagsTest flags) {
-  for (flag in TestEnum.values){
+  for (var flag in TestEnum.values){
     flags.setFlag(flag);
   }
 }
 
 void removeAll(FlagsTest flags) {
-  for (flag in TestEnum.values){
+  for (var flag in TestEnum.values){
     flags.removeFlag(flag);
   }
 }
 
 void toggleAll(FlagsTest flags) {
-  for (flag in TestEnum.values){
+  for (var flag in TestEnum.values){
     flags.toggleFlag(flag);
   }
 }
@@ -56,7 +56,7 @@ void toggleAll(FlagsTest flags) {
 void main() {
   test('set flags', () {
     // Test setting individual flags
-    for (flag in TestEnum.values){
+    for (var flag in TestEnum.values){
       var flags = new FlagsTest();
 
       expect(flags.hasFlag(flag), false);

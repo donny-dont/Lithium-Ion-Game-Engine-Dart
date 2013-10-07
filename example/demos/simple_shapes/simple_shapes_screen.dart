@@ -45,8 +45,6 @@ class SimpleShapesScreen extends SimpleScreen {
     // Create the effect
     _effect = createColoredVertexEffect(_graphicsDevice);
 
-    //createLightingEffect(_graphicsDevice);
-
     // Get the effect pass
     _effectPass = _effect.techniques['color'].passes[0];
 
@@ -65,8 +63,6 @@ class SimpleShapesScreen extends SimpleScreen {
     );
 
     _vpMatrix = projection * view;
-
-    print(_vpMatrix);
 
     _graphicsContext.viewport = new Viewport.bounds(_graphicsDevice, 0, 0, 1280, 720);
 
@@ -151,14 +147,14 @@ class SimpleShapesScreen extends SimpleScreen {
   /// Updates the state of the [SimpleScreen].
   void _onUpdate() {
     var time = new Time();
-    var angle = time.currentTime * 0.000001;
+    var angle = (time.currentTime * 0.0001) % (Math.PI * 2.0);
 
     // Position the pyramid and rotate around its y axis
-    _pyramidMatrix.setTranslationRaw(-1.5, 0.0, -8.0);
+    _pyramidMatrix.setTranslationRaw(1.5, 0.0, 3.0);
     _pyramidMatrix.rotateY(angle);
 
     // Position the cube and rotate it around an axis
-    _cubeMatrix.setTranslationRaw(2.0, 0.0, 4.0);
+    _cubeMatrix.setTranslationRaw(-1.5, 0.0, 3.0);
     _cubeMatrix.rotate(new Vector3(1.0, 1.0, 1.0), angle);
   }
 

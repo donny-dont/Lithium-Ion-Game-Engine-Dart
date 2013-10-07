@@ -70,13 +70,13 @@ class TangentSpaceBuilder {
 
         double r = 1.0 / ((s0 * t1) - (s1 * t0));
 
-        sdir.setComponents(
+        sdir.setValues(
           ((t1 * x0) - (t0 * x1)) * r,
           ((t1 * y0) - (t0 * y1)) * r,
           ((t1 * z0) - (t0 * z1)) * r
         );
 
-        tdir.setComponents(
+        tdir.setValues(
           ((s0 * x1) - (s1 * x0)) * r,
           ((s0 * y1) - (s1 * y0)) * r,
           ((s0 * z1) - (s1 * z0)) * r

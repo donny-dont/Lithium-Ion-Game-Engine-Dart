@@ -46,18 +46,18 @@ const String _coloredPixelName = 'colorPixel';
 ///     var effect = createColoredVertexEffect(device);
 ///
 ///     // Apply the effect paramter
-///     effect.parameters['uMVPMatrix'].setValue(mvpMatrix);
+///     effect.parameters['uMVPMatrix'] = mvpMatrix;
 ///
 ///     // Get the pass
 ///     var technique = effect.techniques['color'];
 ///     var pass = technique.passes[0];
 ///
 ///     // Apply the effect
-///     pass.apply();
+///     context.effectPass = pass;
 ///
 ///     // Draw the mesh
 ///     context.setMesh(mesh);
-///     context.drawIndexedPrimitives(PrimitiveType.TriangleStrip);
+///     context.drawIndexedPrimitives(PrimitiveType.TriangleList);
 Effect createColoredVertexEffect(GraphicsDevice device) {
   var effectBuilder = new EffectBuilder(device);
 

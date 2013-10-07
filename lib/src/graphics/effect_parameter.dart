@@ -64,7 +64,9 @@ class _EffectParameterSampler {
   String _name;
   int _textureUnit;
 
-  _EffectParameterSampler._internal(String name, int textureUnit);
+  _EffectParameterSampler._internal(String name, int textureUnit)
+      : _name = name
+      , _textureUnit = textureUnit;
 
   String get name => _name;
   int get textureUnit => _textureUnit;

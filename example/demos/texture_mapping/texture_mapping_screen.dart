@@ -36,17 +36,42 @@ class TextureMappingScreen extends SimpleScreen {
 
   /// Loads all resources for the [SimpleScreen].
   Future<bool> _onLoad() {
-    // Create the effect
-    _effect = createSimpleTextureEffect(_graphicsDevice);
+    var completer = new Completer<bool>();
 
-    // Get the effect pass
-    _effectPass = _effect.techniques['texmap'].passes[0];
+    _textureManager.loadTexture('texture_mapping/textures/dart_tex.png').then((texture) {
+      // Create the effect
+      _effect = createSimpleTextureEffect(_graphicsDevice);
 
-    // Create the meshes
-    _cubeMesh = _createCube();
+      // Apply the texture to the effect
+      _effect.parameters['uTexture'] = texture;
 
-    // Everything has loaded successfully return a completed future
-    return new Future.value(true);
+      // Get the effect pass
+      _effectPass = _effect.techniques['texmap'].passes[0];
+
+      // Create the view projection matrix
+      var view = makeViewMatrix(
+          new Vector3(0.0, 0.0, 0.0), // Camera position
+          new Vector3(0.0, 0.0, 1.0), // Look at
+          new Vector3(0.0, 1.0, 0.0)  // Up direction
+      );
+
+      var projection = makePerspectiveMatrix(
+          45,         // Degrees
+          16.0 / 9.0, // Aspect ratio
+          0.0001,
+          1000.0
+      );
+
+      _vpMatrix = projection * view;
+
+      // Create the meshes
+      _cubeMesh = _createCube();
+
+      // The scren has been loaded
+      completer.complete(true);
+    });
+
+    return completer.future;
   }
 
   /// Creates a cube with colored vertices.
@@ -69,11 +94,11 @@ class TextureMappingScreen extends SimpleScreen {
   /// Updates the state of the [SimpleScreen].
   void _onUpdate() {
     var time = new Time();
-    var angle = time.currentTime * 0.001;
+    var angle = (time.currentTime) % (Math.PI * 2.0);
 
     // Position the cube and rotate it around an axis
-    _cubeMatrix.setTranslationRaw(1.5, 0.0, -8.0);
-    _cubeMatrix.rotate(new Vector3(1.0, 1.0, 1.0), angle);
+    _cubeMatrix.setTranslationRaw(0.0, 0.0, 3.0);
+    //_cubeMatrix.rotate(new Vector3(1.0, 1.0, 1.0), -angle);
   }
 
   /// Renders the [SimpleScreen].
