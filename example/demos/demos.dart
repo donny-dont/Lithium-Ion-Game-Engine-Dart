@@ -55,9 +55,7 @@ void main() {
   // Start the application
   startApplication('#surface', new SimpleShapesScreen());
 
-  var button = Html.query('#fullscreen');
-
-  var test = new Keyboard();
+  var button = Html.querySelector('#fullscreen');
 
   button.onClick.listen((_) {
     Application.instance.window.fullscreen = true;

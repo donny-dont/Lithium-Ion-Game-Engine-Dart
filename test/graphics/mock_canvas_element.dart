@@ -5,6 +5,7 @@
 
 part of graphics_mocks;
 
+@proxy
 class MockCanvasElement extends Mock implements CanvasElement {
   MockCanvasElement() {
     when(callsTo('getContext3d')).alwaysReturn(new MockRenderingContext());

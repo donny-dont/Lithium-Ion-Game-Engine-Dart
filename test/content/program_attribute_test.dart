@@ -5,13 +5,13 @@
 
 library program_attribute_test;
 
-import 'dart:json' as Json;
+import 'dart:convert';
 import 'package:unittest/unittest.dart';
 import 'package:lithium_ion/graphics.dart';
 import 'package:lithium_ion/content.dart';
 
 ProgramAttribute createProgramAttribute(String value) {
-  return new ProgramAttribute.fromJson(Json.parse(value));
+  return new ProgramAttribute.fromJson(JSON.decode(value));
 }
 
 void testValues() {

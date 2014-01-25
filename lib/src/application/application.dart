@@ -181,7 +181,7 @@ class Application {
 /// Attaches the [Application] to the [CanvasElement] at the given [canvasId].
 /// From there it pushes the [Screen] and begins execution.
 void startApplication(String canvasId, Screen screen) {
-  var surface = Html.query(canvasId);
+  var surface = Html.querySelector(canvasId);
 
   var application = new Application(surface);
   application.addScreen(screen);

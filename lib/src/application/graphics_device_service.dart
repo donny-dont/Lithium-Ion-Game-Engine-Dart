@@ -27,6 +27,9 @@ class GraphicsDeviceManager implements Service {
 
   /// Creates the [GraphicsDevice].
   void createDevice(Html.CanvasElement surface) {
-    _graphicsDevice = new GraphicsDevice(surface);
+    var config = new GraphicsDeviceConfig();
+    config.debug = true;
+
+    _graphicsDevice = new GraphicsDevice(surface, config);
   }
 }

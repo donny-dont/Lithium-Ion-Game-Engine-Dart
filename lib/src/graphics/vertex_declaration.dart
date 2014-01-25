@@ -334,7 +334,6 @@ class VertexDeclaration extends GraphicsResource {
     return true;
   }
 
-
   /// Compares two [VertexElement]s.
   ///
   /// Sorts by first comparing the [VertexElement.slot]. If equal then the value

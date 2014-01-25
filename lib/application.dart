@@ -16,6 +16,7 @@ import 'dart:html' as Html;
 // Package libraries
 //---------------------------------------------------------------------
 
+import 'package:lithium_ion/foundation.dart';
 import 'package:lithium_ion/graphics.dart';
 
 //---------------------------------------------------------------------

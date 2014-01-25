@@ -5,7 +5,7 @@
 
 library shader_format_test;
 
-import 'dart:json' as Json;
+import 'dart:convert';
 import 'package:unittest/unittest.dart';
 import 'package:lithium_ion/content.dart';
 
@@ -50,7 +50,7 @@ void verifyUseSource(ShaderFormat value) {
 //---------------------------------------------------------------------
 
 ShaderFormat createShaderFormat(String value) {
-  return new ShaderFormat.fromJson(Json.parse(value));
+  return new ShaderFormat.fromJson(JSON.decode(value));
 }
 
 void testValues() {
@@ -100,7 +100,7 @@ void testExceptions() {
       ''';
 
   expect(() {
-    var list = Json.parse(repeatList);
+    var list = JSON.decode(repeatList);
     var formats = ShaderFormat.parseList(list);
   }, throwsArgumentError);
 }
@@ -108,7 +108,7 @@ void testExceptions() {
 void testList() {
   String formatList = '[${usePathString},${useSourceString}]';
 
-  var list = Json.parse(formatList);
+  var list = JSON.decode(formatList);
   var formats = ShaderFormat.parseList(list);
 
   expect(formats.length, 2);

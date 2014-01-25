@@ -95,9 +95,13 @@ class ApplicationWindow {
     int newWidth  = (width.toDouble()  * pixelRatio).toInt();
     int newHeight = (height.toDouble() * pixelRatio).toInt();
 
+    print('${Html.window.devicePixelRatio}');
+
     if ((_surface.width != newWidth) || (_surface.height != newHeight)) {
       _surface.width  = newWidth;
       _surface.height = newHeight;
+
+      debug('Window resized to ${newWidth}x${newHeight}', 'lithium_application.ApplicationWindow');
 
       // Notify the change of dimensions
       if (!_onWindowResizedController.isPaused) {
@@ -114,7 +118,7 @@ class ApplicationWindow {
     _resize(
         _surface.clientWidth,
         _surface.clientHeight,
-        Html.window.devicePixelRatio.toDouble()
+        Html.window.devicePixelRatio
     );
   }
 

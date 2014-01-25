@@ -5,7 +5,7 @@
 
 library program_format_test;
 
-import 'dart:json' as Json;
+import 'dart:convert';
 import 'package:unittest/unittest.dart';
 import 'package:lithium_ion/graphics.dart';
 import 'package:lithium_ion/content.dart';
@@ -173,7 +173,7 @@ void verifySources(ProgramFormat value) {
 //---------------------------------------------------------------------
 
 ProgramFormat createProgramFormat(String value) {
-  return new ProgramFormat.fromJson(Json.parse(value));
+  return new ProgramFormat.fromJson(JSON.decode(value));
 }
 
 void testValues() {
@@ -252,7 +252,7 @@ void testExceptions() {
 ''';
 
   expect(() {
-    List list = Json.parse(repeatList);
+    List list = JSON.decode(repeatList);
     Map<String, ProgramFormat> formats = ProgramFormat.parseList(list);
   }, throwsArgumentError);
 }
@@ -260,7 +260,7 @@ void testExceptions() {
 void testList() {
   var formatList = '[${referenceString},${sourceString}]';
 
-  var list = Json.parse(formatList);
+  var list = JSON.decode(formatList);
   var formats = ProgramFormat.parseList(list);
 
   expect(formats.length, 2);

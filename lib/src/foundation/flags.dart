@@ -80,9 +80,7 @@ class Flags<T extends Enum> {
 
   int _getFlag(Object value) {
     if (value is Flags<T>) {
-      var flags = value as Flags<T>;
-
-      return flags._value;
+      return value._value;
     } else if (value is T) {
       var flags = value as Enum;
 
