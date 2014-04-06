@@ -1,4 +1,4 @@
-// Copyright (c) 2012, the Lihtium-Ion Engine project authors.
+// Copyright (c) 2013-2014, the Lithium-Ion Engine project authors.
 // Please see the AUTHORS file for details. All rights reserved.
 // Use of this source code is governed by a zlib license that can be found in
 // the LICENSE file.
@@ -67,7 +67,7 @@ class TextureMappingScreen extends SimpleScreen {
       // Create the meshes
       _cubeMesh = _createCube();
 
-      // The scren has been loaded
+      // The screen has been loaded
       completer.complete(true);
     });
 
@@ -94,11 +94,12 @@ class TextureMappingScreen extends SimpleScreen {
   /// Updates the state of the [SimpleScreen].
   void _onUpdate() {
     var time = new Time();
-    var angle = (time.currentTime) % (Math.PI * 2.0);
+    var angle = (time.currentTime * 0.001);
 
     // Position the cube and rotate it around an axis
-    _cubeMatrix.setTranslationRaw(0.0, 0.0, 3.0);
-    //_cubeMatrix.rotate(new Vector3(1.0, 1.0, 1.0), -angle);
+    _cubeMatrix.setIdentity();
+    _cubeMatrix.setTranslationRaw(-1.5, 0.0, 3.0);
+    _cubeMatrix.rotate(new Vector3(1.0, 1.0, 1.0), angle);
   }
 
   /// Renders the [SimpleScreen].

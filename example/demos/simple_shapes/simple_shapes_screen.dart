@@ -1,4 +1,4 @@
-// Copyright (c) 2012, the Lihtium-Ion Engine project authors.
+// Copyright (c) 2013-2014, the Lithium-Ion Engine project authors.
 // Please see the AUTHORS file for details. All rights reserved.
 // Use of this source code is governed by a zlib license that can be found in
 // the LICENSE file.
@@ -80,7 +80,36 @@ class SimpleShapesScreen extends SimpleScreen {
     var declaration = new VertexDeclaration.positionColor(_graphicsDevice);
 
     // Create a VertexList to generate the data
-    var vertices = new VertexList(declaration, 4);
+    var vertices = new VertexList(declaration, 12);
+
+    // Create the vertex data
+    var positions = vertices.positions;
+    var colors = vertices.colors;
+
+    positions[0]  = new Vector3( 0.0,  0.5,  0.0); colors[0]  = Color.red;   // Top Of Triangle (Front)
+    positions[1]  = new Vector3(-0.5, -0.5,  0.5); colors[1]  = Color.green; // Left Of Triangle (Front)
+    positions[2]  = new Vector3( 0.5, -0.5,  0.5); colors[2]  = Color.blue;  // Right Of Triangle (Front)
+
+    positions[3]  = new Vector3( 0.0,  0.5,  0.0); colors[3]  = Color.red;   // Top Of Triangle (Right)
+    positions[4]  = new Vector3( 0.5, -0.5,  0.5); colors[4]  = Color.blue;  // Left Of Triangle (Right)
+    positions[5]  = new Vector3( 0.5, -0.5, -0.5); colors[5]  = Color.green; // Right Of Triangle (Right)
+
+    positions[6]  = new Vector3( 0.0,  0.5,  0.0); colors[6]  = Color.red;   // Top Of Triangle (Back)
+    positions[7]  = new Vector3( 0.5, -0.5, -0.5); colors[7]  = Color.green; // Left Of Triangle (Back)
+    positions[8]  = new Vector3(-0.5, -0.5, -0.5); colors[8]  = Color.blue;  // Right Of Triangle (Back)
+
+    positions[9]  = new Vector3( 0.0,  0.5,  0.0); colors[9]  = Color.red;   // Top Of Triangle (Left)
+    positions[10] = new Vector3(-0.5, -0.5, -0.5); colors[10] = Color.blue;  // Left Of Triangle (Left)
+    positions[11] = new Vector3(-0.5, -0.5,  0.5); colors[11] = Color.green; // Right Of Triangle (Left)
+
+    // Upload the graphics data
+    var vertexBuffer = new VertexBuffer.static(_graphicsDevice);
+    vertexBuffer.setData(vertices.getBuffer(0));
+
+    // Create the mesh
+    Mesh mesh = new Mesh(_graphicsDevice, declaration, [ vertexBuffer ]);
+
+    return mesh;
   }
 
   /// Creates a cube with colored vertices.
@@ -95,6 +124,9 @@ class SimpleShapesScreen extends SimpleScreen {
     var vertices = new VertexList(declaration, generator.vertexCount);
     var indices  = new Uint16List(generator.indexCount);
 
+    // Generate the mesh
+    //
+    // By default the generator will create a unit cube.
     generator.generateMesh(vertices, indices);
 
     // The BoxGenerator does not know how to create color data so this
@@ -147,13 +179,15 @@ class SimpleShapesScreen extends SimpleScreen {
   /// Updates the state of the [SimpleScreen].
   void _onUpdate() {
     var time = new Time();
-    var angle = (time.currentTime * 0.0001) % (Math.PI * 2.0);
+    var angle = (time.currentTime * 0.001);
 
     // Position the pyramid and rotate around its y axis
+    _pyramidMatrix.setIdentity();
     _pyramidMatrix.setTranslationRaw(1.5, 0.0, 3.0);
     _pyramidMatrix.rotateY(angle);
 
     // Position the cube and rotate it around an axis
+    _cubeMatrix.setIdentity();
     _cubeMatrix.setTranslationRaw(-1.5, 0.0, 3.0);
     _cubeMatrix.rotate(new Vector3(1.0, 1.0, 1.0), angle);
   }
@@ -168,10 +202,10 @@ class SimpleShapesScreen extends SimpleScreen {
     _graphicsContext.effectPass = _effectPass;
 
     // Draw the pyramid
-    //_effect.parameters['uMVPMatrix'] = _pyramidMatrix;
+    _effect.parameters['uMVPMatrix'] = _vpMatrix * _pyramidMatrix;
 
-    //_graphicsContext.setMesh(_pyramidMesh);
-    //_graphicsContext.drawIndexedPrimitives(PrimitiveType.TriangleStrip);
+    _graphicsContext.setMesh(_pyramidMesh);
+    _graphicsContext.drawVertexPrimitiveRange(PrimitiveType.TriangleStrip, 0, 12);
 
     // Draw the cube
     _effect.parameters['uMVPMatrix'] = _vpMatrix * _cubeMatrix;

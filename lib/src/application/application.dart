@@ -1,4 +1,4 @@
-// Copyright (c) 2012, the Lihtium-Ion Engine project authors.
+// Copyright (c) 2013-2014, the Lithium-Ion Engine project authors.
 // Please see the AUTHORS file for details. All rights reserved.
 // Use of this source code is governed by a zlib license that can be found in
 // the LICENSE file.
@@ -58,6 +58,10 @@ class Application {
 
     // Create the ApplicationWindow
     _window = new ApplicationWindow(surface);
+
+    _window.onWindowResized.listen((event) {
+      _currentScreen.onResize(event.width, event.height);
+    });
 
     // Create the activated stream
     _onActivatedController = new StreamController<ActivationEvent>();

@@ -2,7 +2,7 @@
 
 <html>
   <head>
-    <title>index</title>
+    <title>Lithium Ion Engine Examples</title>
     <style>
       html, body {
         width: 100%;
@@ -19,6 +19,10 @@
         width: 100%;
         height: 100%;
       }
+
+      #fullscreen {
+        z-index: 99;
+      }
     </style>
   </head>
 
@@ -26,7 +30,6 @@
     <canvas id="surface"></canvas>
     <button id="fullscreen">Fullscreen</button>
     <script type="application/dart" src="demos.dart"></script>
-    <!-- for this next line to work, your pubspec.yaml file must have a dependency on 'browser' -->
     <script src="packages/browser/dart.js"></script>
   </body>
 </html>

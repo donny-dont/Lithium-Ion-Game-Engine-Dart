@@ -1,4 +1,4 @@
-// Copyright (c) 2012, the Lihtium-Ion Engine project authors.
+// Copyright (c) 2013-2014, the Lithium-Ion Engine project authors.
 // Please see the AUTHORS file for details. All rights reserved.
 // Use of this source code is governed by a zlib license that can be found in
 // the LICENSE file.
@@ -80,6 +80,12 @@ abstract class SimpleScreen extends Screen {
   /// Renders the [SimpleScreen].
   void onDraw() {
     _onDraw();
+  }
+
+  void onResize(int width, int height) {
+    var viewport = new Viewport.bounds(_graphicsDevice, 0, 0, width, height);
+
+    _graphicsContext.viewport = viewport;
   }
 
   //---------------------------------------------------------------------

@@ -1,4 +1,4 @@
-// Copyright (c) 2013, the Lihtium-Ion Engine Project Authors.
+// Copyright (c) 2013-2014, the Lithium-Ion Engine Project Authors.
 // Please see the AUTHORS file for details. All rights reserved.
 // Use of this source code is governed by a zlib license that can be found in
 // the LICENSE file.
@@ -22,6 +22,7 @@ class MockShader implements WebGL.Shader { }
 class MockExtension { }
 class MockVertexArrayObject implements WebGL.VertexArrayObject { }
 
+@proxy
 class MockOesVertexArrayObject extends Mock implements WebGL.OesVertexArrayObject {
   MockOesVertexArrayObject() {
     when(callsTo('createVertexArray')).alwaysReturn(new MockVertexArrayObject());

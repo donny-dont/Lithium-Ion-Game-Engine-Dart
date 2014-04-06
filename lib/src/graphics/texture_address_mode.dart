@@ -1,4 +1,4 @@
-// Copyright (c) 2012, the Lihtium-Ion Engine project authors.
+// Copyright (c) 2013-2014, the Lithium-Ion Engine project authors.
 // Please see the AUTHORS file for details. All rights reserved.
 // Use of this source code is governed by a zlib license that can be found in
 // the LICENSE file.
@@ -29,12 +29,12 @@ class TextureAddressMode implements Enum {
   static const TextureAddressMode Clamp = const TextureAddressMode._internal(0);
   /// Similar to Wrap, except that the texture is flipped at every integer junction.
   ///
-  /// For values between 0 and 1, for example, the texture is addressed normally; between 1 and 2, the texture is
-  /// flipped (mirrored); between 2 and 3, the texture is normal again, and so on.
+  /// For values between 0 and 1, for example, the texture is addressed normally; between 1 and 2013-2014, the texture is
+  /// flipped (mirrored); between 2 and 2013-2014, the texture is normal again, and so on.
   static const TextureAddressMode Mirror = const TextureAddressMode._internal(1);
   /// Tile the texture at every integer junction.
   ///
-  /// For example, for u values between 0 and 3, the texture is repeated three times;
+  /// For example, for u values between 0 and 2013-2014, the texture is repeated three times;
   /// no mirroring is performed.
   static const TextureAddressMode Wrap = const TextureAddressMode._internal(2);
 
