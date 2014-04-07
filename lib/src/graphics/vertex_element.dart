@@ -21,6 +21,10 @@ class VertexElement {
   int _format;
   /// The [VertexElementUsage] for this vertex element.
   int _usage;
+  /// The number of instances to draw using the same per instance data before advancing the buffer by one element.
+  ///
+  /// For non-instanced data this value is set to 0.
+  int _instanceDataStepRate;
   /// The actual attribute index within WebGL.
   int _vertexAttribIndex;
 
@@ -29,18 +33,20 @@ class VertexElement {
   //---------------------------------------------------------------------
 
   /// Initializes an instance of the [VertexElement] class.
-  VertexElement(int offset, int format, int usage, {int usageIndex : 0, int slot : 0})
+  VertexElement(int offset, int format, int usage, {int usageIndex : 0, int slot : 0, int instanceDataStepRate: 0})
       : _slot = slot
       , _offset = offset
       , _format = format
       , _usage = usage
       , _usageIndex = usageIndex
+      , _instanceDataStepRate = instanceDataStepRate
   {
     assert(slot >= 0);
     assert(offset >= 0);
     assert(VertexElementFormat.isValid(format));
     assert(VertexElementUsage.isValid(usage));
     assert(usageIndex >= 0);
+    assert(instanceDataStepRate >= 0);
 
     // \TODO REMOVE!
     _vertexAttribIndex = usage;
@@ -64,6 +70,11 @@ class VertexElement {
 
   /// The [VertexElementUsage] for this vertex element.
   int get usage => _usage;
+
+  /// The number of instances to draw using the same per instance data before advancing the buffer by one element.
+  ///
+  /// For non-instanced data this value is set to 0.
+  int get instanceDataStepRate => _instanceDataStepRate;
 
   //---------------------------------------------------------------------
   // Private methods

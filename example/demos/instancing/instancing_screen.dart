@@ -8,7 +8,7 @@ part of lithium_demos;
 /// Draws a pyramid and cube using vertex colors.
 ///
 /// Matches the [NeHe 3D shapes tutorial](http://nehe.gamedev.net/tutorial/3d_shapes/10035/).
-class SimpleShapesScreen extends SimpleScreen {
+class InstancingScreen extends SimpleScreen {
   //---------------------------------------------------------------------
   // Member variables
   //---------------------------------------------------------------------
@@ -34,7 +34,7 @@ class SimpleShapesScreen extends SimpleScreen {
   // Construction
   //---------------------------------------------------------------------
 
-  SimpleShapesScreen();
+  InstancingScreen();
 
   //---------------------------------------------------------------------
   // Private methods

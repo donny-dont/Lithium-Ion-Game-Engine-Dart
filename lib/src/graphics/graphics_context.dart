@@ -18,6 +18,9 @@ class GraphicsContext {
   /// The vertex attribute was just used.
   static const int _attributeUsed = 2;
 
+  /// Non instance data within the buffer.
+  static const int _perVertexData = 0;
+
   //---------------------------------------------------------------------
   // WebGL variables
   //---------------------------------------------------------------------
@@ -28,6 +31,10 @@ class GraphicsContext {
   ///
   /// Used to interact with vertex array objects.
   WebGL.OesVertexArrayObject _vao;
+  /// The [WebGL.AngleInstancedArrays] extension.
+  ///
+  /// Used to provide instanced rendering.
+  WebGL.AngleInstancedArrays _instancedArrays;
 
   //---------------------------------------------------------------------
   // Member variable
@@ -75,6 +82,8 @@ class GraphicsContext {
   VertexDeclaration _vertexDeclaration;
   /// The state of the vertex attributes.
   List<int> _vertexAttributeState;
+  /// The instance step rate.
+  List<int> _vertexAttributeInstanceStepRate;
 
   //---------------------------------------------------------------------
   // VertexBuffer variables
@@ -142,6 +151,7 @@ class GraphicsContext {
       : _graphicsDevice = device
       , _gl = device._gl
       , _vao = device._vao
+      , _instancedArrays = device._instancedArrays
   {
     var capabilities = _graphicsDevice.capabilities;
 
@@ -155,6 +165,7 @@ class GraphicsContext {
     // Create the current attribute state
     // Initially all vertex attributes are disabled
     _vertexAttributeState = new List<int>.filled(vertexBufferSlots, _attributeDisabled);
+    _vertexAttributeInstanceStepRate = new List<int>.filled(vertexBufferSlots, _perVertexData);
 
     _initializeState();
   }
@@ -503,6 +514,16 @@ class GraphicsContext {
           _vertexDeclaration.getVertexStride(slot),
           element.offset
       );
+
+      int instanceDataStepRate = element.instanceDataStepRate;
+
+      // Setup instancing if necessary
+      if (_vertexAttributeInstanceStepRate[attributeIndex] != instanceDataStepRate) {
+        assert(_instancedArrays != null);
+
+        _instancedArrays.vertexAttribDivisorAngle(attributeIndex, instanceDataStepRate);
+        _vertexAttributeInstanceStepRate[attributeIndex] = instanceDataStepRate;
+      }
     }
 
     // Disable any attributes that were not used on this pass

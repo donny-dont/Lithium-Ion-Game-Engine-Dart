@@ -26,6 +26,10 @@ class GraphicsDevice {
   ///
   /// Used to interact with vertex array objects.
   WebGL.OesVertexArrayObject _vao;
+  /// The [WebGL.AngleInstancedArrays] extension.
+  ///
+  /// Used to provide instanced rendering.
+  WebGL.AngleInstancedArrays _instancedArrays;
   /// The [GraphicsContext] associated with the device.
   ///
   /// This functions as an immediate context meaning all calls are sent directly
@@ -82,6 +86,11 @@ class GraphicsDevice {
     // Create the VAO extension if present
     if (_capabilities.hasVertexArrayObjects) {
       //_vao = GraphicsDeviceExtensions._getExtension(_gl, GraphicsDeviceExtensions.vertexArrayObject);
+    }
+
+    // Create the Angle Instanced Arrays extension if present
+    if (_capabilities.hasInstancedArrays) {
+      _instancedArrays = GraphicsDeviceExtensions._getExtension(_gl, GraphicsDeviceExtensions.instancedArrays);
     }
 
     // Create the resource created stream
