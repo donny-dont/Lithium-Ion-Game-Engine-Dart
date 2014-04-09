@@ -180,7 +180,6 @@ class GraphicsContext {
     _gl.depthRange(_viewport.minDepth, _viewport.maxDepth);
 
     _gl.enable(WebGL.DEPTH_TEST);
-
   }
 
   //---------------------------------------------------------------------
@@ -426,21 +425,39 @@ class GraphicsContext {
     _bindEffectPass(_effectPass);
     _setEffectParameters();
 
+    var indexBuffer = (_boundMesh != null)
+        ? _mesh._indexBuffer
+        : _indexBuffer;
+
     _gl.drawElements(
         primitiveType,
-        _indexBuffer.indexCount,
-        _indexElementSizeToWebGL(_indexBuffer.indexElementSize),
+        indexBuffer.indexCount,
+        _indexElementSizeToWebGL(indexBuffer.indexElementSize),
         0
     );
   }
 
   void drawIndexedPrimitiveRange(int primitiveType, int offset, int count) {
     assert(PrimitiveType.isValid(primitiveType));
-    assert(_indexBuffer != null);
+    assert((_indexBuffer != null) || ((_mesh != null) && (_mesh._indexBuffer != null)));
 
     if (_shouldBindVertexData()) {
       _setupVertexData();
     }
+
+    _bindEffectPass(_effectPass);
+    _setEffectParameters();
+
+    var indexBuffer = (_boundMesh != null)
+        ? _mesh._indexBuffer
+        : _indexBuffer;
+
+    _gl.drawElements(
+        primitiveType,
+        count,
+        _indexElementSizeToWebGL(indexBuffer.indexElementSize),
+        offset
+    );
   }
 
   //---------------------------------------------------------------------
@@ -549,9 +566,12 @@ class GraphicsContext {
   }
 
   void _bindMeshData() {
-    var binding = _mesh._binding;
+    if (_boundMesh != _mesh) {
+      var binding = (_mesh != null) ? _mesh._binding : null;
+      _vao.bindVertexArray(binding);
 
-    _vao.bindVertexArray(binding);
+      _boundMesh = _mesh;
+    }
   }
 
   /// Binds the [Mesh] to the pipeline
@@ -635,6 +655,64 @@ class GraphicsContext {
   }
 
   //---------------------------------------------------------------------
+  // Mesh internal methods
+  //---------------------------------------------------------------------
+
+  void _setMeshData(Mesh mesh) {
+    assert(_vao != null);
+
+    _bindMesh(mesh);
+
+    var vertexDeclaration = mesh._vertexDeclaration;
+
+    // Setup the VertexDeclaration
+    var elements = vertexDeclaration._elements;
+    int elementCount = elements.length;
+
+    for (int i = 0; i < elementCount; ++i) {
+      var element = elements[i];
+
+      // Bind the VertexBuffer
+      int slot = element.slot;
+
+      var buffer = mesh._vertexBuffers[slot];
+      assert(buffer != null);
+
+      _gl.bindBuffer(WebGL.ARRAY_BUFFER, buffer._binding);
+
+      // Bind the attribute index if necessary
+      int attributeIndex = element._vertexAttribIndex;
+      _gl.enableVertexAttribArray(attributeIndex);
+
+      // Setup the attribute pointer
+      _gl.vertexAttribPointer(
+          attributeIndex,
+          element.format,
+          WebGL.FLOAT,
+          false,
+          vertexDeclaration.getVertexStride(slot),
+          element.offset
+      );
+
+      int instanceDataStepRate = element.instanceDataStepRate;
+
+      // Setup instancing if necessary
+      if (_vertexAttributeInstanceStepRate[attributeIndex] != instanceDataStepRate) {
+        assert(_instancedArrays != null);
+
+        _instancedArrays.vertexAttribDivisorAngle(attributeIndex, instanceDataStepRate);
+      }
+    }
+
+    // Bind the index data
+    var indexBuffer = mesh._indexBuffer;
+
+    if (indexBuffer != null) {
+      _gl.bindBuffer(WebGL.ELEMENT_ARRAY_BUFFER, indexBuffer._binding);
+    }
+  }
+
+  //---------------------------------------------------------------------
   // EffectPass internal methods
   //---------------------------------------------------------------------
 
@@ -679,5 +757,19 @@ class GraphicsContext {
 
   void _setTextureAt(int textureUnit, Texture texture) {
 
+  }
+
+  //---------------------------------------------------------------------
+  // Debugging methods
+  //---------------------------------------------------------------------
+
+  void _printVertexAttribState() {
+    int vertexBufferSlots = _vertexAttributeState.length;
+
+    for (var i = 0; i < vertexBufferSlots; ++i) {
+      var enabled = _gl.getVertexAttrib(i, WebGL.VERTEX_ATTRIB_ARRAY_ENABLED);
+
+      print('$i:\tenabled? $enabled');
+    }
   }
 }

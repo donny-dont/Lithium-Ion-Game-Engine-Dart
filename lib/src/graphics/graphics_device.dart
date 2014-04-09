@@ -85,7 +85,7 @@ class GraphicsDevice {
 
     // Create the VAO extension if present
     if (_capabilities.hasVertexArrayObjects) {
-      //_vao = GraphicsDeviceExtensions._getExtension(_gl, GraphicsDeviceExtensions.vertexArrayObject);
+      _vao = GraphicsDeviceExtensions._getExtension(_gl, GraphicsDeviceExtensions.vertexArrayObject);
     }
 
     // Create the Angle Instanced Arrays extension if present
@@ -227,6 +227,8 @@ class GraphicsDevice {
   void _createMesh(Mesh graphicsResource) {
     if (_vao != null) {
       graphicsResource._binding = _vao.createVertexArray();
+
+      _graphicsContext._setMeshData(graphicsResource);
     }
 
     _notifyResourceCreated(graphicsResource);

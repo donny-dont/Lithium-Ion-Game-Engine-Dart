@@ -15,7 +15,7 @@ Thumbs.db
 .buildlog
 packages
 pubspec.lock
-out
+build
 
 # Generated JavaScript files
 *.js
