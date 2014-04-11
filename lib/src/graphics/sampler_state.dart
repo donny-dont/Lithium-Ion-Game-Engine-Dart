@@ -12,11 +12,11 @@ class SamplerState extends GraphicsResource {
   //---------------------------------------------------------------------
 
   /// The texture-address mode for the u-coordinate.
-  TextureAddressMode _addressU = TextureAddressMode.Wrap;
+  TextureAddressMode addressU = TextureAddressMode.Wrap;
   /// The texture-address mode for the v-coordinate.
-  TextureAddressMode _addressV = TextureAddressMode.Wrap;
+  TextureAddressMode addressV = TextureAddressMode.Wrap;
   /// The type of filtering to use during sampling.
-  TextureFilter _filter = TextureFilter.Linear;
+  TextureFilter filter = TextureFilter.Linear;
   /// The maximum anisotropy.
   ///
   /// The default value is 1.0.
@@ -39,9 +39,9 @@ class SamplerState extends GraphicsResource {
   ///     maxAnisotropy = 4;
   SamplerState.anisotropicClamp(GraphicsDevice device)
     : super._internalWithoutBinding(device)
-    , _addressU = TextureAddressMode.Clamp
-    , _addressV = TextureAddressMode.Clamp
-    , _filter = TextureFilter.Anisotropic;
+    , addressU = TextureAddressMode.Clamp
+    , addressV = TextureAddressMode.Clamp
+    , filter = TextureFilter.Anisotropic;
 
   /// Initializes an instance of [SamplerState] with anisotropic filtering and texture coordinate wrapping.
   ///
@@ -52,9 +52,9 @@ class SamplerState extends GraphicsResource {
   ///     maxAnisotropy = 4;
   SamplerState.anisotropicWrap(GraphicsDevice device)
     : super._internalWithoutBinding(device)
-    , _addressU = TextureAddressMode.Wrap
-    , _addressV = TextureAddressMode.Wrap
-    , _filter = TextureFilter.Anisotropic;
+    , addressU = TextureAddressMode.Wrap
+    , addressV = TextureAddressMode.Wrap
+    , filter = TextureFilter.Anisotropic;
 
   /// Initializes an instance of [SamplerState] with linear filtering and texture coordinate clamping.
   ///
@@ -64,9 +64,9 @@ class SamplerState extends GraphicsResource {
   ///     filter = TextureFilter.Linear;
   SamplerState.linearClamp(GraphicsDevice device)
     : super._internal(device)
-    , _addressU = TextureAddressMode.Clamp
-    , _addressV = TextureAddressMode.Clamp
-    , _filter = TextureFilter.Linear;
+    , addressU = TextureAddressMode.Clamp
+    , addressV = TextureAddressMode.Clamp
+    , filter = TextureFilter.Linear;
 
   /// Initializes an instance of [SamplerState] with linear filtering and texture coordinate wrapping.
   ///
@@ -76,9 +76,9 @@ class SamplerState extends GraphicsResource {
   ///     filter = TextureFilter.Linear;
   SamplerState.linearWrap(GraphicsDevice device)
     : super._internalWithoutBinding(device)
-    , _addressU = TextureAddressMode.Wrap
-    , _addressV = TextureAddressMode.Wrap
-    , _filter = TextureFilter.Linear;
+    , addressU = TextureAddressMode.Wrap
+    , addressV = TextureAddressMode.Wrap
+    , filter = TextureFilter.Linear;
 
   /// Initializes an instance of [SamplerState] with point filtering and texture coordinate clamping.
   ///
@@ -89,9 +89,9 @@ class SamplerState extends GraphicsResource {
   ///     magFilter = TextureMagFilter.Point;
   SamplerState.pointClamp(GraphicsDevice device)
     : super._internalWithoutBinding(device)
-    , _addressU = TextureAddressMode.Clamp
-    , _addressV = TextureAddressMode.Clamp
-    , _filter = TextureFilter.Point;
+    , addressU = TextureAddressMode.Clamp
+    , addressV = TextureAddressMode.Clamp
+    , filter = TextureFilter.Point;
 
   /// Initializes an instance of [SamplerState] with point filtering and texture coordinate wrapping.
   ///
@@ -102,25 +102,13 @@ class SamplerState extends GraphicsResource {
   ///     magFilter = TextureMagFilter.Point;
   SamplerState.pointWrap(GraphicsDevice device)
     : super._internalWithoutBinding(device)
-    , _addressU = TextureAddressMode.Wrap
-    , _addressV = TextureAddressMode.Wrap
-    , _filter = TextureFilter.Point;
+    , addressU = TextureAddressMode.Wrap
+    , addressV = TextureAddressMode.Wrap
+    , filter = TextureFilter.Point;
 
   //---------------------------------------------------------------------
   // Properties
   //---------------------------------------------------------------------
-
-  /// The texture-address mode for the u-coordinate.
-  TextureAddressMode get addressU => _addressU;
-  set addressU(TextureAddressMode value) { _addressU = value; }
-
-  /// The texture-address mode for the v-coordinate.
-  TextureAddressMode get addressV => _addressV;
-  set addressV(TextureAddressMode value) { _addressV = value; }
-
-  /// The type of filtering to use during sampling.
-  TextureFilter get filter => _filter;
-  set filter(TextureFilter value) { _filter = value; }
 
   /// The maximum anisotropy.
   ///
