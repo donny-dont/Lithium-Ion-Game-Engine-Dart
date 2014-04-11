@@ -26,7 +26,7 @@ void testStrides(VertexDeclaration declaration, dynamic strides) {
   }
 }
 
-void testNamedConstructor(VertexDeclaration declaration, List<int> elements) {
+void testNamedConstructor(VertexDeclaration declaration, List<VertexElementUsage> elements) {
   var allElements = [
       VertexElementUsage.Position,
       VertexElementUsage.Normal,
@@ -40,7 +40,7 @@ void testNamedConstructor(VertexDeclaration declaration, List<int> elements) {
   int allElementCount = allElements.length;
 
   for (int i = 0; i < allElementCount; ++i) {
-    int usage = allElements[i];
+    var usage = allElements[i];
     bool hasElement = elements.contains(usage);
 
     expect(declaration.hasElement(usage, 0), hasElement);

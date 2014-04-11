@@ -8,85 +8,54 @@ part of lithium_graphics;
 /// Defines vertex element formats.
 class VertexElementFormat {
   //---------------------------------------------------------------------
-  // Serialization names
+  // Member variables
   //---------------------------------------------------------------------
 
-  /// String representation of [Scalar].
-  static const String _scalarName = 'Scalar';
-  /// String representation of [Vector2].
-  static const String _vector2Name = 'Vector2';
-  /// String representation of [Vector3].
-  static const String _vector3Name = 'Vector3';
-  /// String representation of [Vector4].
-  static const String _vector4Name = 'Vector4';
+  /// The index of the enumeration within [values].
+  final int index;
+
+  //---------------------------------------------------------------------
+  // Construction
+  //---------------------------------------------------------------------
+
+  /// Create an enumeration with the given index.
+  const VertexElementFormat._internal(this.index);
 
   //---------------------------------------------------------------------
   // Enumerations
   //---------------------------------------------------------------------
 
   /// Single-component, 32-bit floating-point element.
-  static const int Scalar = 1;
+  static const VertexElementFormat Scalar = const VertexElementFormat._internal(0);
   /// Two-component, 32-bit floating-point element.
-  static const int Vector2 = 2;
+  static const VertexElementFormat Vector2 = const VertexElementFormat._internal(1);
   /// Three-component, 32-bit floating-point element.
-  static const int Vector3 = 3;
+  static const VertexElementFormat Vector3 = const VertexElementFormat._internal(2);
   /// Three-component, 32-bit floating-point element.
-  static const int Vector4 = 4;
+  static const VertexElementFormat Vector4 = const VertexElementFormat._internal(3);
 
   //---------------------------------------------------------------------
-  // Class methods
+  // Values
   //---------------------------------------------------------------------
 
-  /// Convert from a [String] name to the corresponding [VertexElementFormat] enumeration.
-  static int parse(String name) {
-    switch (name) {
-      case _scalarName : return Scalar;
-      case _vector2Name: return Vector2;
-      case _vector3Name: return Vector3;
-      case _vector4Name: return Vector4;
-    }
+  /// List of enumerations.
+  static const List<VertexElementFormat> values = const [
+      Scalar,
+      Vector2,
+      Vector3,
+      Vector4
+  ];
+}
 
-    assert(false);
-    return Scalar;
-  }
+/// Mapping of [VertexElementFormat] enumerations to their sizes.
+const List<int> _vertexElementFormatBytesMapping = const [
+    4,  // Scalar
+    8,  // Vector2
+    12, // Vector3
+    16  // Vector4
+];
 
-  /// Converts the [VertexElementFormat] enumeration to a [String].
-  static String stringify(int value) {
-    switch (value) {
-      case Scalar : return _scalarName;
-      case Vector2: return _vector2Name;
-      case Vector3: return _vector3Name;
-      case Vector4: return _vector4Name;
-    }
-
-    assert(false);
-    return _scalarName;
-  }
-
-  /// Checks whether the value is a valid enumeration.
-  ///
-  /// Should be gotten rid of when enums are supported properly.
-  static bool isValid(int value) {
-    switch (value) {
-      case Scalar :
-      case Vector2:
-      case Vector3:
-      case Vector4: return true;
-    }
-
-    return false;
-  }
-
-  /// Gets the size in bytes of the [VertexElementFormat].
-  static int sizeInBytes(int value) {
-    switch (value) {
-      case Scalar : return  4;
-      case Vector2: return  8;
-      case Vector3: return 12;
-      case Vector4: return 16;
-    }
-
-    assert(false);
-    return 0;
-  }
+/// Gets the number of bytes required for the [VertexElementFormat].
+int _vertexElementFormatInBytes(VertexElementFormat format) {
+  return _vertexElementFormatBytesMapping[format.index];
 }

@@ -53,7 +53,7 @@ void main() {
   enableLogging();
 
   // Start the application
-  startApplication('#surface', new TextureMappingScreen());
+  startApplication('#surface', new SimpleShapesScreen());
 
   var button = Html.querySelector('#fullscreen');
 

@@ -43,7 +43,7 @@ class ProgramAttribute {
   //---------------------------------------------------------------------
 
   /// The [VertexElementUsage] of the semantic.
-  int get usage => _semantic.usage;
+  VertexElementUsage get usage => _semantic.usage;
 
   /// The index of the semantic.
   int get usageIndex => _semantic.usageIndex;

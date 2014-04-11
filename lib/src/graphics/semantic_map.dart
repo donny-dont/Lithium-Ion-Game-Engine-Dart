@@ -36,11 +36,11 @@ class SemanticMap {
   // Public methods
   //---------------------------------------------------------------------
 
-  /// Retrives the vertex attribute index with the given [usage] and [usageIndex].
+  /// Retrieves the vertex attribute index with the given [usage] and [usageIndex].
   ///
   /// Returns [SemanticMap.notFound] if the semantic is not found.
-  int indexOf(int usage, int usageIndex) {
-    var semanticName = VertexElementUsage._toSemanticName(usage, usageIndex);
+  int indexOf(VertexElementUsage usage, int usageIndex) {
+    var semanticName = _toSemanticName(usage, usageIndex);
 
     return _indexOfSemantic(semanticName);
   }
@@ -48,9 +48,7 @@ class SemanticMap {
   /// Maps a [usage] and [usageIndex] to a vertex attribute [index].
   ///
   /// If the [index] is already in use the
-  void add(int usage, int usageIndex, int index) {
-    assert(VertexElementUsage.isValid(usage));
-
+  void add(VertexElementUsage usage, int usageIndex, int index) {
     // See if the index is already in use
     if (_mapping.containsValue(index)) {
       var boundTo;
@@ -65,7 +63,7 @@ class SemanticMap {
     }
 
     // Bind the mapping
-    var semanticName = VertexElementUsage._toSemanticName(usage, usageIndex);
+    var semanticName = _toSemanticName(usage, usageIndex);
     _mapping[semanticName] = index;
   }
 
@@ -108,20 +106,37 @@ class SemanticMap {
   static Map<String, String> get defaultAttributes {
     if (_defaultAttributes == null) {
       _defaultAttributes = {
-          'vPosition' : VertexElementUsage._toSemanticName(VertexElementUsage.Position         , 0),
-          'vNormal'   : VertexElementUsage._toSemanticName(VertexElementUsage.Normal           , 0),
-          'vTangent'  : VertexElementUsage._toSemanticName(VertexElementUsage.Tangent          , 0),
-          'vBinormal' : VertexElementUsage._toSemanticName(VertexElementUsage.Binormal         , 0),
-          'vPointSize': VertexElementUsage._toSemanticName(VertexElementUsage.PointSize        , 0),
-          'vColor'    : VertexElementUsage._toSemanticName(VertexElementUsage.Color            , 0),
-          'vTexCoord0': VertexElementUsage._toSemanticName(VertexElementUsage.TextureCoordinate, 0),
-          'vTexCoord1': VertexElementUsage._toSemanticName(VertexElementUsage.TextureCoordinate, 1),
-          'vTexCoord2': VertexElementUsage._toSemanticName(VertexElementUsage.TextureCoordinate, 2),
-          'vTexCoord3': VertexElementUsage._toSemanticName(VertexElementUsage.TextureCoordinate, 3)
+          'vPosition' : _toSemanticName(VertexElementUsage.Position         , 0),
+          'vNormal'   : _toSemanticName(VertexElementUsage.Normal           , 0),
+          'vTangent'  : _toSemanticName(VertexElementUsage.Tangent          , 0),
+          'vBinormal' : _toSemanticName(VertexElementUsage.Binormal         , 0),
+          'vPointSize': _toSemanticName(VertexElementUsage.PointSize        , 0),
+          'vColor'    : _toSemanticName(VertexElementUsage.Color            , 0),
+          'vTexCoord0': _toSemanticName(VertexElementUsage.TextureCoordinate, 0),
+          'vTexCoord1': _toSemanticName(VertexElementUsage.TextureCoordinate, 1),
+          'vTexCoord2': _toSemanticName(VertexElementUsage.TextureCoordinate, 2),
+          'vTexCoord3': _toSemanticName(VertexElementUsage.TextureCoordinate, 3)
       };
     }
 
     return _defaultAttributes;
   }
   static set defaultAttributes(Map<String, String> value) { _defaultAttributes = value; }
+
+  static String _toSemanticName(VertexElementUsage usage, int index) {
+    String semantic;
+
+    switch (usage) {
+      case VertexElementUsage.Position         : semantic = 'POSITION'; break;
+      case VertexElementUsage.Normal           : semantic = 'NORMAL'  ; break;
+      case VertexElementUsage.Tangent          : semantic = 'TANGENT' ; break;
+      case VertexElementUsage.Binormal         : semantic = 'BINORMAL'; break;
+      case VertexElementUsage.TextureCoordinate: semantic = 'TEXCOORD'; break;
+      case VertexElementUsage.Color            : semantic = 'COLOR'   ; break;
+      case VertexElementUsage.PointSize        : semantic = 'PSIZE'   ; break;
+    }
+
+    return '${semantic}${index}';
+  }
 }
+

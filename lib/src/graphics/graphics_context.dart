@@ -540,7 +540,7 @@ class GraphicsContext {
       // Setup the attribute pointer
       _gl.vertexAttribPointer(
           attributeIndex,
-          element.format,
+          element.format.index + 1,
           WebGL.FLOAT,
           false,
           _vertexDeclaration.getVertexStride(slot),
@@ -704,7 +704,7 @@ class GraphicsContext {
       // Setup the attribute pointer
       _gl.vertexAttribPointer(
           attributeIndex,
-          element.format,
+          element.format.index + 1,
           WebGL.FLOAT,
           false,
           vertexDeclaration.getVertexStride(slot),

@@ -17,7 +17,7 @@ class _SemanticFormat {
   //---------------------------------------------------------------------
 
   /// The [VertexElementUsage] of the semantic.
-  int _usage;
+  VertexElementUsage _usage;
   /// The index of the semantic.
   int _usageIndex = 0;
 
@@ -52,7 +52,7 @@ class _SemanticFormat {
   //---------------------------------------------------------------------
 
   /// The [VertexElementUsage] of the semantic.
-  int get usage => _usage;
+  VertexElementUsage get usage => _usage;
 
   /// The index of the semantic.
   int get usageIndex => _usageIndex;
@@ -62,7 +62,7 @@ class _SemanticFormat {
   //---------------------------------------------------------------------
 
   /// Determines the corresponding [VertexElementUsage].
-  static int _getVertexElementUsage(String value) {
+  static VertexElementUsage _getVertexElementUsage(String value) {
     switch (value) {
       case 'POSITION': return VertexElementUsage.Position;
       case 'NORMAL'  : return VertexElementUsage.Normal;

@@ -10,7 +10,7 @@ import 'package:lithium_ion/graphics.dart';
 
 import '../test_helpers.dart';
 
-void testConstructor(int offset, int format, int usage, int usageIndex, int slot) {
+void testConstructor(int offset, VertexElementFormat format, VertexElementUsage usage, int usageIndex, int slot) {
   var element = new VertexElement(offset, format, usage, usageIndex: usageIndex, slot: slot);
 
   expect(element.slot      , slot);
@@ -51,8 +51,6 @@ void main() {
 
     // Test assertions
     expect(() { testConstructor(-1, VertexElementFormat.Scalar, VertexElementUsage.Position, 0, 0); }, throwsAssertionError);
-    expect(() { testConstructor( 0, -1, VertexElementUsage.Position, 0, 0); }, throwsAssertionError);
-    expect(() { testConstructor( 0, VertexElementFormat.Scalar, -1, 0, 0); }, throwsAssertionError);
     expect(() { testConstructor( 0, VertexElementFormat.Scalar, VertexElementUsage.Position, -1, 0); }, throwsAssertionError);
     expect(() { testConstructor( 0, VertexElementFormat.Scalar, VertexElementUsage.Position, 0, -1); }, throwsAssertionError);
   });

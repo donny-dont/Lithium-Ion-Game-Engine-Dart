@@ -386,7 +386,7 @@ class GraphicsDevice {
   ///
   void _setSemantic(EffectPass graphicsResource,
                     String name,
-                    int usage,
+                    VertexElementUsage usage,
                     int usageIndex,
                     SemanticMap semanticMap)
   {

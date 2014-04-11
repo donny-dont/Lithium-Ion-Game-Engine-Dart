@@ -47,7 +47,7 @@ class MockContextAttributes implements WebGL.ContextAttributes {
 //---------------------------------------------------------------------
 
 @proxy
-class MockRenderingContext extends Mock implements WebGL.RenderingContext {
+class MockRenderingContext extends Mock {
   static const String _vendorName   = 'Lithium-Ion Engine';
   static const String _rendererName = 'Lithium-Ion Engine Mock WebGL';
   static const String _versionName  = 'Mock WebGL 1.0 (OpenGL ES 2.0)';

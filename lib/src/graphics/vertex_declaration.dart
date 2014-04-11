@@ -158,7 +158,7 @@ class VertexDeclaration extends GraphicsResource {
   ///
   /// If [simdAligned] is set to true then each [VertexElement] will be aligned
   /// to a 128-bit value.
-  void _createElements(List<int> elements, bool simdAligned) {
+  void _createElements(List<VertexElementUsage> elements, bool simdAligned) {
     // Create the offsets in bytes for the data
     int scalarSize  = (simdAligned) ? 16 :  4;
     int vector2Size = (simdAligned) ? 16 :  8;
@@ -172,7 +172,7 @@ class VertexDeclaration extends GraphicsResource {
     _elements = new List<VertexElement>(elementCount);
 
     for (int i = 0; i < elementCount; ++i) {
-      int usage = elements[i];
+      var usage = elements[i];
       var element;
 
       switch (usage) {
@@ -184,7 +184,7 @@ class VertexDeclaration extends GraphicsResource {
           offset += vector3Size;
           break;
         case VertexElementUsage.TextureCoordinate:
-          element = new VertexElement(offset, VertexElementFormat.Vector2, 6);
+          element = new VertexElement(offset, VertexElementFormat.Vector2, usage);
           offset += vector2Size;
           break;
         case VertexElementUsage.Color:
@@ -224,7 +224,7 @@ class VertexDeclaration extends GraphicsResource {
   }
 
   /// Queries whether a [VertexElement] with the given [usage] and [usageIndex] is present.
-  bool hasElement(int usage, int usageIndex) {
+  bool hasElement(VertexElementUsage usage, int usageIndex) {
     return _findElement(usage, usageIndex) != null;
   }
 
@@ -238,7 +238,7 @@ class VertexDeclaration extends GraphicsResource {
   //---------------------------------------------------------------------
 
   /// Finds a [VertexElement] with the given [usage] and [usageIndex].
-  VertexElement _findElement(int usage, int usageIndex) {
+  VertexElement _findElement(VertexElementUsage usage, int usageIndex) {
     int elementCount = _elements.length;
 
     for (int i = 0; i < elementCount; ++i) {
@@ -281,7 +281,7 @@ class VertexDeclaration extends GraphicsResource {
       var element = _elements[i];
 
       int slot = element.slot;
-      int endingByte = element.offset + VertexElementFormat.sizeInBytes(element.format);
+      int endingByte = element.offset + _vertexElementFormatInBytes(element.format);
 
       _strides[slot] = Math.max(endingByte, _strides[slot]);
     }
@@ -350,8 +350,8 @@ class VertexDeclaration extends GraphicsResource {
 
     if (aSlot == bSlot) {
       // Compare the usage
-      int aUsage = a.usage;
-      int bUsage = b.usage;
+      var aUsage = a.usage;
+      var bUsage = b.usage;
 
       if (aUsage == bUsage) {
         // Compare the usage index
@@ -364,7 +364,7 @@ class VertexDeclaration extends GraphicsResource {
           return (aUsageIndex < bUsageIndex) ? -1 : 1;
         }
       } else {
-        return (aUsage < bUsage) ? -1 : 1;
+        return (aUsage.index < bUsage.index) ? -1 : 1;
       }
     } else {
       return (aSlot < bSlot) ? -1 : 1;

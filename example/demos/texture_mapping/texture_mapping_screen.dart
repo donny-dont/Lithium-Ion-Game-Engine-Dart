@@ -38,7 +38,7 @@ class TextureMappingScreen extends SimpleScreen {
   Future<bool> _onLoad() {
     var completer = new Completer<bool>();
 
-    _textureManager.loadTexture('texture_mapping/textures/uv.jpg').then((texture) {
+    _textureManager.loadTexture('texture_mapping/textures/dart_tex.png').then((texture) {
       // Create the effect
       _effect = createSimpleTextureEffect(_graphicsDevice);
 

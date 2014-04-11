@@ -99,7 +99,7 @@ class VertexList {
   }
 
   /// Gets a [StridedList] that holds the data of the [VertexElement] with the given [usage] and [usageIndex].
-  StridedList getElement(int usage, int usageIndex) {
+  StridedList getElement(VertexElementUsage usage, int usageIndex) {
     var element = _vertexDeclaration._findElement(usage, usageIndex);
     var list = null;
 
