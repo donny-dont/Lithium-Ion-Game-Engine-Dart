@@ -18,7 +18,7 @@ varying highp vec2 texCoord;
 void main() {
   texCoord = vTexCoord0;
 
-  gl_Position = uMVPMatrix[0] * vec4(vPosition, 1.0);
+  gl_Position = uMVPMatrix * vec4(vPosition, 1.0);
 }
 ''';
 
@@ -31,6 +31,7 @@ varying highp vec2 texCoord;
 
 void main() {
   gl_FragColor = texture2D(uTexture, texCoord);
+  gl_FragColor = vec4(texCoord, 0.0, 1.0);
 }
 ''';
 

@@ -140,6 +140,15 @@ class GraphicsContext {
   EffectPass _effectPass;
 
   //---------------------------------------------------------------------
+  // Texture variables
+  //---------------------------------------------------------------------
+
+  /// The currently bound [Texture]s.
+  List<Texture> _boundTextures;
+  /// The active texture unit.
+  int _activeTextureUnit;
+
+  //---------------------------------------------------------------------
   // Construction
   //---------------------------------------------------------------------
 
@@ -167,6 +176,10 @@ class GraphicsContext {
     _vertexAttributeState = new List<int>.filled(vertexBufferSlots, _attributeDisabled);
     _vertexAttributeInstanceStepRate = new List<int>.filled(vertexBufferSlots, _perVertexData);
 
+    // Create the texture units
+    _boundTextures = new List<Texture>(capabilities.textureUnits);
+    _activeTextureUnit = 0;
+
     _initializeState();
   }
 
@@ -180,6 +193,8 @@ class GraphicsContext {
     _gl.depthRange(_viewport.minDepth, _viewport.maxDepth);
 
     _gl.enable(WebGL.DEPTH_TEST);
+    _gl.frontFace(WebGL.CCW);
+    _gl.cullFace(WebGL.BACK);
   }
 
   //---------------------------------------------------------------------
@@ -558,6 +573,8 @@ class GraphicsContext {
       }
     }
 
+    this._printVertexAttribState();
+
     // The VertexDeclaration is bound to the pipeline
     _boundVertexDeclaration = _vertexDeclaration;
 
@@ -747,7 +764,7 @@ class GraphicsContext {
       var sampler = samplers[i];
       var value = parameters._getParameterValue(sampler.name);
 
-      _setTextureAt(sampler.textureUnit, value);
+      _bindTextureAt(sampler.textureUnit, value);
     }
   }
 
@@ -755,8 +772,100 @@ class GraphicsContext {
   // Texture internal methods
   //---------------------------------------------------------------------
 
-  void _setTextureAt(int textureUnit, Texture texture) {
+  void _setActiveTextureUnit(int textureUnit) {
+    if (_activeTextureUnit != textureUnit) {
+      _gl.activeTexture(WebGL.TEXTURE0 + textureUnit);
 
+      _activeTextureUnit = textureUnit;
+    }
+  }
+
+  /// Binds the [texture] to the given [textureUnit].
+  void _bindTextureAt(int textureUnit, Texture texture) {
+    if (_boundTextures[textureUnit] != texture) {
+      _setActiveTextureUnit(textureUnit);
+
+      _gl.bindTexture(texture._target, texture._binding);
+
+      _boundTextures[textureUnit] = texture;
+    }
+  }
+
+  void _bindTexture(Texture texture) {
+    var textureUnit = _findTexture(texture);
+
+    if (textureUnit == -1) {
+      _bindTextureAt(_activeTextureUnit, texture);
+    } else {
+      _setActiveTextureUnit(textureUnit);
+    }
+  }
+
+  /// Searches the bound textures for the index of the given [texture].
+  int _findTexture(Texture texture) {
+    var textureUnits = _boundTextures.length;
+
+    for (var i = 0; i < textureUnits; ++i) {
+      if (_boundTextures[i] == texture) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
+  void _initializeTexture(Texture texture) {
+    var target = texture._target;
+    var samplerState = texture._samplerState;
+
+    _bindTexture(texture);
+
+    // Set the parameters otherwise the texture object cannot be rendered
+    _gl.texParameteri(
+        target,
+        WebGL.TEXTURE_WRAP_S,
+        _textureAddressModeToWebGL(samplerState.addressU)
+    );
+
+    _gl.texParameteri(
+        target,
+        WebGL.TEXTURE_WRAP_T,
+        _textureAddressModeToWebGL(samplerState.addressV)
+    );
+
+    var filter = samplerState.filter;
+
+    _gl.texParameteri(
+        target,
+        WebGL.TEXTURE_MIN_FILTER,
+        _textureFilterMinToWebGL(filter)
+    );
+
+    _gl.texParameteri(
+        target,
+        WebGL.TEXTURE_MAG_FILTER,
+        _textureFilterMagToWebGL(filter)
+    );
+  }
+
+  void _bindSamplerState(Texture texture, SamplerState samplerState) {
+    var boundSamplerState = texture._samplerState;
+    var target = texture._target;
+
+    _bindTexture(texture);
+  }
+
+  void _setElementTexture2D(Texture2D texture, Html.HtmlElement element) {
+    _bindTexture(texture);
+
+    _gl.texImage2D(
+        texture._target,
+        0,
+        WebGL.RGBA,
+        WebGL.RGBA,
+        WebGL.UNSIGNED_BYTE,
+        element
+    );
   }
 
   //---------------------------------------------------------------------

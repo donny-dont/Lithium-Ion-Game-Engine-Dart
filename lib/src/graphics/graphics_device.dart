@@ -248,6 +248,7 @@ class GraphicsDevice {
   /// Binds a [Texture] to the [GraphicsDevice].
   void _createTexture(Texture graphicsResource) {
     graphicsResource._binding = _gl.createTexture();
+    graphicsContext._initializeTexture(graphicsResource);
 
     _notifyResourceCreated(graphicsResource);
   }
@@ -258,6 +259,14 @@ class GraphicsDevice {
     graphicsResource._binding = null;
 
     _notifyResourceDestroyed(graphicsResource);
+  }
+
+  //---------------------------------------------------------------------
+  // Texture methods
+  //---------------------------------------------------------------------
+
+  void _setElementTexture2D(Texture graphicsResource, Html.HtmlElement element) {
+    _graphicsContext._setElementTexture2D(graphicsResource, element);
   }
 
   //---------------------------------------------------------------------

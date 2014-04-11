@@ -184,7 +184,7 @@ class VertexDeclaration extends GraphicsResource {
           offset += vector3Size;
           break;
         case VertexElementUsage.TextureCoordinate:
-          element = new VertexElement(offset, VertexElementFormat.Vector2, usage);
+          element = new VertexElement(offset, VertexElementFormat.Vector2, 6);
           offset += vector2Size;
           break;
         case VertexElementUsage.Color:

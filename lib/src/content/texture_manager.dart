@@ -18,6 +18,8 @@ class TextureManager {
     image.onLoad.listen((_) {
       var texture = new Texture2D(_graphicsDevice);
 
+      texture.setElement(image);
+
       completer.complete(texture);
     });
 

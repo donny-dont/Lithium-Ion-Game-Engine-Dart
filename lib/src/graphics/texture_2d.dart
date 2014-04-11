@@ -13,7 +13,9 @@ class Texture2D extends Texture {
   Texture2D(GraphicsDevice device)
       : super._internal(device, WebGL.TEXTURE_2D);
 
-  void setElement(Html.ImageElement image) {
+  void setElement(Html.HtmlElement element) {
+    assert(element is Html.ImageElement || element is Html.CanvasElement || element is Html.VideoElement);
 
+    _graphicsDevice._setElementTexture2D(this, element);
   }
 }
