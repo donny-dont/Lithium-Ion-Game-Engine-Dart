@@ -14,7 +14,7 @@ class VertexBuffer extends GraphicsResource {
   /// The binding to [WebGL].
   WebGL.Buffer _binding;
   /// The [BufferUsage] of the buffer.
-  BufferUsage _bufferUsage;
+  final BufferUsage bufferUsage;
 
   //---------------------------------------------------------------------
   // Construction
@@ -31,7 +31,7 @@ class VertexBuffer extends GraphicsResource {
   /// If the data is changing every frame or so the [VertexBuffer] should be
   /// created using the [VertexBuffer.dynamic] constructor.
   VertexBuffer.static(GraphicsDevice device)
-      : _bufferUsage = BufferUsage.Static
+      : bufferUsage = BufferUsage.Static
       , super._internal(device)
   {
     _graphicsDevice._createVertexBuffer(this);
@@ -47,18 +47,11 @@ class VertexBuffer extends GraphicsResource {
   /// then the [VertexBuffer] should be created using the [VertexBuffer.static]
   /// constructor.
   VertexBuffer.dynamic(GraphicsDevice device)
-      : _bufferUsage = BufferUsage.Dynamic
+      : bufferUsage = BufferUsage.Dynamic
       , super._internal(device)
   {
     _graphicsDevice._createVertexBuffer(this);
   }
-
-  //---------------------------------------------------------------------
-  // Properties
-  //---------------------------------------------------------------------
-
-  /// The [BufferUsage] of the buffer.
-  BufferUsage get bufferUsage => _bufferUsage;
 
   //---------------------------------------------------------------------
   // Public methods

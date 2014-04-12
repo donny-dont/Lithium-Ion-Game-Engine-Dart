@@ -30,11 +30,11 @@ class GraphicsDeviceConfig {
   //---------------------------------------------------------------------
 
   /// Whether a debug context should be created.
-  bool _debug = false;
+  bool debug = false;
   /// Whether a depth buffer should be created.
-  bool _depthBuffer = true;
+  bool depthBuffer = true;
   /// Whether a stencil buffer should be created.
-  bool _stencilBuffer = false;
+  bool stencilBuffer = false;
 
   //---------------------------------------------------------------------
   // Construction
@@ -49,20 +49,4 @@ class GraphicsDeviceConfig {
   ///     config.depthBuffer = true;
   ///     config.stencilBuffer = false;
   GraphicsDeviceConfig();
-
-  //---------------------------------------------------------------------
-  // Properties
-  //---------------------------------------------------------------------
-
-  /// Whether a debug context should be created.
-  bool get debug => _debug;
-  set debug(bool value) { _debug = value; }
-
-  /// Whether a depth buffer should be created.
-  bool get depthBuffer => _depthBuffer;
-  set depthBuffer(bool value) { _depthBuffer = value; }
-
-  /// Whether a stencil buffer should be created.
-  bool get stencilBuffer => _stencilBuffer;
-  set stencilBuffer(bool value) { _stencilBuffer = value; }
 }

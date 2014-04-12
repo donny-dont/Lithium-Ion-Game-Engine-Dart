@@ -66,7 +66,7 @@ class VertexList {
   /// [VertexElementUsage.Tangent] at the [VertexElement.usageIndex] of 0.
   Vector3List get tangents => getElement(VertexElementUsage.Tangent, 0) as Vector3List;
 
-  /// The binromal (bitangent) data if present.
+  /// The binormal (bitangent) data if present.
   ///
   /// Corresponds to the [VertexElement] with a [VertexElement.usage] of
   /// [VertexElementUsage.Binormal] at the [VertexElement.usageIndex] of 0.

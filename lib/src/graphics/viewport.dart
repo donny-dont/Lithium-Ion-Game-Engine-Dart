@@ -50,14 +50,6 @@ class Viewport extends GraphicsResource {
   // Properties
   //---------------------------------------------------------------------
 
-  /// The x-coordinate of the upper left corner of the viewport on the render-target surface.
-  int get x => _x;
-  set x(int value) { _x = value; }
-
-  /// The y-coordinate of the upper left corner of the viewport on the render-target surface.
-  int get y => _y ;
-  set y(int value) { _y = value; }
-
   /// The width of the viewport on the render-target surface, in pixels.
   ///
   /// Asserts that the value is a positive number.

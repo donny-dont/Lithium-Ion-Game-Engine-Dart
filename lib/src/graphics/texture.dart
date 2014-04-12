@@ -13,7 +13,7 @@ class Texture extends GraphicsResource {
   /// The binding to [WebGL].
   WebGL.Texture _binding;
   /// The target type for the [Texture] in [WebGL].
-  int _target;
+  final int _target;
   /// The current [SamplerState] attached to the [Texture].
   ///
   /// Constructed with the values in [SamplerState.linearWrap].

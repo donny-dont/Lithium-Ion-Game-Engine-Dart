@@ -12,9 +12,9 @@ class WindowResizedEvent {
   //---------------------------------------------------------------------
 
   /// The updated width of the [ApplicationWindow].
-  int _width;
+  final int width;
   /// The updated height of the [ApplicationWindow].
-  int _height;
+  final int height;
 
   //---------------------------------------------------------------------
   // Construction
@@ -23,16 +23,5 @@ class WindowResizedEvent {
   /// Creates an instance of the [WindowResizedEvent] class.
   ///
   /// A [WindowResizedEvent] can not be created directly.
-  WindowResizedEvent._internal(int width, int height)
-      : _width  = width
-      , _height = height;
-
-  //---------------------------------------------------------------------
-  // Properties
-  //---------------------------------------------------------------------
-
-  /// The updated width of the [ApplicationWindow].
-  int get width => _width;
-  /// The updated height of the [ApplicationWindow].
-  int get height => _height;
+  WindowResizedEvent._internal(this.width, this.height);
 }
