@@ -8,7 +8,7 @@ library graphics_mocks;
 import 'dart:html';
 import 'dart:web_gl' as WebGL;
 
-import 'package:unittest/mock.dart';
+import 'package:mock/mock.dart';
 import 'package:lithium_ion/graphics.dart';
 
 part 'mock_canvas_element.dart';

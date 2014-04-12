@@ -22,15 +22,19 @@ class MockShader implements WebGL.Shader { }
 class MockExtension { }
 class MockVertexArrayObject implements WebGL.VertexArrayObject { }
 
-@proxy
 class MockOesVertexArrayObject extends Mock implements WebGL.OesVertexArrayObject {
   MockOesVertexArrayObject() {
     when(callsTo('createVertexArray')).alwaysReturn(new MockVertexArrayObject());
   }
+
+  // Present to remove analyzer errors
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-@proxy
-class MockAngleInstancedArrays extends Mock implements WebGL.AngleInstancedArrays { }
+class MockAngleInstancedArrays extends Mock implements WebGL.AngleInstancedArrays {
+  // Present to remove analyzer errors
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
 
 //---------------------------------------------------------------------
 // WebGL.ContextAttributes
@@ -50,7 +54,6 @@ class MockContextAttributes implements WebGL.ContextAttributes {
 // WebGL.RenderingContext
 //---------------------------------------------------------------------
 
-@proxy
 class MockRenderingContext extends Mock implements WebGL.RenderingContext {
   static const String _vendorName   = 'Lithium-Ion Engine';
   static const String _rendererName = 'Lithium-Ion Engine Mock WebGL';
@@ -133,4 +136,7 @@ class MockRenderingContext extends Mock implements WebGL.RenderingContext {
       when(callsTo('getExtension', '${vendorPrefixes[i]}${name}')).alwaysReturn(returnValue);
     }
   }
+
+  // Present to remove analyzer errors
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

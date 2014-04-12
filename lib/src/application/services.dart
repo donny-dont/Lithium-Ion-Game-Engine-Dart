@@ -31,7 +31,7 @@ class Services {
 
   /// Retrieves a [Service] by using a runtime [type].
   Service getService(Type type) {
-
+    return null;
   }
 
   /// Removes the [Service] from the container.

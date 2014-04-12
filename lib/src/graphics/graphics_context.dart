@@ -657,7 +657,7 @@ class GraphicsContext {
     _gl.bufferDataTyped(
         WebGL.ARRAY_BUFFER,
         data,
-        _bufferUsageToWebGL(buffer._bufferUsage)
+        _bufferUsageToWebGL(buffer.bufferUsage)
     );
   }
 

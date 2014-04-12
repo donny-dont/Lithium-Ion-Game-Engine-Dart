@@ -5,7 +5,7 @@
 
 library graphics_context_test;
 
-import 'package:unittest/mock.dart';
+import 'package:mock/mock.dart';
 import 'package:unittest/unittest.dart';
 import 'package:lithium_ion/graphics.dart';
 

@@ -20,4 +20,7 @@ class MockCanvasElement extends Mock implements CanvasElement {
   MockCanvasElement.specifyExtensions(List extensions) {
     when(callsTo('getContext3d')).alwaysReturn(new MockRenderingContext(extensions));
   }
+
+  // Present to remove analyzer errors
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
