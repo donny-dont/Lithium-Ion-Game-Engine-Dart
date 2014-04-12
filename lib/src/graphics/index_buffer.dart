@@ -14,9 +14,9 @@ class IndexBuffer extends GraphicsResource {
   /// The binding to [WebGL].
   WebGL.Buffer _binding;
   /// The [BufferUsage] of the buffer.
-  BufferUsage _bufferUsage;
+  final BufferUsage bufferUsage;
   /// The [IndexElementSize] of the buffer.
-  IndexElementSize _indexElementSize;
+  final IndexElementSize indexElementSize;
   /// The number of indices.
   int _indexCount = 0;
 
@@ -34,9 +34,8 @@ class IndexBuffer extends GraphicsResource {
   /// multiple times, but doing so could have a negative performance impact.
   /// If the data is changing every frame or so the [IndexBuffer] should be
   /// created using the [IndexBuffer.dynamic] constructor.
-  IndexBuffer.static(GraphicsDevice device, [IndexElementSize elementSize = IndexElementSize.Short])
-      : _bufferUsage = BufferUsage.Static
-      , _indexElementSize = elementSize
+  IndexBuffer.static(GraphicsDevice device, [this.indexElementSize = IndexElementSize.Short])
+      : bufferUsage = BufferUsage.Static
       , super._internal(device)
   {
     _graphicsDevice._createIndexBuffer(this);
@@ -51,9 +50,8 @@ class IndexBuffer extends GraphicsResource {
   /// If [setData], or [replaceData] are not being called on a frequent basis,
   /// then the [IndexBuffer] should be created using the [IndexBuffer.static]
   /// constructor.
-  IndexBuffer.dynamic(GraphicsDevice device, [IndexElementSize elementSize = IndexElementSize.Short])
-      : _bufferUsage = BufferUsage.Dynamic
-      , _indexElementSize = elementSize
+  IndexBuffer.dynamic(GraphicsDevice device, [this.indexElementSize = IndexElementSize.Short])
+      : bufferUsage = BufferUsage.Dynamic
       , super._internal(device)
   {
     _graphicsDevice._createIndexBuffer(this);
@@ -62,12 +60,6 @@ class IndexBuffer extends GraphicsResource {
   //---------------------------------------------------------------------
   // Properties
   //---------------------------------------------------------------------
-
-  /// The [BufferUsage] of the buffer.
-  BufferUsage get bufferUsage => _bufferUsage;
-
-  /// The [IndexElementSize] of the buffer.
-  IndexElementSize get indexElementSize => _indexElementSize;
 
   /// The number of indices.
   int get indexCount => _indexCount;
@@ -78,12 +70,12 @@ class IndexBuffer extends GraphicsResource {
 
   /// Sets the entire contents of the buffer with the values contained in [data].
   void setData(TypedData data) {
-    assert(((_indexElementSize == IndexElementSize.Short)   && (data is Uint16List)) ||
-           ((_indexElementSize == IndexElementSize.Integer) && (data is Uint32List)));
+    assert(((indexElementSize == IndexElementSize.Short)   && (data is Uint16List)) ||
+           ((indexElementSize == IndexElementSize.Integer) && (data is Uint32List)));
 
     _graphicsDevice._graphicsContext._setIndexBufferData(this, data);
 
-    _indexCount = data.lengthInBytes ~/ _indexElementSizeInBytes(_indexElementSize);
+    _indexCount = data.lengthInBytes ~/ _indexElementSizeInBytes(indexElementSize);
   }
 
   /// Replaces a portion of the buffer with the values contained in [data].
@@ -91,8 +83,8 @@ class IndexBuffer extends GraphicsResource {
   /// The contents are replaced starting at the [offset] in bytes up to the size
   /// of the [data] array.
   void replaceData(TypedData data, int offset) {
-    assert(((_indexElementSize == IndexElementSize.Short)   && (data is Uint16List)) ||
-           ((_indexElementSize == IndexElementSize.Integer) && (data is Uint32List)));
+    assert(((indexElementSize == IndexElementSize.Short)   && (data is Uint16List)) ||
+           ((indexElementSize == IndexElementSize.Integer) && (data is Uint32List)));
     assert(offset >= 0);
 
     _graphicsDevice._graphicsContext._replaceIndexBufferData(this, data, offset);

@@ -14,9 +14,9 @@ class RenderingErrorEvent {
   //---------------------------------------------------------------------
 
   /// The [WebGL] error code.
-  int _error;
+  final int error;
   /// The name of the method whose call resulted in the [error].
-  String _methodName;
+  final String methodName;
 
   //---------------------------------------------------------------------
   // Construction
@@ -28,25 +28,17 @@ class RenderingErrorEvent {
   /// is the call to [WebGL.RenderingContext] where the error occurred.
   ///
   /// A [RenderingErrorEvent] can not be created directly.
-  RenderingErrorEvent._internal(int error, String methodName)
-      : _error = error
-      , _methodName = methodName;
+  RenderingErrorEvent._internal(this.error, this.methodName);
 
   //---------------------------------------------------------------------
   // Properties
   //---------------------------------------------------------------------
 
-  /// The [WebGL] error code.
-  int get error => _error;
-
-  /// The name of the method whose call resulted in the [error].
-  String get methodName => _methodName;
-
   /// Retrieves a human readable error message.
   String get message {
     var errorMessage;
 
-    switch (_error) {
+    switch (error) {
       case WebGL.INVALID_ENUM:
         errorMessage = 'An unacceptable value is specified for an enumerated argument. The offending command is ignored and has no other side effect than to set the error flag.';
         break;
@@ -67,6 +59,6 @@ class RenderingErrorEvent {
         break;
     }
 
-    return '${_methodName}: ${errorMessage}';
+    return '${methodName}: ${errorMessage}';
   }
 }

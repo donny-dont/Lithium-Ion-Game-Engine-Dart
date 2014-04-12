@@ -12,7 +12,7 @@ class ResourceDestroyedEvent {
   //---------------------------------------------------------------------
 
   /// The [GraphicsResource] that was destroyed.
-  GraphicsResource _resource;
+  final GraphicsResource resource;
 
   //---------------------------------------------------------------------
   // Construction
@@ -21,13 +21,5 @@ class ResourceDestroyedEvent {
   /// Creates an instance of the [ResourceDestroyedEvent] class.
   ///
   /// A [ResourceDestroyedEvent] can not be created directly.
-  ResourceDestroyedEvent._internal(GraphicsResource resource)
-      : _resource = resource;
-
-  //---------------------------------------------------------------------
-  // Properties
-  //---------------------------------------------------------------------
-
-  /// The [GraphicsResource] that was destroyed.
-  GraphicsResource get resource => _resource;
+  ResourceDestroyedEvent._internal(this.resource);
 }

@@ -12,7 +12,7 @@ class ResourceCreatedEvent {
   //---------------------------------------------------------------------
 
   /// The [GraphicsResource] that was created.
-  GraphicsResource _resource;
+  final GraphicsResource resource;
 
   //---------------------------------------------------------------------
   // Construction
@@ -21,13 +21,5 @@ class ResourceCreatedEvent {
   /// Creates an instance of the [ResourceCreatedEvent] class.
   ///
   /// A [ResourceCreatedEvent] can not be created directly.
-  ResourceCreatedEvent._internal(GraphicsResource resource)
-      : _resource = resource;
-
-  //---------------------------------------------------------------------
-  // Properties
-  //---------------------------------------------------------------------
-
-  /// The [GraphicsResource] that was created.
-  GraphicsResource get resource => _resource;
+  ResourceCreatedEvent._internal(this.resource);
 }

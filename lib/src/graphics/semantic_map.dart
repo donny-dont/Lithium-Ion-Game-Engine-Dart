@@ -139,4 +139,3 @@ class SemanticMap {
     return '${semantic}${index}';
   }
 }
-

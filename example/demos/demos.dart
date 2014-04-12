@@ -13,7 +13,6 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'dart:html' as Html;
-import 'dart:math' as Math;
 
 //---------------------------------------------------------------------
 // Package libraries
@@ -23,7 +22,6 @@ import 'package:lithium_ion/application.dart';
 import 'package:lithium_ion/content.dart';
 import 'package:lithium_ion/foundation.dart';
 import 'package:lithium_ion/graphics.dart';
-import 'package:lithium_ion/input.dart';
 import 'package:lithium_ion/mesh.dart';
 import 'package:vector_math/vector_math.dart';
 
@@ -53,7 +51,7 @@ void main() {
   enableLogging();
 
   // Start the application
-  startApplication('#surface', new SimpleShapesScreen());
+  startApplication('#surface', new TextureMappingScreen());
 
   var button = Html.querySelector('#fullscreen');
 

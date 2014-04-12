@@ -144,6 +144,8 @@ class EffectParameterBlock {
   Object _getParameterValue(String name) {
     if (_parameters.containsKey(name)) {
       return _parameters[name].value;
+    } else {
+      return null;
     }
   }
 }

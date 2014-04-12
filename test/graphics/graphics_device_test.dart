@@ -24,12 +24,10 @@ void main() {
 
     // Create all the GraphicsResource subclasses
     var viewport = new Viewport(device);
-    print(resources);
     var vertexBuffer = new VertexBuffer.static(device);
     var indexBuffer = new IndexBuffer.static(device);
     var vertexDeclaration = new VertexDeclaration.position(device);
     var mesh = new Mesh(device, vertexDeclaration, [vertexBuffer], indexBuffer);
-    print(resources);
 
     expect(resources, 5);
 

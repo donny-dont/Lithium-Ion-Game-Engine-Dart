@@ -29,6 +29,9 @@ class MockOesVertexArrayObject extends Mock implements WebGL.OesVertexArrayObjec
   }
 }
 
+@proxy
+class MockAngleInstancedArrays extends Mock implements WebGL.AngleInstancedArrays { }
+
 //---------------------------------------------------------------------
 // WebGL.ContextAttributes
 //---------------------------------------------------------------------
@@ -40,6 +43,7 @@ class MockContextAttributes implements WebGL.ContextAttributes {
   bool antialias = true;
   bool premultipliedAlpha = true;
   bool preserveDrawingBuffer = false;
+  bool failIfMajorPerformanceCaveat = false;
 }
 
 //---------------------------------------------------------------------
@@ -47,7 +51,7 @@ class MockContextAttributes implements WebGL.ContextAttributes {
 //---------------------------------------------------------------------
 
 @proxy
-class MockRenderingContext extends Mock {
+class MockRenderingContext extends Mock implements WebGL.RenderingContext {
   static const String _vendorName   = 'Lithium-Ion Engine';
   static const String _rendererName = 'Lithium-Ion Engine Mock WebGL';
   static const String _versionName  = 'Mock WebGL 1.0 (OpenGL ES 2.0)';
@@ -99,12 +103,21 @@ class MockRenderingContext extends Mock {
 
     for (int i = 0; i < extensionCount; ++i) {
       var name = allExtensions[i];
+      var extensionMock;
 
-      var returnValue = (name == GraphicsDeviceExtensions.vertexArrayObject)
-          ? new MockOesVertexArrayObject()
-          : new MockExtension();
+      switch (name) {
+        case GraphicsDeviceExtensions.vertexArrayObject:
+          extensionMock = new MockOesVertexArrayObject();
+          break;
+        case GraphicsDeviceExtensions.instancedArrays:
+          extensionMock = new MockAngleInstancedArrays();
+          break;
+        default:
+          extensionMock = new MockExtension();
+          break;
+      }
 
-      _initializeExtension(extensions, name, returnValue);
+      _initializeExtension(extensions, name, extensionMock);
     }
   }
 

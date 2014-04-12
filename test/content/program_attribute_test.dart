@@ -26,17 +26,15 @@ void testValues() {
 
   names.forEach((value) {
     var semantic = value[0];
-    int usage = value[1];
-
-    String noIndexString = '{"semantic":"${semantic}","symbol":"vAttrib"}';
-
+    var usage = value[1];
+    var noIndexString = '{"semantic":"${semantic}","symbol":"vAttrib"}';
     var noIndex = createProgramAttribute(noIndexString);
 
     expect(noIndex.symbol    , 'vAttrib');
     expect(noIndex.usage     , usage);
     expect(noIndex.usageIndex, 0);
 
-    for (int i = 0; i < 8; ++i) {
+    for (var i = 0; i < 8; ++i) {
       String withIndexString = '{"semantic":"${semantic}_${i}","symbol":"vAttrib"}';
 
       var withIndex = createProgramAttribute(withIndexString);

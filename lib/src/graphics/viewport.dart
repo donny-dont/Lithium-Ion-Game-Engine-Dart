@@ -12,9 +12,9 @@ class Viewport extends GraphicsResource {
   //---------------------------------------------------------------------
 
   /// The x-coordinate of the upper left corner of the viewport on the render-target surface.
-  int _x = 0;
+  int x = 0;
   /// The y-coordinate of the upper left corner of the viewport on the render-target surface.
-  int _y = 0;
+  int y = 0;
   /// The width of the viewport on the render-target surface, in pixels.
   int _width = 640;
   /// The height of the viewport on the render-target surface, in pixels.
@@ -35,13 +35,14 @@ class Viewport extends GraphicsResource {
   /// Creates an instance of the [Viewport] class.
   ///
   /// The rectangular bounding box is specified.
-  Viewport.bounds(GraphicsDevice device, int x, int y, int width, int height)
-    : _x = x
-    , _y = y
-    , _width = width
+  Viewport.bounds(GraphicsDevice device, this.x, this.y, int width, int height)
+    : _width = width
     , _height = height
     , super._internal(device)
   {
+    assert(x >= 0);
+    assert(y >= 0);
+
     _graphicsDevice._createWithoutBinding(this);
   }
 

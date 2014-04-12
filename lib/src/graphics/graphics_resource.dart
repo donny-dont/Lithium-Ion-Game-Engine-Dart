@@ -14,7 +14,7 @@ abstract class GraphicsResource implements Disposable {
   /// The [GraphicsDevice] the resource is bound to.
   GraphicsDevice _graphicsDevice;
   /// The name of the resource.
-  String _name = '';
+  String name = '';
 
   //---------------------------------------------------------------------
   // Construction
@@ -50,10 +50,6 @@ abstract class GraphicsResource implements Disposable {
 
   /// The [GraphicsDevice] the resource is bound to.
   GraphicsDevice get graphicsDevice => _graphicsDevice;
-
-  /// The name of the resource
-  String get name => _name;
-  set name(String value) { _name = value; }
 
   /// Whether the object has been disposed
   bool get isDisposed => _graphicsDevice == null;
