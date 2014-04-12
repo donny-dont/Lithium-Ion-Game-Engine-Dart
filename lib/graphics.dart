@@ -33,6 +33,7 @@ part 'src/graphics/blend.dart';
 part 'src/graphics/blend_operation.dart';
 part 'src/graphics/buffer_usage.dart';
 part 'src/graphics/compare_function.dart';
+part 'src/graphics/color_write_channels.dart';
 part 'src/graphics/cube_map_face.dart';
 part 'src/graphics/cull_mode.dart';
 part 'src/graphics/debug_rendering_context.dart';
