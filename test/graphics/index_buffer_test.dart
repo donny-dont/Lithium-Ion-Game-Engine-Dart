@@ -24,6 +24,10 @@ void testSetData(IndexBuffer buffer, IndexElementSize elementSize) {
       ? new Uint16List(4)
       : new Uint32List(4);
 
+  var usage = (buffer.bufferUsage == BufferUsage.Static)
+      ? WebGL.STATIC_DRAW
+      : WebGL.DYNAMIC_DRAW;
+
   data[0] = 0;
   data[1] = 1;
   data[2] = 2;
@@ -33,7 +37,7 @@ void testSetData(IndexBuffer buffer, IndexElementSize elementSize) {
 
   expect(buffer.indexCount, data.length);
 
-  gl.getLogs(callsTo('bufferDataTyped', WebGL.ELEMENT_ARRAY_BUFFER, data, buffer.bufferUsage)).verify(happenedOnce);
+  gl.getLogs(callsTo('bufferDataTyped', WebGL.ELEMENT_ARRAY_BUFFER, data, usage)).verify(happenedOnce);
 }
 
 void testReplaceData(IndexBuffer buffer, IndexElementSize elementSize) {

@@ -2,9 +2,8 @@ name: lithium_ion
 description: A sample web application
 dependencies:
   logging: any
-  mock: any
-  vector_math:
-    git: https://github.com/johnmccutchan/vector_math.git
+  vector_math: any
 dev_dependencies:
   browser: any
+  mock: any
   unittest: any

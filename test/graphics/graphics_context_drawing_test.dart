@@ -162,7 +162,7 @@ void testVertexDeclarationTransitions() {
     graphicsContext.setVertexDeclaration(vertexDeclaration);
     graphicsContext.drawVertexPrimitiveRange(PrimitiveType.TriangleList, 0, 4);
 
-    verifyVertexDeclaration(gl, elements, lastElements, vertexDeclaration.getVertexStride(0));
+    verifyVertexDeclaration(gl, elements, lastElements, vertexDeclaration.getStride(0));
 
     gl.clearLogs();
 

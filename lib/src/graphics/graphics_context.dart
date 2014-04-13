@@ -543,7 +543,7 @@ class GraphicsContext {
           element.format.index + 1,
           WebGL.FLOAT,
           false,
-          _vertexDeclaration.getVertexStride(slot),
+          _vertexDeclaration.getStride(slot),
           element.offset
       );
 
@@ -707,7 +707,7 @@ class GraphicsContext {
           element.format.index + 1,
           WebGL.FLOAT,
           false,
-          vertexDeclaration.getVertexStride(slot),
+          vertexDeclaration.getStride(slot),
           element.offset
       );
 

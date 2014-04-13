@@ -18,11 +18,24 @@ void testStrides(VertexDeclaration declaration, dynamic strides) {
     strides = [ strides ];
   }
 
-  int strideCount = strides.length;
-  expect(strideCount, declaration.slots);
+  var slotCount = declaration.slots;
+  expect(strides.length, slotCount);
 
-  for (int i = 0; i < strideCount; ++i) {
-    expect(strides[i], declaration.getVertexStride(i));
+  for (var i = 0; i < slotCount; ++i) {
+    expect(strides[i], declaration.getStride(i));
+  }
+}
+
+void testInstanceStepRate(VertexDeclaration declaration, dynamic stepRates) {
+  if (stepRates is int) {
+    stepRates = [ stepRates ];
+  }
+
+  var slotCount = declaration.slots;
+  expect(stepRates.length, slotCount);
+
+  for (var i = 0; i < slotCount; ++i) {
+    expect(stepRates[i], declaration.getInstanceStepRate(i));
   }
 }
 
@@ -37,15 +50,15 @@ void testNamedConstructor(VertexDeclaration declaration, List<VertexElementUsage
       VertexElementUsage.PointSize
   ];
 
-  int allElementCount = allElements.length;
+  var allElementCount = allElements.length;
 
-  for (int i = 0; i < allElementCount; ++i) {
+  for (var i = 0; i < allElementCount; ++i) {
     var usage = allElements[i];
-    bool hasElement = elements.contains(usage);
+    var hasElement = elements.contains(usage);
 
     expect(declaration.hasElement(usage, 0), hasElement);
 
-    for (int j = 1; j < 8; ++j) {
+    for (var j = 1; j < 8; ++j) {
       expect(declaration.hasElement(usage, j), false);
     }
   }
@@ -100,7 +113,7 @@ void main() {
   });
 
   // Strides
-  test('getVertexStride', () {
+  test('getStride', () {
     var declaration;
 
     // Test computed strides
@@ -123,46 +136,106 @@ void main() {
 
     declaration = new VertexDeclaration(graphicsDevice, elements);
     testStrides(declaration, [ 12, 12, 12, 12, 8, 16, 4, 12, 12, 12, 12, 8, 16, 4 ]);
+    testInstanceStepRate(declaration, new List<int>.filled(elements.length, 0));
 
     // Test declared strides
     var strides = [ 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16];
     declaration = new VertexDeclaration(graphicsDevice, elements, strides);
 
     testStrides(declaration, strides);
+    testInstanceStepRate(declaration, new List<int>.filled(elements.length, 0));
 
     // Test position constructor
     declaration = new VertexDeclaration.position(graphicsDevice);
     testStrides(declaration, 12);
+    testInstanceStepRate(declaration, 0);
 
     declaration = new VertexDeclaration.position(graphicsDevice, true);
     testStrides(declaration, 16);
+    testInstanceStepRate(declaration, 0);
 
     // Test positionColor constructor
     declaration = new VertexDeclaration.positionColor(graphicsDevice);
     testStrides(declaration, 12 + 16);
+    testInstanceStepRate(declaration, 0);
 
     declaration = new VertexDeclaration.positionColor(graphicsDevice, true);
     testStrides(declaration, 16 * 2);
+    testInstanceStepRate(declaration, 0);
 
     // Test positionColorSize constructor
     declaration = new VertexDeclaration.positionColorSize(graphicsDevice);
     testStrides(declaration, 12 + 16 + 4);
+    testInstanceStepRate(declaration, 0);
 
     declaration = new VertexDeclaration.positionColorSize(graphicsDevice, true);
     testStrides(declaration, 16 * 3);
+    testInstanceStepRate(declaration, 0);
 
     // Test positionNormalTexture constructor
     declaration = new VertexDeclaration.positionNormalTexture(graphicsDevice);
     testStrides(declaration, 12 + 12 + 8);
+    testInstanceStepRate(declaration, 0);
 
     declaration = new VertexDeclaration.positionNormalTexture(graphicsDevice, true);
     testStrides(declaration, 16 * 3);
+    testInstanceStepRate(declaration, 0);
 
     // Test positionTexture constructor
     declaration = new VertexDeclaration.positionTexture(graphicsDevice);
     testStrides(declaration, 12 + 8);
+    testInstanceStepRate(declaration, 0);
 
     declaration = new VertexDeclaration.positionTexture(graphicsDevice, true);
     testStrides(declaration, 16 * 2);
+    testInstanceStepRate(declaration, 0);
+  });
+
+  // Strides
+  test('getInstanceStepRate', () {
+    var declaration;
+    var elements;
+
+    // Test instance data
+    elements = [
+        new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position         , slot:  0, instanceDataStepRate: 1),
+        new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Normal           , slot:  1, instanceDataStepRate: 1),
+        new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Tangent          , slot:  2, instanceDataStepRate: 1),
+        new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Binormal         , slot:  3, instanceDataStepRate: 1),
+        new VertexElement(0, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, slot:  4, instanceDataStepRate: 1),
+        new VertexElement(0, VertexElementFormat.Vector4, VertexElementUsage.Color            , slot:  5, instanceDataStepRate: 1),
+        new VertexElement(0, VertexElementFormat.Scalar , VertexElementUsage.PointSize        , slot:  6, instanceDataStepRate: 1),
+        new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position         , slot:  7, usageIndex: 1, instanceDataStepRate: 1),
+        new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Normal           , slot:  8, usageIndex: 1, instanceDataStepRate: 1),
+        new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Tangent          , slot:  9, usageIndex: 1, instanceDataStepRate: 1),
+        new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Binormal         , slot: 10, usageIndex: 1, instanceDataStepRate: 1),
+        new VertexElement(0, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, slot: 11, usageIndex: 1, instanceDataStepRate: 1),
+        new VertexElement(0, VertexElementFormat.Vector4, VertexElementUsage.Color            , slot: 12, usageIndex: 1, instanceDataStepRate: 1),
+        new VertexElement(0, VertexElementFormat.Scalar , VertexElementUsage.PointSize        , slot: 13, usageIndex: 1, instanceDataStepRate: 1)
+    ];
+
+    declaration = new VertexDeclaration(graphicsDevice, elements);
+    testInstanceStepRate(declaration, new List<int>.filled(elements.length, 1));
+
+    // Test interleaved instance data
+    elements = [
+        new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position         , slot: 0, instanceDataStepRate: 0),
+        new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Normal           , slot: 0, instanceDataStepRate: 0),
+        new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Tangent          , slot: 1, instanceDataStepRate: 1),
+        new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Binormal         , slot: 1, instanceDataStepRate: 1),
+        new VertexElement(0, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, slot: 2, instanceDataStepRate: 2),
+        new VertexElement(0, VertexElementFormat.Vector4, VertexElementUsage.Color            , slot: 2, instanceDataStepRate: 2),
+        new VertexElement(0, VertexElementFormat.Scalar , VertexElementUsage.PointSize        , slot: 3, instanceDataStepRate: 3),
+        new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position         , slot: 3, usageIndex: 1, instanceDataStepRate: 3),
+        new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Normal           , slot: 4, usageIndex: 1, instanceDataStepRate: 4),
+        new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Tangent          , slot: 4, usageIndex: 1, instanceDataStepRate: 4),
+        new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Binormal         , slot: 5, usageIndex: 1, instanceDataStepRate: 5),
+        new VertexElement(0, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, slot: 5, usageIndex: 1, instanceDataStepRate: 5),
+        new VertexElement(0, VertexElementFormat.Vector4, VertexElementUsage.Color            , slot: 6, usageIndex: 1, instanceDataStepRate: 6),
+        new VertexElement(0, VertexElementFormat.Scalar , VertexElementUsage.PointSize        , slot: 6, usageIndex: 1, instanceDataStepRate: 6)
+    ];
+
+    declaration = new VertexDeclaration(graphicsDevice, elements);
+    testInstanceStepRate(declaration, [ 0, 1, 2, 3, 4, 5, 6 ]);
   });
 }

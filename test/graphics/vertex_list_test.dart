@@ -32,4 +32,22 @@ void main() {
     expect(list.positions.length, vertexCount);
     expect(list.colors.length   , vertexCount);
   });
+
+  test('instanced', () {
+    const int vertexCount = 80;
+    const int instanceCount = 10;
+
+    var elements = [
+        new VertexElement( 0, VertexElementFormat.Vector3, VertexElementUsage.Position         , slot: 0, instanceDataStepRate: 0),
+        new VertexElement( 0, VertexElementFormat.Vector3, VertexElementUsage.Color            , slot: 1, instanceDataStepRate: 1),
+        new VertexElement(12, VertexElementFormat.Vector3, VertexElementUsage.TextureCoordinate, slot: 1, instanceDataStepRate: 1)
+    ];
+
+    var declaration = new VertexDeclaration(graphicsDevice, elements);
+    var list = new VertexList(declaration, vertexCount, instanceCount);
+
+    var instanceColors = list.getElement(VertexElementUsage.Color, 0);
+
+    expect(instanceColors.length, instanceCount);
+  });
 }

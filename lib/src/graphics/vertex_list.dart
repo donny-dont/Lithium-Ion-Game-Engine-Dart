@@ -37,8 +37,8 @@ class VertexList {
 
     for (int i = 0; i < slotCount; ++i) {
       var stepRate = declaration.getInstanceStepRate(i);
-      var count = (stepRate != 0) ? vertexCount : instanceCount * stepRate;
-      var bytes = declaration.getStride(i) * vertexCount;
+      var count = (stepRate == 0) ? vertexCount : instanceCount * stepRate;
+      var bytes = declaration.getStride(i) * count;
 
       assert(bytes != 0);
 
