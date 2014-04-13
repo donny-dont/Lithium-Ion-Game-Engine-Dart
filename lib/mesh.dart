@@ -28,6 +28,7 @@ part 'src/mesh/box_generator.dart';
 part 'src/mesh/mesh_generator.dart';
 part 'src/mesh/normal_data_builder.dart';
 part 'src/mesh/plane_generator.dart';
+part 'src/mesh/sphere_generator.dart';
 part 'src/mesh/tangent_space_builder.dart';
 
 //---------------------------------------------------------------------
