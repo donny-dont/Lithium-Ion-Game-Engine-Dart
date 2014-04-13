@@ -344,6 +344,8 @@ class GraphicsDevice {
         if (index != SemanticMap.notFound) {
           debug('Binding $attributeName to $index', 'lithium_graphics.GraphicsDevice');
           _gl.bindAttribLocation(program, index, attributeName);
+        } else {
+          debug('Binding not found for $attributeName', 'lithium_graphics.GraphicsDevice');
         }
       }
     }

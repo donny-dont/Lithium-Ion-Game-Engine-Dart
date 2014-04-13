@@ -39,6 +39,8 @@ part 'shared/simple_texture_effect.dart';
 // Graphics demos
 //---------------------------------------------------------------------
 
+part 'instancing/instanced_colored_vertex_effect.dart';
+part 'instancing/instancing_screen.dart';
 part 'simple_shapes/simple_shapes_screen.dart';
 part 'texture_mapping/texture_mapping_screen.dart';
 
@@ -51,7 +53,7 @@ void main() {
   enableLogging();
 
   // Start the application
-  startApplication('#surface', new TextureMappingScreen());
+  startApplication('#surface', new InstancingScreen());
 
   var button = Html.querySelector('#fullscreen');
 

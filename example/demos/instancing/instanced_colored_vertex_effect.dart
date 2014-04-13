@@ -8,9 +8,12 @@ part of lithium_demos;
 /// Source code for the colored vertex shader.
 const String _instancedColoredVertexSource =
 '''
+// Per vertex values
 attribute vec3 vPosition;
 
+// Per instance values
 attribute vec4 vColor;
+attribute vec3 vTexCoord1;
 
 uniform mat4 uMVPMatrix;
 
@@ -19,7 +22,7 @@ varying lowp vec4 color;
 void main() {
   color = vColor;
 
-  gl_Position = uMVPMatrix * vec4(vPosition, 1.0);
+  gl_Position = uMVPMatrix * (vec4(vPosition, 1.0) + vec4(vTexCoord1, 1.0));
 }
 ''';
 
@@ -63,11 +66,11 @@ Effect createInstancedColoredVertexEffect(GraphicsDevice device) {
   var effectBuilder = new EffectBuilder(device);
 
   // Add the vertex and pixel shaders to the effect
-  effectBuilder.addVertexShader(_coloredVertexName, _coloredVertexSource);
-  effectBuilder.addPixelShader(_coloredPixelName, _coloredPixelSource);
+  effectBuilder.addVertexShader(_instancedColoredVertexName, _instancedColoredVertexSource);
+  effectBuilder.addPixelShader(_instancedColoredPixelName, _instancedColoredPixelSource);
 
   // Create the pass
-  effectBuilder.addEffectPass('color', _coloredVertexName, _coloredPixelName);
+  effectBuilder.addEffectPass('color', _instancedColoredVertexName, _instancedColoredPixelName);
 
   // Create the effect
   return effectBuilder.create();

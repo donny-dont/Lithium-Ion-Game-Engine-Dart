@@ -76,7 +76,7 @@ class TextureMappingScreen extends SimpleScreen {
     return completer.future;
   }
 
-  /// Creates a cube with colored vertices.
+  /// Creates a cube that contains texture coordinates.
   Mesh _createCube() {
     // Define how the vertex data should be laid out
     var declaration = new VertexDeclaration.positionTexture(_graphicsDevice);

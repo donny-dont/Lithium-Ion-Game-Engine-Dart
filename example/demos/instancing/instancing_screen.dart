@@ -5,18 +5,23 @@
 
 part of lithium_demos;
 
-/// Draws a pyramid and cube using vertex colors.
-///
-/// Matches the [NeHe 3D shapes tutorial](http://nehe.gamedev.net/tutorial/3d_shapes/10035/).
+/// Draws a batch of cubes through instancing.
 class InstancingScreen extends SimpleScreen {
+  //---------------------------------------------------------------------
+  // Class variables
+  //---------------------------------------------------------------------
+
+  /// The number of instances per dimension.
+  static const int _instanceLength = 10;
+  /// The total number of instances.
+  static const int _instanceCount = _instanceLength * _instanceLength * _instanceLength;
+  /// The padding between each instance.
+  static const double _instancePadding = 1.0;
+
   //---------------------------------------------------------------------
   // Member variables
   //---------------------------------------------------------------------
 
-  /// The [Mesh] containing the pyramid.
-  Mesh _pyramidMesh;
-  /// The model matrix for the pyramid.
-  Matrix4 _pyramidMatrix = new Matrix4.identity();
   /// The [Mesh] containing the cube.
   Mesh _cubeMesh;
   /// The model matrix for the cube.
@@ -43,7 +48,7 @@ class InstancingScreen extends SimpleScreen {
   /// Loads all resources for the [SimpleScreen].
   Future<bool> _onLoad() {
     // Create the effect
-    _effect = createColoredVertexEffect(_graphicsDevice);
+    _effect = createInstancedColoredVertexEffect(_graphicsDevice);
 
     // Get the effect pass
     _effectPass = _effect.techniques['color'].passes[0];
@@ -66,62 +71,35 @@ class InstancingScreen extends SimpleScreen {
 
     _graphicsContext.viewport = new Viewport.bounds(_graphicsDevice, 0, 0, 1280, 720);
 
-    // Create the meshes
-    _pyramidMesh = _createPyramid();
-    _cubeMesh = _createCube();
+    // Create the mesh
+    _cubeMesh = _createInstancedCube();
 
     // Everything has loaded successfully return a completed future
     return new Future.value(true);
   }
 
-  /// Creates a pyramid mesh with colored vertices.
-  Mesh _createPyramid() {
-    // Define how the vertex data should be laid out
-    var declaration = new VertexDeclaration.positionColor(_graphicsDevice);
-
-    // Create a VertexList to generate the data
-    var vertices = new VertexList(declaration, 12);
-
-    // Create the vertex data
-    var positions = vertices.positions;
-    var colors = vertices.colors;
-
-    positions[0]  = new Vector3( 0.0,  0.5,  0.0); colors[0]  = Color.red;   // Top Of Triangle   (Front)
-    positions[1]  = new Vector3(-0.5, -0.5,  0.5); colors[1]  = Color.green; // Left Of Triangle  (Front)
-    positions[2]  = new Vector3( 0.5, -0.5,  0.5); colors[2]  = Color.blue;  // Right Of Triangle (Front)
-
-    positions[3]  = new Vector3( 0.0,  0.5,  0.0); colors[3]  = Color.red;   // Top Of Triangle   (Right)
-    positions[4]  = new Vector3( 0.5, -0.5,  0.5); colors[4]  = Color.blue;  // Left Of Triangle  (Right)
-    positions[5]  = new Vector3( 0.5, -0.5, -0.5); colors[5]  = Color.green; // Right Of Triangle (Right)
-
-    positions[6]  = new Vector3( 0.0,  0.5,  0.0); colors[6]  = Color.red;   // Top Of Triangle   (Back)
-    positions[7]  = new Vector3( 0.5, -0.5, -0.5); colors[7]  = Color.green; // Left Of Triangle  (Back)
-    positions[8]  = new Vector3(-0.5, -0.5, -0.5); colors[8]  = Color.blue;  // Right Of Triangle (Back)
-
-    positions[9]  = new Vector3( 0.0,  0.5,  0.0); colors[9]  = Color.red;   // Top Of Triangle   (Left)
-    positions[10] = new Vector3(-0.5, -0.5, -0.5); colors[10] = Color.blue;  // Left Of Triangle  (Left)
-    positions[11] = new Vector3(-0.5, -0.5,  0.5); colors[11] = Color.green; // Right Of Triangle (Left)
-
-    // Upload the graphics data
-    var vertexBuffer = new VertexBuffer.static(_graphicsDevice);
-    vertexBuffer.setData(vertices.getBuffer(0));
-
-    // Create the mesh
-    Mesh mesh = new Mesh(_graphicsDevice, declaration, [ vertexBuffer ]);
-
-    return mesh;
-  }
-
-  /// Creates a cube with colored vertices.
-  Mesh _createCube() {
+  /// Creates instances of a cube mesh.
+  Mesh _createInstancedCube() {
     // Create a BoxGenerator to create the mesh data
     var generator = new BoxGenerator();
 
     // Define how the vertex data should be laid out
-    var declaration = new VertexDeclaration.positionColor(_graphicsDevice);
+    var perVertexSlot = 0;
+    var perInstanceSlot = 1;
+
+    var elements = [
+        // Per-vertex data is at slot 0
+        new VertexElement( 0, VertexElementFormat.Vector3, VertexElementUsage.Position         , slot: perVertexSlot),
+
+        // Per-instance data is at slot 1
+        new VertexElement( 0, VertexElementFormat.Vector3, VertexElementUsage.Color            , slot: perInstanceSlot, instanceDataStepRate: 1),
+        new VertexElement(12, VertexElementFormat.Vector3, VertexElementUsage.TextureCoordinate, slot: perInstanceSlot, usageIndex: 1, instanceDataStepRate: 1)
+    ];
+
+    var declaration = new VertexDeclaration(_graphicsDevice, elements);
 
     // Query the storage requirements for creating a cube and create the data
-    var vertices = new VertexList(declaration, generator.vertexCount);
+    var vertices = new VertexList(declaration, generator.vertexCount, _instanceCount);
     var indices  = new Uint16List(generator.indexCount);
 
     // Generate the mesh
@@ -129,42 +107,60 @@ class InstancingScreen extends SimpleScreen {
     // By default the generator will create a unit cube.
     generator.generateMesh(vertices, indices);
 
-    // The BoxGenerator does not know how to create color data so this
-    // needs to be created manually
-    var colors = vertices.colors;
+    // Get the instance data
+    var offsets = vertices.getElement(VertexElementUsage.TextureCoordinate, 1);
+    var colors  = vertices.getElement(VertexElementUsage.Color, 0);
 
-    // Each face should have a unique color
-    var faceColors = [
-        Color.blue,   // Negative X (left)
-        Color.orange, // Negative Y (bottom)
-        Color.yellow, // Negative Z (back)
-        Color.green,  // Positive Y (top)
-        Color.red,    // Positive Z (front)
-        Color.violet  // Positive X (right)
-    ];
+    // Create the instance data
+    var position = new Vector3.zero();
+    var incrementPositionBy = 1.0 + _instancePadding;
+    var startPosition = -0.5 * (((_instanceLength - 1) * _instancePadding) + _instanceLength);
 
-    int faceCount = faceColors.length;
-    int vertexIndex = 0;
+    var color = new Vector3.zero();
+    var incrementColorBy = 1.0 / (_instanceLength - 1);
 
-    for (int i = 0; i < faceCount; ++i) {
-      var color = faceColors[i];
+    position.x = startPosition;
+    var i = 0;
 
-      // Each face has 4 vertices associated with it
-      colors[vertexIndex++] = color;
-      colors[vertexIndex++] = color;
-      colors[vertexIndex++] = color;
-      colors[vertexIndex++] = color;
+    for (var x = 0; x < _instanceLength; ++x) {
+      position.y = startPosition;
+      color.y = 0.0;
+
+      for (var y = 0; y < _instanceLength; ++y) {
+        position.z = startPosition;
+        color.z = 0.0;
+
+        for (var z = 0; z < _instanceLength; ++z) {
+          // Set the instance data
+          offsets[i] = position;
+          colors [i] = color;
+
+          ++i;
+
+          position.z += incrementPositionBy;
+          color.z += incrementColorBy;
+        }
+
+        position.y += incrementPositionBy;
+        color.y += incrementColorBy;
+      }
+
+      position.x += incrementPositionBy;
+      color.x += incrementColorBy;
     }
 
     // Upload the graphics data
-    var vertexBuffer = new VertexBuffer.static(_graphicsDevice);
-    vertexBuffer.setData(vertices.getBuffer(0));
+    var perVertexBuffer = new VertexBuffer.static(_graphicsDevice);
+    perVertexBuffer.setData(vertices.getBuffer(perVertexSlot));
+
+    var perInstanceBuffer = new VertexBuffer.static(_graphicsDevice);
+    perInstanceBuffer.setData(vertices.getBuffer(perInstanceSlot));
 
     var indexBuffer = new IndexBuffer.static(_graphicsDevice);
     indexBuffer.setData(indices);
 
     // Create the mesh
-    Mesh mesh = new Mesh(_graphicsDevice, declaration, [ vertexBuffer ], indexBuffer);
+    Mesh mesh = new Mesh(_graphicsDevice, declaration, [ perVertexBuffer, perInstanceBuffer ], indexBuffer);
 
     return mesh;
   }
@@ -172,7 +168,6 @@ class InstancingScreen extends SimpleScreen {
   /// Unloads all resources for the [SimpleScreen].
   void _onUnload() {
     // Dispose of the meshes to reclaim memory
-    _pyramidMesh.dispose();
     _cubeMesh.dispose();
   }
 
@@ -181,36 +176,27 @@ class InstancingScreen extends SimpleScreen {
     var time = new Time();
     var angle = (time.currentTime * 0.001);
 
-    // Position the pyramid and rotate around its y axis
-    _pyramidMatrix.setIdentity();
-    _pyramidMatrix.setTranslationRaw(1.5, 0.0, 3.0);
-    _pyramidMatrix.rotateY(angle);
-
     // Position the cube and rotate it around an axis
     _cubeMatrix.setIdentity();
-    _cubeMatrix.setTranslationRaw(-1.5, 0.0, 3.0);
-    _cubeMatrix.rotate(new Vector3(1.0, 1.0, 1.0), angle);
+    _cubeMatrix.setTranslationRaw(0.0, 0.0, 17.5);
+    _cubeMatrix.rotate(new Vector3(1.0, 0.0, 0.0), angle);
+    _cubeMatrix.rotate(new Vector3(0.0, 1.0, 0.0), angle);
+    _cubeMatrix.rotate(new Vector3(0.0, 0.0, 1.0), angle);
   }
 
   /// Renders the [SimpleScreen].
   void _onDraw() {
     // Clear the screen
-    _graphicsContext.clearColor = Color.blueViolet;
+    _graphicsContext.clearColor = Color.black;
     _graphicsContext.clearBuffers();
 
     // Set the EffectPass
     _graphicsContext.effectPass = _effectPass;
 
-    // Draw the pyramid
-    _effect.parameters['uMVPMatrix'] = _vpMatrix * _pyramidMatrix;
-
-    _graphicsContext.setMesh(_pyramidMesh);
-    _graphicsContext.drawVertexPrimitiveRange(PrimitiveType.TriangleStrip, 0, 12);
-
     // Draw the cube
     _effect.parameters['uMVPMatrix'] = _vpMatrix * _cubeMatrix;
 
     _graphicsContext.setMesh(_cubeMesh);
-    _graphicsContext.drawIndexedPrimitives(PrimitiveType.TriangleList);
+    _graphicsContext.drawInstancedPrimitives(PrimitiveType.TriangleList, 0, _instanceCount);
   }
 }

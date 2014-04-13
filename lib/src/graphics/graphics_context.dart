@@ -475,6 +475,33 @@ class GraphicsContext {
     );
   }
 
+  void drawInstancedPrimitives(int primitiveType, int offset, int count) {
+    assert(_instancedArrays != null);
+    assert(PrimitiveType.isValid(primitiveType));
+    assert((_indexBuffer != null) || ((_mesh != null) && (_mesh._indexBuffer != null)));
+
+    if (_shouldBindVertexData()) {
+      _setupVertexData();
+
+      this._printVertexAttribState();
+    }
+
+    _bindEffectPass(_effectPass);
+    _setEffectParameters();
+
+    var indexBuffer = (_boundMesh != null)
+        ? _mesh._indexBuffer
+        : _indexBuffer;
+
+    _instancedArrays.drawElementsInstancedAngle(
+        primitiveType,
+        indexBuffer.indexCount,
+        _indexElementSizeToWebGL(indexBuffer.indexElementSize),
+        offset,
+        count
+    );
+  }
+
   //---------------------------------------------------------------------
   // Drawing internal methods
   //---------------------------------------------------------------------
@@ -727,6 +754,8 @@ class GraphicsContext {
     if (indexBuffer != null) {
       _gl.bindBuffer(WebGL.ELEMENT_ARRAY_BUFFER, indexBuffer._binding);
     }
+
+    _printVertexAttribState();
   }
 
   //---------------------------------------------------------------------
@@ -877,8 +906,9 @@ class GraphicsContext {
 
     for (var i = 0; i < vertexBufferSlots; ++i) {
       var enabled = _gl.getVertexAttrib(i, WebGL.VERTEX_ATTRIB_ARRAY_ENABLED);
+      var divisor = _gl.getVertexAttrib(i, WebGL.AngleInstancedArrays.VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE);
 
-      print('$i:\tenabled? $enabled');
+      print('$i:\tenabled? $enabled\tDivisor:\t$divisor');
     }
   }
 }

@@ -40,6 +40,6 @@ class VertexElement {
     assert(instanceDataStepRate >= 0);
 
     // \TODO REMOVE
-    _vertexAttribIndex = (usage != VertexElementUsage.TextureCoordinate) ? usage.index : 6;
+    _vertexAttribIndex = (usage != VertexElementUsage.TextureCoordinate) ? usage.index : 6 + usageIndex;
   }
 }
