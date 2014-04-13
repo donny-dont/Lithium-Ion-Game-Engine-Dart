@@ -35,10 +35,4 @@ class ColorChannel implements Enum {
   static const ColorChannel Alpha = const ColorChannel._internal(3);
 }
 
-class ColorWriteChannels extends Flags<ColorChannel> {
-  //---------------------------------------------------------------------
-  // Member variables
-  //---------------------------------------------------------------------
-
-  static final ColorWriteChannels None = new ColorWriteChannels();
-}
+class ColorWriteChannels extends Flags<ColorChannel> {}

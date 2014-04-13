@@ -48,7 +48,7 @@ class GraphicsContext {
   //---------------------------------------------------------------------
 
   /// The current color that the color buffer is set to on clear.
-  Vector4 _clearColor = new Vector4(0.0, 0.0, 0.0, 1.0);
+  Vector4 _clearColor = new Vector4(0.0, 0.0, 0.0, 0.0);
   /// The current value to set the depth buffer to on clear.
   double _clearDepth = 0.0;
   /// The current value to set the stencil buffer to on clear.

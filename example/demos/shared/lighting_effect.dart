@@ -65,7 +65,7 @@ const String _lightingPixelName = 'colorPixel';
 ///
 ///     var effect = createColoredVertexEffect(device);
 ///
-///     // Apply the effect paramter
+///     // Apply the effect parameter
 ///     effect.parameters['uMVPMatrix'].setValue(mvpMatrix);
 ///
 ///     // Get the pass

@@ -324,7 +324,7 @@ class GraphicsDevice {
     }
   }
 
-  /// Applys a [SemanticMap] to the [program].
+  /// Applies a [SemanticMap] to the [program].
   ///
   /// The [SemanticMap] specifies the vertex attribute locations.
   void _applySemanticMap(WebGL.Program program) {

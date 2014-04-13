@@ -31,7 +31,6 @@ varying highp vec2 texCoord;
 
 void main() {
   gl_FragColor = texture2D(uTexture, texCoord);
-  gl_FragColor = vec4(texCoord, 0.0, 1.0);
 }
 ''';
 
@@ -48,7 +47,7 @@ const String _simpleTexturePixelName = 'texturePixel';
 ///
 ///     var effect = createSimpleTextureEffect(device);
 ///
-///     // Apply the effect paramter
+///     // Apply the effect parameter
 ///     effect.parameters['uMVPMatrix'] = mvpMatrix;
 ///     effect.parameters['uTexture'] = texture;
 ///

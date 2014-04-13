@@ -22,6 +22,8 @@ abstract class SimpleScreen extends Screen {
   GraphicsContext _graphicsContext;
   /// The [TextureManager] used by the [SimpleScreen].
   TextureManager _textureManager;
+  /// The [Viewport] used by the [SimpleScreen].
+  Viewport _viewport;
   /// Whether the [SimpleScreen] is loaded already.
   bool _isLoaded = false;
 
@@ -55,6 +57,7 @@ abstract class SimpleScreen extends Screen {
       _graphicsDevice = services.graphicsDeviceManager.graphicsDevice;
       _graphicsContext = _graphicsDevice.graphicsContext;
       _textureManager = new TextureManager(_graphicsDevice);
+      _viewport = new Viewport(_graphicsDevice);
 
       return _onLoad();
     }
@@ -83,9 +86,10 @@ abstract class SimpleScreen extends Screen {
   }
 
   void onResize(int width, int height) {
-    var viewport = new Viewport.bounds(_graphicsDevice, 0, 0, width, height);
+    _viewport.width = width;
+    _viewport.height = height;
 
-    _graphicsContext.viewport = viewport;
+    _graphicsContext.viewport = _viewport;
   }
 
   //---------------------------------------------------------------------

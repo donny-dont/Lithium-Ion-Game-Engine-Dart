@@ -20,22 +20,27 @@ class VertexList {
   /// The [VertexDeclaration] for the data.
   VertexDeclaration _vertexDeclaration;
   /// The number of vertices.
-  int _vertexCount;
+  final int vertexCount;
+  /// The number of instances.
+  final int instanceCount;
 
   //---------------------------------------------------------------------
   // Construction
   //---------------------------------------------------------------------
 
-  VertexList(VertexDeclaration declaration, int vertexCount)
+  VertexList(VertexDeclaration declaration, this.vertexCount, [this.instanceCount = 0])
       : _vertexDeclaration = declaration
-      , _vertexCount = vertexCount
   {
-    int slotCount = declaration.slots;
+    var slotCount = declaration.slots;
 
     _buffers = new List<ByteBuffer>(slotCount);
 
     for (int i = 0; i < slotCount; ++i) {
-      int bytes = declaration.getVertexStride(i) * _vertexCount;
+      var stepRate = declaration.getInstanceStepRate(i);
+      var count = (stepRate != 0) ? vertexCount : instanceCount * stepRate;
+      var bytes = declaration.getStride(i) * vertexCount;
+
+      assert(bytes != 0);
 
       _buffers[i] = new Uint8List(bytes).buffer;
     }
@@ -44,9 +49,6 @@ class VertexList {
   //---------------------------------------------------------------------
   // Properties
   //---------------------------------------------------------------------
-
-  /// The number of vertices present.
-  int get vertexCount => _vertexCount;
 
   /// The position data if present.
   ///
@@ -106,7 +108,7 @@ class VertexList {
     if (element != null) {
       int offset = element.offset;
       int slot   = element.slot;
-      int stride = _vertexDeclaration.getVertexStride(slot);
+      int stride = _vertexDeclaration.getStride(slot);
       var buffer = _buffers[slot];
 
       switch (element.format) {

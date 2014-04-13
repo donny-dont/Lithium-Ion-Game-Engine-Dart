@@ -38,7 +38,7 @@ class TextureMappingScreen extends SimpleScreen {
   Future<bool> _onLoad() {
     var completer = new Completer<bool>();
 
-    _textureManager.loadTexture('texture_mapping/textures/dart_tex.png').then((texture) {
+    _textureManager.loadTexture('texture_mapping/textures/uv.jpg').then((texture) {
       // Create the effect
       _effect = createSimpleTextureEffect(_graphicsDevice);
 
@@ -100,14 +100,16 @@ class TextureMappingScreen extends SimpleScreen {
 
     // Position the cube and rotate it around an axis
     _cubeMatrix.setIdentity();
-    _cubeMatrix.setTranslationRaw(0.0, 0.0, 3.0);
-    _cubeMatrix.rotate(new Vector3(1.0, 1.0, 1.0), angle);
+    _cubeMatrix.setTranslationRaw(0.0, 0.0, 2.0);
+    _cubeMatrix.rotate(new Vector3(1.0, 0.0, 0.0), angle);
+    _cubeMatrix.rotate(new Vector3(0.0, 1.0, 0.0), angle);
+    _cubeMatrix.rotate(new Vector3(0.0, 0.0, 1.0), angle);
   }
 
   /// Renders the [SimpleScreen].
   void _onDraw() {
     // Clear the screen
-    _graphicsContext.clearColor = Color.blueViolet;
+    _graphicsContext.clearColor = Color.black;
     _graphicsContext.clearBuffers();
 
     // Set the EffectPass

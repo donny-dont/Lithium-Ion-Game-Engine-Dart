@@ -28,7 +28,7 @@ class GraphicsDeviceManager implements Service {
   /// Creates the [GraphicsDevice].
   void createDevice(Html.CanvasElement surface) {
     var config = new GraphicsDeviceConfig();
-    config.debug = true;
+    config.debug = const String.fromEnvironment('DEBUG') != null;
 
     _graphicsDevice = new GraphicsDevice(surface, config);
   }

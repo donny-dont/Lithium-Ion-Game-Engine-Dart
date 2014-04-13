@@ -32,6 +32,7 @@ class VertexDeclaration extends GraphicsResource {
       : super._internal(device)
   {
     assert(elements != null);
+    assert(elements.length > 0);
     assert(_areElementsValid(elements));
 
     _graphicsDevice._createWithoutBinding(this);
@@ -217,10 +218,32 @@ class VertexDeclaration extends GraphicsResource {
   //---------------------------------------------------------------------
 
   /// Gets the stride for the vertex buffer at the given [index].
-  int getVertexStride(int index) {
+  int getStride(int index) {
     assert((index >= 0) && (index < _strides.length));
 
     return _strides[index];
+  }
+
+  /// Gets whether the vertex buffer at the given [index] holds per instance data.
+  int getInstanceStepRate(int index) {
+    assert((index >= 0) && (index < _strides.length));
+
+    var elementCount = _elements.length;
+
+    for (var i = 0; i < elementCount; ++i) {
+      var element = _elements[i];
+
+      if (element.slot == index) {
+        // Declarations are validated during creation to ensure that per
+        // instance data is not in the same slot as per vertex data. This means
+        // the first vertex
+        return element.instanceDataStepRate;
+      }
+    }
+
+    // Should never get here
+    assert(false);
+    return 0;
   }
 
   /// Queries whether a [VertexElement] with the given [usage] and [usageIndex] is present.
@@ -321,12 +344,39 @@ class VertexDeclaration extends GraphicsResource {
     int elementCount = elements.length;
 
     for (int i = 0; i < elementCount; ++i) {
+      var a = elements[i];
+
       for (int j = i + 1; j < elementCount; ++j) {
-        var a = elements[i];
         var b = elements[j];
 
         if ((a.usage == b.usage) && (a.usageIndex == b.usageIndex)) {
           return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  /// Verifies [elements] that are instance data.
+  ///
+  /// Checks to see that any element that contains per instance data is not in
+  /// the same slot as an element containing per vertex data. Also validates
+  /// that the same step rate is used for all the per instance data.
+  static bool _areInstanceElementsValid(List<VertexElement> elements) {
+    var elementCount = elements.length;
+
+    for (var i = 0; i < elementCount; ++i) {
+      var a = elements[i];
+      var instanced = a.instanceDataStepRate == 0;
+
+      if (a.instanceDataStepRate != 0) {
+        for (var j = i + 1; j < elementCount; ++j) {
+          var b = elements[j];
+
+          if ((a.slot == b.slot) && (a.instanceDataStepRate != b.instanceDataStepRate)) {
+            return false;
+          }
         }
       }
     }
