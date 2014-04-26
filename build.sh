@@ -28,6 +28,6 @@ echo Unstaging files
 mv .docs_staging docs
 
 echo Committing GitHub pages
-git commit -A
+git add -A
 git commit -m "Auto-commit from Drone"
 git push origin gh-pages
