@@ -12,10 +12,12 @@
 Thumbs.db
 
 # Dart files
-.buildlog
 packages
 pubspec.lock
+
+# Dart build files
 build
+.buildlog
 
 # Generated JavaScript files
 *.js
@@ -24,3 +26,4 @@ build
 
 # Generated documentation
 docs
+dartdoc-viewer

@@ -22,6 +22,8 @@ import 'package:lithium_ion/foundation.dart';
 //---------------------------------------------------------------------
 
 part 'src/input/button_state.dart';
+part 'src/input/game_pad.dart';
+part 'src/input/game_pad_state.dart';
 part 'src/input/keyboard.dart';
 part 'src/input/keyboard_state.dart';
 part 'src/input/keys.dart';
