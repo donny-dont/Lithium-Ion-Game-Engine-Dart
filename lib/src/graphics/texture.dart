@@ -36,7 +36,7 @@ class Texture extends GraphicsResource {
   // Public methods
   //---------------------------------------------------------------------
 
-  /// Immediately releases the unmanaged resources used by this object.
+  @override
   void dispose() {
     _samplerState.dispose();
     _graphicsDevice._destroyTexture(this);

@@ -269,6 +269,10 @@ class GraphicsDevice {
     _graphicsContext._setElementTexture2D(graphicsResource, element);
   }
 
+  void _setElementTextureCube(Texture graphicsResource, CubeMapFace face, Html.HtmlElement element) {
+    _graphicsContext._setElementTexureCube(graphicsResource, face, element);
+  }
+
   //---------------------------------------------------------------------
   // EffectPass methods
   //---------------------------------------------------------------------

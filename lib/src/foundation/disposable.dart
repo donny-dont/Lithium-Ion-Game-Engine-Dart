@@ -8,7 +8,7 @@ part of lithium_foundation;
 /// Interface for an object that has resources that need to be released explicitly.
 ///
 /// Objects that implement [Disposable] should have some form of managed
-/// resource that needs to be cleaned up explictly to avoid memory leaks.
+/// resource that needs to be cleaned up explicitly to avoid memory leaks.
 ///
 /// One example is a class that subscribes to a [Stream]. Before the class is
 /// disposed of through garbage collection the subscription should be

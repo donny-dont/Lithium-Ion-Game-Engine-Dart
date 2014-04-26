@@ -43,7 +43,7 @@ class CubeMapFace implements Enum {
   //---------------------------------------------------------------------
 
   /// List of enumerations.
-  static const List<TextureAddressMode> values = const [
+  static const List<CubeMapFace> values = const [
       NegativeX,
       NegativeY,
       NegativeZ,

@@ -11,23 +11,42 @@ class DepthStencilState extends GraphicsResource {
   // Member variables
   //---------------------------------------------------------------------
 
+  /// Whether depth buffering is enabled or disabled.
+  ///
+  /// The default is true.
+  bool depthBufferEnabled = true;
+  /// Whether writing to the depth buffer is enabled or disabled.
+  ///
+  /// The default is true.
+  bool depthBufferWriteEnabled = true;
+  /// The comparison function for the depth-buffer test.
+  ///
+  /// The default is CompareFunction.LessEqual.
+  CompareFunction depthBufferFunction = CompareFunction.LessEqual;
+
   //---------------------------------------------------------------------
   // Construction
   //---------------------------------------------------------------------
 
   /// Creates an instance of the [DepthStencilState] class.
   DepthStencilState(GraphicsDevice device)
-    : super._internal(device)
-  {
-    _graphicsDevice._createWithoutBinding(this);
-  }
+    : super._internalWithoutBinding(device);
 
-  //---------------------------------------------------------------------
-  // Public methods
-  //---------------------------------------------------------------------
+  /// Creates an instance of [DepthState] with a writable depth buffer.
+  DepthStencilState.depthWrite(String name, GraphicsDevice device)
+    : super._internalWithoutBinding(device)
+    , depthBufferEnabled = true
+    , depthBufferWriteEnabled = true;
 
-  /// Immediately releases the unmanaged resources used by this object.
-  void dispose() {
-    _graphicsDevice._destroyWithoutBinding(this);
-  }
+  /// Creates an instance of [DepthState] with a read-only depth buffer.
+  DepthStencilState.depthRead(String name, GraphicsDevice device)
+    : super._internalWithoutBinding(device)
+    , depthBufferEnabled = true
+    , depthBufferWriteEnabled = false;
+
+  /// Creates an instance of [DepthState] which doesn't use a depth buffer.
+  DepthStencilState.none(String name, GraphicsDevice device)
+    : super._internalWithoutBinding(device)
+    , depthBufferEnabled = false
+    , depthBufferWriteEnabled = false;
 }

@@ -66,25 +66,25 @@ class EffectParameterType implements Enum {
   //---------------------------------------------------------------------
 
   /// List of enumerations.
-  static const List<BlendOperation> values = const [
-    Scalar,
-    Vector2,
-    Vector3,
-    Vector4,
-    Matrix2,
-    Matrix3,
-    Matrix4,
-    ScalarList,
-    Vector2List,
-    Vector3List,
-    Vector4List,
-    Matrix2List,
-    Matrix3List,
-    Matrix4List,
-    Texture2D,
-    TextureCube,
-    Block,
-    BlockList
+  static const List<EffectParameterType> values = const [
+      Scalar,
+      Vector2,
+      Vector3,
+      Vector4,
+      Matrix2,
+      Matrix3,
+      Matrix4,
+      ScalarList,
+      Vector2List,
+      Vector3List,
+      Vector4List,
+      Matrix2List,
+      Matrix3List,
+      Matrix4List,
+      Texture2D,
+      TextureCube,
+      Block,
+      BlockList
   ];
 }
 

@@ -11,8 +11,12 @@ class TextureCube extends Texture {
   //---------------------------------------------------------------------
 
   TextureCube(GraphicsDevice device)
-      : super._internal(device, WebGL.TEXTURE_CUBE_MAP)
-  {
+      : super._internal(device, WebGL.TEXTURE_CUBE_MAP);
 
+
+  void setElement(CubeMapFace face, Html.HtmlElement element) {
+    assert(element is Html.ImageElement || element is Html.CanvasElement || element is Html.VideoElement);
+
+    _graphicsDevice._setElementTextureCube(this, face, element);
   }
 }

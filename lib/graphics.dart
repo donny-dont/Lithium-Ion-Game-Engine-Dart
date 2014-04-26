@@ -14,6 +14,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:html' as Html;
 import 'dart:math' as Math;
+@MirrorsUsed(targets: WebGL.RenderingContext)
 import 'dart:mirrors';
 import 'dart:typed_data';
 import 'dart:web_gl' as WebGL;
@@ -31,6 +32,7 @@ import 'package:vector_math/vector_math.dart';
 
 part 'src/graphics/blend.dart';
 part 'src/graphics/blend_operation.dart';
+part 'src/graphics/blend_state.dart';
 part 'src/graphics/buffer_usage.dart';
 part 'src/graphics/compare_function.dart';
 part 'src/graphics/color_write_channels.dart';
@@ -62,6 +64,7 @@ part 'src/graphics/resource_created_event.dart';
 part 'src/graphics/resource_destroyed_event.dart';
 part 'src/graphics/sampler_state.dart';
 part 'src/graphics/semantic_map.dart';
+part 'src/graphics/stencil_operation.dart';
 part 'src/graphics/surface_format.dart';
 part 'src/graphics/texture.dart';
 part 'src/graphics/texture_2d.dart';

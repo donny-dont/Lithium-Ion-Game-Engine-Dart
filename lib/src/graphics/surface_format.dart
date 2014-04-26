@@ -60,7 +60,7 @@ class SurfaceFormat implements Enum {
   //---------------------------------------------------------------------
 
   /// List of enumerations.
-  static const List<TextureAddressMode> values = const [
+  static const List<SurfaceFormat> values = const [
       Rgba,
       Rgb,
       Rgb565,
@@ -110,18 +110,15 @@ const List<int> _surfaceFormatInternalMapping = const [
 
 
 /// Checks whether the value is a compressed format.
-bool _isCompressedFormat(SurfaceFormat surfaceFormat) {
-  return ((surfaceFormat == SurfaceFormat.Dxt1) ||
-          (surfaceFormat == SurfaceFormat.Dxt3) ||
-          (surfaceFormat == SurfaceFormat.Dxt5));
-}
+bool _isCompressedFormat(SurfaceFormat surfaceFormat)
+     => ((surfaceFormat == SurfaceFormat.Dxt1) ||
+         (surfaceFormat == SurfaceFormat.Dxt3) ||
+         (surfaceFormat == SurfaceFormat.Dxt5));
 
 /// Converts the [SurfaceFormat] enumeration to its WebGL value.
-int _surfaceFormatToWebGL(SurfaceFormat surfaceFormat) {
-  return _surfaceFormatMapping[surfaceFormat.index];
-}
+int _surfaceFormatToWebGL(SurfaceFormat surfaceFormat)
+    => _surfaceFormatMapping[surfaceFormat.index];
 
 /// Converts the [TextureFilter] enumeration to its WebGL internal format value.
-int _surfaceFormatInternalToWebGL(SurfaceFormat surfaceFormat) {
-  return _surfaceFormatInternalMapping[surfaceFormat.index];
-}
+int _surfaceFormatInternalToWebGL(SurfaceFormat surfaceFormat)
+    => _surfaceFormatInternalMapping[surfaceFormat.index];

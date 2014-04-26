@@ -46,7 +46,7 @@ class SphereGenerator extends MeshGenerator {
   ///
   /// Index data will be placed within the [indices] array starting at the specified
   /// [indexOffset].
-  void _generateIndices(Uint16Array indices, int vertexOffset, int indexOffset) {
+  void _generateIndices(Uint16List indices, int vertexOffset, int indexOffset) {
     int x;
 
     // Sides
@@ -73,19 +73,19 @@ class SphereGenerator extends MeshGenerator {
   /// within the [array] will contain position data.
   ///
   /// The mesh will be centered at the given [center] position.
-  void _generatePositions(Vector3Array positions, vec3 center, int vertexOffset) {
+  void _generatePositions(Vector3List positions, Vector3 center, int vertexOffset) {
     for (int y = 0; y <= latSegments; ++y) {
       double v = y / latSegments;
-      double sv = sin(v * Math.PI);
-      double cv = cos(v * Math.PI);
+      double sv = Math.sin(v * Math.PI);
+      double cv = Math.cos(v * Math.PI);
 
       for (int x = 0; x <= lonSegments; ++x) {
         double u = x / lonSegments;
 
-        positions[vertexOffset++] = new vec3.raw(
-            radius * cos(u * Math.PI * 2.0) * sv + center.x,
+        positions[vertexOffset++] = new Vector3(
+            radius * Math.cos(u * Math.PI * 2.0) * sv + center.x,
             radius * cv + center.y,
-            radius * sin(u * Math.PI * 2.0) * sv + center.z
+            radius * Math.sin(u * Math.PI * 2.0) * sv + center.z
         );
       }
     }
@@ -96,13 +96,13 @@ class SphereGenerator extends MeshGenerator {
   /// Texture coordinates will be placed within the [array] starting at the
   /// specified [vertexData]. When complete the \[[vertexOffset], [vertexOffset] + [vertexCount]\]
   /// within the [array] will contain texture coordinate data.
-  void _generateTextureCoordinates(Vector2Array texCoords, int vertexOffset) {
+  void _generateTextureCoordinates(Vector2List texCoords, int vertexOffset) {
     for (int y = 0; y <= latSegments; ++y) {
       double v = y / latSegments;
 
       for (int x = 0; x <= lonSegments; ++x) {
         double u = x / lonSegments;
-        texCoords[vertexOffset++] = new vec2.raw(u, v);
+        texCoords[vertexOffset++] = new Vector2(u, v);
       }
     }
   }
@@ -112,19 +112,19 @@ class SphereGenerator extends MeshGenerator {
   /// Normals will be placed within the [vertexArray] starting at the specified
   /// [vertexOffset]. When complete the \[[vertexOffset], [vertexOffset] + [vertexCount]\]
   /// within the [vertexArray] will contain normal data.
-  void _generateNormals(Vector3Array positions, Vector3Array normals, Uint16Array indices, int vertexOffset, int indexOffset) {
+  void _generateNormals(Vector3List positions, Vector3List normals, Uint16List indices, int vertexOffset, int indexOffset) {
     for (int y = 0; y <= latSegments; ++y) {
       double v = y / latSegments;
-      double sv = sin(v * Math.PI);
-      double cv = cos(v * Math.PI);
+      double sv = Math.sin(v * Math.PI);
+      double cv = Math.cos(v * Math.PI);
 
       for (int x = 0; x <= lonSegments; ++x) {
         double u = x / lonSegments;
 
-        normals[vertexOffset++] = new vec3.raw(
-            cos(u * Math.PI * 2.0) * sv,
+        normals[vertexOffset++] = new Vector3(
+            Math.cos(u * Math.PI * 2.0) * sv,
             cv,
-            sin(u * Math.PI * 2.0) * sv
+            Math.sin(u * Math.PI * 2.0) * sv
         );
       }
     }
@@ -139,12 +139,16 @@ class SphereGenerator extends MeshGenerator {
   /// This is a helper method for creating a single sphere. If you are creating
   /// many sphere meshes prefer creating a [SphereGenerator] and using that to generate
   /// multiple meshes.
-  static Mesh createSphere(String name, GraphicsDevice graphicsDevice, List<InputLayoutElement> elements, num radius, vec3 center) {
+  static Mesh createSphere(GraphicsDevice graphicsDevice,
+                           VertexDeclaration declaration,
+                          {num radius,
+                           Vector3 center})
+  {
     // Setup the generator
     SphereGenerator generator = new SphereGenerator();
     generator.radius = radius;
 
     // Create the mesh
-    return MeshGenerator._createMesh(name, graphicsDevice, elements, generator, center);
+    return MeshGenerator._createMesh(graphicsDevice, declaration, generator, center);
   }
 }

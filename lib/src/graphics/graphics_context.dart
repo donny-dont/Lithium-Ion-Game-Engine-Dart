@@ -58,6 +58,14 @@ class GraphicsContext {
   // Default variables
   //---------------------------------------------------------------------
 
+  /// The default [BlendState] to use.
+  ///
+  /// Constructed with the values in [BlendState.opaque].
+  BlendState _blendStateDefault;
+  /// The default [DepthStencilState] to use.
+  ///
+  /// Constructed with the values in [DepthStencilState.default].
+  DepthStencilState _depthStencilStateDefault;
   /// The default [RasterizerState] to use.
   ///
   /// Constructed with the values in [RasterizerState.cullClockwise].
@@ -210,48 +218,31 @@ class GraphicsContext {
     }
   }
 
-  /// Sets a [Viewport] identifying the portion of the render target to receive draw calls.
-  set viewport(Viewport value) {
+  /// Sets the current [BlendState] to use on the pipeline.
+  ///
+  /// If the [value] is null all values of the pipeline associated with
+  /// blending will be reset to their defaults.
+  set blendState(BlendState value) {
     if (value == null) {
+      blendState = _blendStateDefault;
       return;
     }
+  }
 
-    // Set the viewport values
-    var x = value.x,
-        y = value.y,
-        width = value.width,
-        height = value.height;
-
-    if ((x      != _viewport.x)     ||
-        (y      != _viewport.y)     ||
-        (width  != _viewport.width) ||
-        (height != _viewport.height))
-    {
-      _gl.viewport(x, y, width, height);
-
-      _viewport.x      = x;
-      _viewport.y      = y;
-      _viewport.width  = width;
-      _viewport.height = height;
-    }
-
-    // Set the depth values
-    var minDepth = value.minDepth,
-        maxDepth = value.maxDepth;
-
-    if ((minDepth != _viewport.minDepth) ||
-        (maxDepth != _viewport.maxDepth))
-    {
-      _gl.depthRange(minDepth, maxDepth);
-
-      _viewport.minDepth = minDepth;
-      _viewport.maxDepth = maxDepth;
+  /// Sets the current [DepthStencilState] to use on the pipeline.
+  ///
+  /// If the [value] is null all values of the pipeline associated with the
+  /// depth and stencil buffer will be reset to their defaults.
+  set depthStencilState(DepthStencilState value) {
+    if (value == null) {
+      depthStencilState = _depthStencilStateDefault;
+      return;
     }
   }
 
   /// Sets the current [RasterizerState] to use on the pipeline.
   ///
-  /// If [rasterizerState] is null all values of the pipeline associated with
+  /// If the [value] is null all values of the pipeline associated with
   /// rasterization will be reset to their defaults.
   set rasterizerState(RasterizerState value) {
     if (value == null) {
@@ -338,6 +329,45 @@ class GraphicsContext {
       }
 
       _rasterizerState.scissorTestEnabled = scissorTestEnabled;
+    }
+  }
+
+  /// Sets a [Viewport] identifying the portion of the render target to receive draw calls.
+  set viewport(Viewport value) {
+    if (value == null) {
+      return;
+    }
+
+    // Set the viewport values
+    var x = value.x,
+    y = value.y,
+    width = value.width,
+    height = value.height;
+
+    if ((x      != _viewport.x)     ||
+    (y      != _viewport.y)     ||
+    (width  != _viewport.width) ||
+    (height != _viewport.height))
+    {
+      _gl.viewport(x, y, width, height);
+
+      _viewport.x      = x;
+      _viewport.y      = y;
+      _viewport.width  = width;
+      _viewport.height = height;
+    }
+
+    // Set the depth values
+    var minDepth = value.minDepth,
+    maxDepth = value.maxDepth;
+
+    if ((minDepth != _viewport.minDepth) ||
+    (maxDepth != _viewport.maxDepth))
+    {
+      _gl.depthRange(minDepth, maxDepth);
+
+      _viewport.minDepth = minDepth;
+      _viewport.maxDepth = maxDepth;
     }
   }
 
@@ -889,6 +919,19 @@ class GraphicsContext {
 
     _gl.texImage2D(
         texture._target,
+        0,
+        WebGL.RGBA,
+        WebGL.RGBA,
+        WebGL.UNSIGNED_BYTE,
+        element
+    );
+  }
+
+  void _setElementTexureCube(TextureCube texture, CubeMapFace face, Html.HtmlElement element) {
+    _bindTexture(texture);
+
+    _gl.texImage2D(
+        _cubeMapFaceToWebGL(face),
         0,
         WebGL.RGBA,
         WebGL.RGBA,

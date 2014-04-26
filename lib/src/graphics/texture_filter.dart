@@ -53,7 +53,7 @@ class TextureFilter implements Enum {
   //---------------------------------------------------------------------
 
   /// List of enumerations.
-  static const List<FrontFace> values = const [
+  static const List<TextureFilter> values = const [
     Linear,
     Point,
     Anisotropic,

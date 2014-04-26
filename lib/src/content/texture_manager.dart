@@ -27,4 +27,43 @@ class TextureManager {
 
     return completer.future;
   }
+
+  Future<Texture> loadCubemap(String negativeXPath,
+                              String negativeYPath,
+                              String negativeZPath,
+                              String positiveXPath,
+                              String positiveYPath,
+                              String positiveZPath)
+  {
+    var imagePaths = [
+        negativeXPath,
+        negativeYPath,
+        negativeZPath,
+        positiveXPath,
+        positiveYPath,
+        positiveZPath
+    ];
+
+    var texture = new TextureCube(_graphicsDevice);
+    var loaded = 0;
+    var completer = new Completer<Texture>();
+
+    for (var i = 0; i < 6; ++i) {
+      var image = new Html.ImageElement();
+
+      image.onLoad.listen((_) {
+        texture.setElement(CubeMapFace.values[i], image);
+
+        ++loaded;
+
+        if (loaded == 6) {
+          completer.complete(texture);
+        }
+      });
+
+      image.src = imagePaths[i];
+    }
+
+    return completer.future;
+  }
 }
